@@ -1,8 +1,14 @@
-[package]
-name = "graphics-rs"
+[workspace]
+members = [
+  "frameworks/glfw-c",
+]
+workspace.resolver = "2"
+
+[workspace.package]
 version = "0.1.0"
+authors = ["Matthew Rodusek"]
+categories = ["framework", "video-game"]
+license = "MIT OR APACHE2"
+keywords = []
+repository = "https://github.com/bitwizeshift/alloy-rs"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
