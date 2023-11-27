@@ -1,6 +1,7 @@
 [workspace]
 members = [
-  "frameworks/glfw-c",
+  "frameworks/build",
+  "frameworks/glfw-c"
 ]
 workspace.resolver = "2"
 

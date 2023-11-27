@@ -12,8 +12,10 @@ license = "Zlib"
 build = "build.rs"
 links = "glfw"
 
-# [lib]
-# name = "glfw_c"
+[features]
+wayland = []
 
 [build-dependencies]
 cmake = "0.1"
+bindgen = "0.69.1"
+build = { path = "../build" }
