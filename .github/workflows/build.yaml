@@ -1,0 +1,199 @@
+name: Build
+on:
+  push:
+    branches: [master, feature/*]
+  pull_request:
+    branches: [master]
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  format:
+    name: Check Format
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install toolchain
+        uses: ./.github/actions/rust-toolchain
+        with:
+          components: rustfmt
+
+      - name: Check format
+        run: cargo fmt --all -- --check
+
+  check:
+    name: Check Manifest
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install toolchain
+        uses: ./.github/actions/rust-toolchain
+
+      - name: Check manifest
+        run: cargo check --verbose --workspace
+
+  deny:
+    name: Cargo Deny
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install toolchain
+        uses: ./.github/actions/rust-toolchain
+
+      - name: Install cargo-deny
+        run: |
+          cargo install --locked cargo-deny
+
+      - name: Check cargo-deny
+        run: |
+          cargo deny check
+
+  clippy:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install toolchain
+        uses: ./.github/actions/rust-toolchain
+        with:
+          components: clippy
+
+      - name: Install required cargo
+        run: cargo install clippy-sarif sarif-fmt
+
+      - name: Check clippy
+        run: |
+          cargo clippy                                                         \
+            --no-deps                                                          \
+            --message-format=json                                              \
+            -- --deny clippy::all                                              \
+            | clippy-sarif | tee rust-clippy-results.sarif | sarif-fmt
+        continue-on-error: true
+
+      - name: Upload analysis results to GitHub
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: rust-clippy-results.sarif
+          wait-for-processing: true
+
+  doctest:
+    name: Doctest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install toolchain
+        uses: ./.github/actions/rust-toolchain
+
+      - name: Doctest
+        run: cargo test --doc --verbose
+
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install toolchain
+        uses: ./.github/actions/rust-toolchain
+
+      - name: Build
+        run: cargo build --verbose
+
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    needs: [build]
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install toolchain
+        uses: ./.github/actions/rust-toolchain
+
+      - name: Test
+        run: cargo test --verbose
+
+  coverage:
+    name: Code Coverage
+    runs-on: ${{ matrix.os }}
+    needs: [build, test]
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    defaults:
+      run:
+        shell: bash
+    env:
+      OUTPUT_FILE: ${{matrix.os}}-codecov.json
+      COVERAGE_MINIMUM: ${{ 70.0 }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install toolchain
+        uses: ./.github/actions/rust-toolchain
+
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+
+      - name: Generate Coverage Report
+        id: report
+        run: |
+          cargo llvm-cov --json --output-path ${{ env.OUTPUT_FILE }}
+          echo "coverage=$(cat ${{ env.OUTPUT_FILE }})" >> "${GITHUB_OUTPUT}"
+
+      - name: Check Coverage Requirement
+        env:
+          COVERAGE: ${{fromJson(steps.report.outputs.coverage).data[0].totals.lines.percent}}
+        run: |
+          if [[ ${{env.COVERAGE_MINIMUM}} > ${{env.COVERAGE}} ]]; then
+            echo "Error: Project code coverage fell below minimum desired '${COVERAGE_MINIMUM}%'!" >&2
+            echo "The current coverage is '${COVERAGE}%.'" >&2
+            echo "Please either add more tests, or lower the requirements." >&2
+            exit 1
+          fi
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        if: success() || failure()
+        continue-on-error: true
+        with:
+          name: ${{matrix.os}}-codecov
+          path: ${{env.OUTPUT_FILE}}
