@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "frameworks/build",
+  "frameworks/foundation",
   "frameworks/glfw",
   "frameworks/vulkan",
   "frameworks/openal",
