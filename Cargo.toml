@@ -2,6 +2,7 @@
 members = [
   "frameworks/build",
   "frameworks/glfw",
+  "frameworks/vulkan",
 ]
 workspace.resolver = "2"
 
