@@ -1,5 +1,5 @@
 [package]
-name = "alloy"
+name = "example"
 version.workspace = true
 authors.workspace = true
 categories.workspace = true
@@ -8,13 +8,9 @@ keywords.workspace = true
 repository.workspace = true
 edition.workspace = true
 
-[features]
-default = ["vulkan", "openal"]
-vulkan = ["dep:vulkan"]
-opengl = []
-openal = ["dep:openal"]
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 glfw = { path = "../frameworks/glfw" }
-vulkan = { path = "../frameworks/vulkan", optional = true }
-openal = { path = "../frameworks/openal", optional = true }
+vulkan = { path = "../frameworks/vulkan" }
+openal = { path = "../frameworks/openal" }
