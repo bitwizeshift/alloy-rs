@@ -1,5 +1,5 @@
 [package]
-name = "glfw-c"
+name = "glfw"
 version = "3.3.8"
 edition = "2021"
 authors = ["Camilla Löwy", "Marcus Geelnard"]

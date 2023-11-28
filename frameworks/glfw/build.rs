@@ -27,6 +27,13 @@ fn compile_glfw() {
     dst.join("lib").display()
   );
   println!("cargo:rustc-link-lib=dylib=glfw3");
+
+  if cfg!(any(target_os = "macos", target_os = "ios")) {
+    build::rustc_link_lib!("framework=Cocoa");
+    build::rustc_link_lib!("framework=IOKit");
+    build::rustc_link_lib!("framework=CoreFoundation");
+    build::rustc_link_lib!("framework=OpenGL");
+  }
 }
 
 // Generates bindgen bindings for GLFW.
@@ -56,7 +63,7 @@ fn generate_glfw_bindings() {
     .expect("Couldn't write bindings!");
 }
 
-#[cfg(target_os = "macos")]
+#[cfg(any(target_os = "macos", target_os = "ios"))]
 fn target_bindgen_args(builder: bindgen::Builder) -> bindgen::Builder {
   let sysroot = build::apple::target_xcode_sysroot();
 
@@ -68,7 +75,7 @@ fn target_bindgen_args(builder: bindgen::Builder) -> bindgen::Builder {
     .clang_args(&["-framework", "OpenGL"])
 }
 
-#[cfg(not(target_os = "macos"))]
+#[cfg(not(any(target_os = "macos", target_os = "ios")))]
 fn target_bindgen_args(builder: bindgen::Builder) -> bindgen::Builder {
   builder
 }
