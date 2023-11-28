@@ -1,0 +1,49 @@
+# https://embarkstudios.github.io/cargo-deny/checks/advisories/cfg.html
+[advisories]
+vulnerability = "deny"
+unmaintained = "deny"
+unsound = "deny"
+yanked = "deny"
+notice = "deny"
+git-fetch-with-cli = true
+ignore = []
+
+# https://embarkstudios.github.io/cargo-deny/checks/bans/cfg.html
+[bans]
+multiple-versions = "warn"
+wildcards = "allow"
+
+# https://embarkstudios.github.io/cargo-deny/checks/licenses/cfg.html
+[licenses]
+default = "deny"
+unlicensed = "deny"
+copyleft = "deny"
+unused-allowed-license = "deny"
+private.ignore = true
+allow = [
+    "Apache-2.0",
+    "MIT",
+    "Zlib",
+]
+
+# This is transitively required by bindgen and anything using syn/quote for
+# proc-macro definitions
+[[licenses.exceptions]]
+allow = ["Unicode-DFS-2016"]
+name = "unicode-ident"
+
+# bindgen is a build-dependency only -- so this does not apply
+[[licenses.exceptions]]
+allow = ["BSD-3-Clause"]
+name = "bindgen"
+
+# libloading is used transitively by bindgen via clang-sys
+[[licenses.exceptions]]
+allow = ["ISC"]
+name = "libloading"
+
+# https://embarkstudios.github.io/cargo-deny/checks/sources/cfg.html
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-git = []
