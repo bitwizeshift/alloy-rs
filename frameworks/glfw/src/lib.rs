@@ -7,11 +7,14 @@
 #![deny(rust_2018_idioms)]
 
 /// This module provides all that raw definitions of the C glfw library.
-#[allow(non_upper_case_globals)]
-#[allow(non_camel_case_types)]
-#[allow(non_snake_case)]
-#[allow(unused)]
 pub mod c {
+  #![allow(non_upper_case_globals)]
+  #![allow(non_camel_case_types)]
+  #![allow(non_snake_case)]
+  #![allow(unused)]
+  #![allow(missing_docs)]
+  #![allow(unused_results)]
+  #![allow(rust_2018_idioms)]
   include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 }
 
@@ -169,6 +172,12 @@ impl Window {
   #[inline]
   pub fn show(&self) {
     unsafe { c::glfwShowWindow(self.0) }
+  }
+
+  /// Swaps the underlying buffers of this window.
+  #[inline]
+  pub fn swap_buffers(&self) {
+    unsafe { c::glfwSwapBuffers(self.0) }
   }
 }
 
