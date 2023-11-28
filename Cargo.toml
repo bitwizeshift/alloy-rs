@@ -5,6 +5,7 @@ members = [
   "frameworks/glfw",
   "frameworks/vulkan",
   "frameworks/openal",
+  "alloy",
 ]
 workspace.resolver = "2"
 
