@@ -4,3 +4,6 @@
 [submodule "3rd-party/vulkan-headers"]
 	path = 3rd-party/vulkan-headers
 	url = git@github.com:KhronosGroup/Vulkan-Headers
+[submodule "3rd-party/openal-soft"]
+	path = 3rd-party/openal-soft
+	url = git://repo.or.cz/openal-soft.git

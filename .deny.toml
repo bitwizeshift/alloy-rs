@@ -42,6 +42,10 @@ name = "bindgen"
 allow = ["ISC"]
 name = "libloading"
 
+[[licenses.exceptions]]
+allow = ["BSD-3-Clause"]
+name = "openal-sys"
+
 # https://embarkstudios.github.io/cargo-deny/checks/sources/cfg.html
 [sources]
 unknown-registry = "deny"

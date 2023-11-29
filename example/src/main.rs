@@ -5,7 +5,7 @@ fn main() {
     glfw::c::glfwCreateWindow(
       640,
       480,
-      "My first window".as_bytes().as_ptr() as *const i8,
+      "My first window\0".as_bytes().as_ptr() as *const i8,
       std::ptr::null_mut(),
       std::ptr::null_mut(),
     )
