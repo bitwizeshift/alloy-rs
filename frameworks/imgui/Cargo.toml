@@ -1,5 +1,5 @@
 [package]
-name = "glfw"
+name = "imgui"
 version.workspace = true
 authors.workspace = true
 categories.workspace = true
@@ -8,7 +8,12 @@ keywords.workspace = true
 repository.workspace = true
 edition.workspace = true
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[features]
+default = ["vulkan"]
+vulkan = []
+opengl = []
 
-[dependencies]
-glfw-sys = { path = "../glfw-sys" }
+[build-dependencies]
+bindgen = "0.69.1"
+build = { path = "../build" }
+cc = "1.0"

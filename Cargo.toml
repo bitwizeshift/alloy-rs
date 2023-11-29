@@ -2,8 +2,11 @@
 members = [
   "frameworks/build",
   "frameworks/foundation",
+  "frameworks/glfw-sys",
   "frameworks/glfw",
+  "frameworks/vulkan-sys",
   "frameworks/vulkan",
+  "frameworks/openal-sys",
   "frameworks/openal",
   "alloy",
   "example",

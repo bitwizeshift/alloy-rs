@@ -6,7 +6,6 @@
 #![deny(unused_results)]
 #![deny(rust_2018_idioms)]
 
-/// This module provides all that raw definitions of the C glfw library.
 pub mod c {
   #![allow(non_upper_case_globals)]
   #![allow(non_camel_case_types)]
@@ -15,7 +14,8 @@ pub mod c {
   #![allow(missing_docs)]
   #![allow(unused_results)]
   #![allow(rust_2018_idioms)]
-  include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+  #[doc(inline)]
+  pub use glfw_sys::*;
 }
 
 /// An error that may be returned from a GLFW operation.

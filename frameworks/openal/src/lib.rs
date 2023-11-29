@@ -17,7 +17,8 @@ pub mod c {
   #![allow(missing_docs)]
   #![allow(unused_results)]
   #![allow(rust_2018_idioms)]
-  include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+  #[doc(inline)]
+  pub use openal_sys::*;
 }
 
 /// Representation of an Audio device.

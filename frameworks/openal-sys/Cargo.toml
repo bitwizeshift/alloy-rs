@@ -1,0 +1,15 @@
+[package]
+name = "openal-sys"
+version = "1.23.1"
+authors = ["Chris <chris.kcat@gmail.com>"]
+categories = ["audio"]
+license = "LGPL"
+keywords.workspace = true
+repository = "https://repo.or.cz/w/openal-soft.git"
+edition.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+bindgen = "0.69.1"
+build = { path = "../build" }

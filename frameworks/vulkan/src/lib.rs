@@ -15,7 +15,8 @@ pub mod c {
   #![allow(missing_docs)]
   #![allow(unused_results)]
   #![allow(rust_2018_idioms)]
-  include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+  #[doc(inline)]
+  pub use vulkan_sys::*;
 }
 
 /// Counts the number of extension properties available.
