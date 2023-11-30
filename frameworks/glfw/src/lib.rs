@@ -168,6 +168,16 @@ impl Window {
     unsafe { c::glfwWindowShouldClose(self.0) != 0 }
   }
 
+  /// Gets a constant pointer to the underlying [`c::GLFWwindow`].
+  pub fn ptr(&self) -> *const c::GLFWwindow {
+    self.0
+  }
+
+  /// Gets a mutable pointer to the underlying [`c::GLFWwindow`].
+  pub fn ptr_mut(&self) -> *mut c::GLFWwindow {
+    self.0
+  }
+
   /// Shows this window.
   #[inline]
   pub fn show(&self) {

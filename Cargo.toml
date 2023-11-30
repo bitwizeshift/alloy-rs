@@ -8,6 +8,8 @@ members = [
   "frameworks/vulkan",
   "frameworks/openal-sys",
   "frameworks/openal",
+  "frameworks/imgui-sys",
+  "frameworks/imgui",
   "alloy",
   "example",
 ]

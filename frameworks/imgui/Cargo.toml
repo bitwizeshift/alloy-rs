@@ -8,12 +8,7 @@ keywords.workspace = true
 repository.workspace = true
 edition.workspace = true
 
-[features]
-default = ["vulkan"]
-vulkan = []
-opengl = []
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[build-dependencies]
-bindgen = "0.69.1"
-build = { path = "../build" }
-cc = "1.0"
+[dependencies]
+imgui-sys = { path = "../imgui-sys" }

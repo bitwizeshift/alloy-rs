@@ -31,6 +31,8 @@ fn main() {
   } else {
     println!("OpenAL does NOT have enumeration extension!")
   }
+  let _imgui = imgui::Context::new();
+  unsafe { imgui::c::backend::glfw::imgui_glfw_init_for_vulkan(window.ptr_mut(), true) };
 
   while !window.should_close() {
     context.poll_events();

@@ -7,3 +7,6 @@
 [submodule "3rd-party/openal-soft"]
 	path = 3rd-party/openal-soft
 	url = git://repo.or.cz/openal-soft.git
+[submodule "3rd-party/cimgui"]
+	path = 3rd-party/cimgui
+	url = git@github.com:cimgui/cimgui

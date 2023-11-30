@@ -1,0 +1,26 @@
+[package]
+name = "imgui-sys"
+version = "1.9.0"
+authors = ["ocornut <ocornut@users.noreply.github.com>"]
+categories = ["gui"]
+license = "MIT"
+keywords.workspace = true
+repository = "https://github.com/ocornut/imgui"
+edition.workspace = true
+
+[features]
+default = ["vulkan"]
+vulkan = ["dep:vulkan-sys"]
+opengl = []
+dx12 = []
+
+[dependencies]
+glfw-sys = { path = "../glfw-sys" }
+vulkan-sys = { path = "../vulkan-sys", optional = true }
+
+[build-dependencies]
+cmake = "0.1"
+cc = "1.0"
+bindgen = "0.69.1"
+build = { path = "../build" }
+
