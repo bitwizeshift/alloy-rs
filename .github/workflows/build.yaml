@@ -98,6 +98,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Install toolchain
         uses: ./.github/actions/rust-toolchain
@@ -118,6 +120,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Install toolchain
         uses: ./.github/actions/rust-toolchain
@@ -139,6 +143,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Install toolchain
         uses: ./.github/actions/rust-toolchain
@@ -166,6 +172,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Install toolchain
         uses: ./.github/actions/rust-toolchain
