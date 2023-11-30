@@ -10,10 +10,14 @@ fn main() {
 fn compile_openal() {
   let mut cfg = cmake::Config::new("../../3rd-party/openal-soft");
 
-  let dst = cfg.build();
+  let dst = cfg.define("LIBTYPE", "STATIC").build();
 
   build::rustc_link_search!("native={}", dst.join("lib").display());
-  build::rustc_link_lib!("dylib=openal");
+  build::rustc_link_lib!("static=openal");
+  if cfg!(any(target_os = "macos", target_os = "ios")) {
+    build::rustc_link_lib!("framework=AudioToolbox");
+    build::rustc_link_lib!("framework=CoreAudio");
+  }
 }
 
 // Generates bindgen bindings for openal.
