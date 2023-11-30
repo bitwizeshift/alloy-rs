@@ -33,7 +33,7 @@ impl Device {
   }
 
   /// Opens a device with the given name.
-  pub fn open(name: &CStr) -> Self {
+  pub fn open(_name: &CStr) -> Self {
     todo!()
   }
 
