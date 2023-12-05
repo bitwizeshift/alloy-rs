@@ -1,5 +1,5 @@
 [package]
-name = "example"
+name = "toast"
 version.workspace = true
 authors.workspace = true
 categories.workspace = true
@@ -11,9 +11,5 @@ edition.workspace = true
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-glfw = { path = "../frameworks/glfw" }
-vulkan = { path = "../frameworks/vulkan" }
-openal = { path = "../frameworks/openal" }
-imgui = { path = "../frameworks/imgui" }
-foundation = { path = "../frameworks/foundation" }
-toast = { path = "../frameworks/toast" }
+boxer-sys = { path = "../boxer-sys"}
+foundation = { path = "../foundation" }

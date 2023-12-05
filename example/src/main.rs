@@ -16,7 +16,8 @@ fn main() {
   if context.vulkan_supported() {
     println!("Vulkan is supported!")
   } else {
-    println!("Vulkan is not supported!")
+    println!("Vulkan is not supported!");
+    std::process::exit(1);
   }
 
   let count = vulkan::count_extension_properties();
@@ -31,6 +32,12 @@ fn main() {
   } else {
     println!("OpenAL does NOT have enumeration extension!")
   }
+
+  toast::ToastBuilder::question()
+    .title_cstr(foundation::cstr!("Hello world"))
+    .message_cstr(foundation::cstr!("something went wrong?"))
+    .show();
+
   let _imgui = imgui::Context::new();
   unsafe { imgui::c::backend::glfw::imgui_glfw_init_for_vulkan(window.ptr_mut(), true) };
 
