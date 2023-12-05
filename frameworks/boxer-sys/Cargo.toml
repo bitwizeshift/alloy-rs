@@ -1,0 +1,22 @@
+# Note: I claim no authorship of this code. All copyright ownership goes to
+# the original author Aaron Jacobs; I only modified the sources so they can be
+# compiled and parsed in C so that bindgen could pick it up.
+
+[package]
+name = "boxer-sys"
+version = "1.0.0"
+authors = ["Aaron Jacobs <aaronmjacobs@users.noreply.github.com>"]
+description = """
+  This is a slightly modified implementation of 'boxer' so that it can compile
+  as a C library, and bound into Rust.
+"""
+license = "MIT"
+categories = []
+keywords = []
+repository = "https://github.com/aaronmjacobs/Boxer"
+edition.workspace = true
+
+[build-dependencies]
+cmake = "0.1"
+bindgen = "0.69.1"
+build = { path = "../build" }
