@@ -26,7 +26,7 @@ fn generate_boxer_bindings() {
   use std::path::PathBuf;
 
   build::rerun_if_changed!("src/boxer_linux.cpp");
-  build::rerun_if_changed!("src/boxer_macos.mm");
+  build::rerun_if_changed!("src/boxer_mac.mm");
   build::rerun_if_changed!("src/boxer_win.cpp");
   build::rerun_if_changed!("src/boxer.h");
 
