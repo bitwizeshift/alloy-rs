@@ -97,7 +97,7 @@ runs:
       shell: powershell
       if: runner.os == 'Windows'
       run: |
-        choco install vulkan-sdk --version=1.2.182.0
+        choco install vulkan-sdk
 
     - name: Checkout 3rd-party
       uses: ./.github/actions/checkout
