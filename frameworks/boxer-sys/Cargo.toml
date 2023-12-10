@@ -13,6 +13,7 @@ description = """
   as a C library, and bound into Rust.
 """
 license = "MIT"
+license-file = "src/LICENSE"
 categories = []
 keywords = []
 repository = "https://github.com/aaronmjacobs/Boxer"
