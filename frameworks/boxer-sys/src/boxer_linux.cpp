@@ -75,7 +75,7 @@ BoxerSelection boxer_show(const char* message, const char* title, BoxerStyle sty
                                               "%s",
                                               message);
    gtk_window_set_title(GTK_WINDOW(dialog), title);
-   Selection selection = getSelection(gtk_dialog_run(GTK_DIALOG(dialog)));
+   BoxerSelection selection = getSelection(gtk_dialog_run(GTK_DIALOG(dialog)));
 
    gtk_widget_destroy(GTK_WIDGET(dialog));
    gtk_widget_destroy(GTK_WIDGET(parent));
