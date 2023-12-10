@@ -21,8 +21,14 @@ jobs:
           rust: nightly
 
       - name: Install mdbook
-        run: |
-          cargo install --locked mdbook
+        uses: ./.github/actions/cargo-install
+        with:
+          target: mdbook
+
+      - name: Install cargo-about
+        uses: ./.github/actions/cargo-install
+        with:
+          target: cargo-about
 
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov

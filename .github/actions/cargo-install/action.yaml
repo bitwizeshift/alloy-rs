@@ -1,0 +1,29 @@
+name: cargo-install
+description: "Performs a cargo install for the specified component, with caching"
+
+inputs:
+  target:
+    required: true
+    description: "The component to install"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Cache installation
+      id: cargo-install
+      uses: actions/cache@v3
+      with:
+        path: .cargo/bin/${{ inputs.target }}
+        key: cargo-install-${{ inputs.target }}
+
+    - name: Update git submodules
+      if: steps.cargo-install.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        mkdir -p .cargo/bin
+        cargo install --locked ${{ inputs.target }} --root ./.cargo
+
+    - name: Update PATH
+      shell: bash
+      run: |
+        echo "$(pwd)/.cargo/bin" >> "${GITHUB_PATH}"

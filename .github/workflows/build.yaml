@@ -61,8 +61,15 @@ jobs:
       - name: Install toolchain
         uses: ./.github/actions/rust-toolchain
 
-      - name: Install cargo-deny and cargo-about
-        run: cargo install --locked cargo-deny cargo-about
+      - name: Install cargo-deny
+        uses: ./.github/actions/cargo-install
+        with:
+          target: cargo-deny
+
+      - name: Install cargo-about
+        uses: ./.github/actions/cargo-install
+        with:
+          target: cargo-about
 
       - name: Check cargo-deny
         run: cargo deny check
@@ -98,8 +105,15 @@ jobs:
         with:
           components: clippy
 
-      - name: Install required cargo
-        run: cargo install clippy-sarif sarif-fmt
+      - name: Install clippy-sarif
+        uses: ./.github/actions/cargo-install
+        with:
+          target: clippy-sarif
+
+      - name: Install sarif-fmt
+        uses: ./.github/actions/cargo-install
+        with:
+          target: sarif-fmt
 
       - name: Check clippy
         continue-on-error: true
