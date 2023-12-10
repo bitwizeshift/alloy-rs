@@ -1,0 +1,17 @@
+name: checkout-recursive
+description: "Performs a cached recursive submodule checkout"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Cache Submodules
+      id: cache-submodule
+      uses: actions/cache@v3
+      with:
+        path: 3rd-party
+        key: submodules
+    - name: Update git submodules
+      if: steps.cache-submodule.outputs.cache-hit != 'true'
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive

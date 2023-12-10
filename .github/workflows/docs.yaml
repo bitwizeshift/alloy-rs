@@ -12,6 +12,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Checkout 3rd-party
+        uses: ./.github/actions/checkout
+
       - name: Install toolchain
         uses: ./.github/actions/rust-toolchain
         with:
