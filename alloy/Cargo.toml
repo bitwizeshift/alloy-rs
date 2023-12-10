@@ -1,11 +1,12 @@
 # Schema: https://doc.rust-lang.org/cargo/reference/manifest.html
 [package]
 name = "alloy"
+description = "A game engine written in Rust"
 version.workspace = true
 authors.workspace = true
-categories.workspace = true
 license.workspace = true
-keywords.workspace = true
+categories = ["gui", "game-engines", "game-development"]
+keywords = ["gui", "game-engines", "game-development"]
 repository.workspace = true
 edition.workspace = true
 

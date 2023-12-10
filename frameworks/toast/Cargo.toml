@@ -3,10 +3,10 @@
 name = "toast"
 version.workspace = true
 authors.workspace = true
-categories.workspace = true
 license.workspace = true
-keywords.workspace = true
 repository.workspace = true
+categories = ["api-bindings", "gui"]
+keywords = ["gui", "toast", "window"]
 edition.workspace = true
 
 [dependencies]

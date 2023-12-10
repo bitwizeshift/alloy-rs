@@ -2,9 +2,11 @@
 [package]
 name = "build"
 description = "A small internal crate for simplifying build.rs logic."
-edition = "2021"
 version.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
+categories = ["development-tools::build-utils"]
+keywords = ["build-utils"]
+edition.workspace = true
 

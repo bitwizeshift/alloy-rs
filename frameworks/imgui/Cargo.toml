@@ -3,10 +3,10 @@
 name = "imgui"
 version.workspace = true
 authors.workspace = true
-categories.workspace = true
 license.workspace = true
-keywords.workspace = true
 repository.workspace = true
+categories = ["gui", "api-bindings"]
+keywords = ["gui"]
 edition.workspace = true
 
 [features]

@@ -13,10 +13,9 @@ description = """
   as a C library, and bound into Rust.
 """
 license = "MIT"
-license-file = "src/LICENSE"
-categories = []
-keywords = []
 repository = "https://github.com/aaronmjacobs/Boxer"
+categories = ["external-ffi-bindings", "gui"]
+keywords = ["gui", "window", "bindgen"]
 edition.workspace = true
 
 [build-dependencies]

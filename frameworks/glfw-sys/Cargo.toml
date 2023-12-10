@@ -2,7 +2,6 @@
 [package]
 name = "glfw-sys"
 version = "3.3.8"
-edition = "2021"
 authors = ["Camilla Löwy", "Marcus Geelnard"]
 description = " A multi-platform library for OpenGL, OpenGL ES, Vulkan, window and input"
 documentation = "http://www.glfw.org/documentation.html"
@@ -10,9 +9,9 @@ homepage = "http://www.glfw.org/"
 repository = "https://github.com/glfw/glfw"
 readme = "../../3rd-party/glfw/README.md"
 license = "Zlib"
-license-file = "../../3rd-party/glfw/LICENSE.md"
-build = "build.rs"
-links = "glfw"
+categories = ["multimedia", "multimedia::graphics", "graphics", "external-ffi-bindings"]
+keywords = ["vulkan", "glfw", "bindgen"]
+edition.workspace = true
 
 [features]
 default = ["vulkan"]

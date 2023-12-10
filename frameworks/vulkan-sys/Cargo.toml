@@ -3,10 +3,10 @@
 name = "vulkan-sys"
 version = "1.3.271"
 authors = ["The Khronos Group Inc."]
-categories = ["graphics"]
 license = "MIT OR Apache-2.0"
-keywords = []
 repository = "https://github.com/KhronosGroup/Vulkan-Headers"
+categories = ["graphics", "external-ffi-bindings"]
+keywords = ["graphics", "vulkan", "bindgen"]
 edition.workspace = true
 
 [build-dependencies]

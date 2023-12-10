@@ -3,10 +3,10 @@
 name = "vulkan"
 version.workspace = true
 authors.workspace = true
-categories.workspace = true
 license.workspace = true
-keywords.workspace = true
 repository.workspace = true
+categories = ["api-bindings", "graphics"]
+keywords = ["vulkan"]
 edition.workspace = true
 
 [features]

@@ -3,11 +3,10 @@
 name = "imgui-sys"
 version = "1.9.0"
 authors = ["ocornut <ocornut@users.noreply.github.com>"]
-categories = ["gui"]
 license = "MIT"
-license-file = "../../3rd-party/cimgui/imgui/LICENSE.txt"
-keywords.workspace = true
 repository = "https://github.com/ocornut/imgui"
+categories = ["gui", "external-ffi-bindings"]
+keywords = ["gui", "bindgen"]
 edition.workspace = true
 
 [features]

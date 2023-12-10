@@ -1,11 +1,13 @@
+# Schema: https://doc.rust-lang.org/cargo/reference/manifest.html
 [package]
 name = "example"
+description = "A small demo using the alloy-rs engine"
 version.workspace = true
 authors.workspace = true
-categories.workspace = true
 license.workspace = true
-keywords.workspace = true
 repository.workspace = true
+categories = []
+keywords = []
 edition.workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

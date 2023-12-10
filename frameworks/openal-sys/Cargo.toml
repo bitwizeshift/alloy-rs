@@ -3,11 +3,10 @@
 name = "openal-sys"
 version = "1.23.1"
 authors = ["Chris <chris.kcat@gmail.com>"]
-categories = ["audio"]
 license = "BSD-3-Clause"
-license-file = "../../3rd-party/openal-soft/COPYING"
-keywords.workspace = true
 repository = "https://repo.or.cz/w/openal-soft.git"
+categories = ["multimedia::audio", "external-ffi-bindings"]
+keywords = ["audio", "openal", "bindgen"]
 edition.workspace = true
 
 [build-dependencies]
