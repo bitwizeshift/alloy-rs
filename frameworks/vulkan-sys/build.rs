@@ -8,9 +8,6 @@ fn main() {
 
 fn link_vulkan() {
   build::rustc_link_lib!("vulkan");
-  if cfg!(any(target_os = "macos", target_os = "ios")) {
-    build::rustc_link_lib!("MoltenVK");
-  }
 }
 
 fn generate_vulkan_bindings() {
