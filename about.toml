@@ -1,0 +1,22 @@
+# Schema: https://embarkstudios.github.io/cargo-about/cli/generate/config.html
+
+accepted = [
+  "Apache-2.0",
+  "MIT",
+]
+
+# bindgen and all transitive things are nice, but the licenses don't affect us
+# for redistribution.
+ignore-build-dependencies = true
+ignore-dev-dependencies = true
+
+# GLFW is licensed under ZLib, which is a perfectly acceptable license, just not
+# the standard license.
+[glfw-sys]
+accepted = ["Zlib"]
+
+# OpenAL is distributed under the BSD 3-Clause license. This isn't a problem
+# since no alterations are made to the base-licensed product, and this only
+# needs the license as part of redistribution of the binary.
+[openal-sys]
+accepted = ["BSD-3-Clause"]
