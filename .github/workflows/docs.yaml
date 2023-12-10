@@ -40,6 +40,10 @@ jobs:
           cargo llvm-cov --html
           cp -r target/llvm-cov/html target/doc/coverage
 
+      - name: Generate license manifest
+        run: |
+          cargo about generate .cargo-about/about.hbs -o target/doc/licenses.html
+
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v1
         with:
