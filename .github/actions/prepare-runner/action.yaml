@@ -1,0 +1,103 @@
+name: prepare-runner
+description: "Prepares the underlying runner for building this project"
+
+runs:
+  using: "composite"
+  steps:
+    # Install base dependencies
+
+    # ubuntu-latest, windows-latest, and macos-latest all come with cmake and
+    # clang, so we don't need any of these base dependencies.
+    #
+    # See:
+    #   - https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md
+    #   - https://github.com/actions/runner-images/blob/main/images/macos/macos-12-Readme.md
+    #   - https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md
+
+    - name: Prepare compiler
+      shell: bash
+      if: runner.os == 'Linux'
+      run: |
+        echo "CC=clang-15" >> "${GITHUB_ENV}"
+        echo "CXX=clang++-15" >> "${GITHUB_ENV}"
+
+    - name: Prepare compiler
+      shell: bash
+      if: runner.os == 'macOS'
+      run: |
+        echo "CC=$(brew --prefix llvm@15)/bin/clang" >> "${GITHUB_ENV}"
+        echo "CXX=$(brew --prefix llvm@15)/bin/clang++" >> "${GITHUB_ENV}"
+
+    # OpenAL
+
+    # macOS and Windows both use builtin audio-requirements, so only the linux
+    # runners need to install the audio dependencies in order to work.
+
+    - name: Install OpenAL requirements
+      shell: bash
+      if: runner.os == 'Linux'
+      run: |
+        # Install pulseaudio, portaudio, ALSA, JACK dependencies for
+        # corresponding backends.
+        # Install Qt5 dependency for alsoft-config.
+        sudo apt-get update -y
+        sudo apt-get install -y -qq                                            \
+          libpulse-dev                                                         \
+          portaudio19-dev                                                      \
+          libasound2-dev                                                       \
+          libjack-dev                                                          \
+          qtbase5-dev
+
+    # GLFW
+
+    # macOS and Windows both use builtin requirements for GLFW, so only the linux
+    # runners need to install dependencies.
+
+    - name: Install GLFW requirements
+      shell: bash
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y -qq                                            \
+          libxrandr-dev                                                        \
+          libxinerama-dev                                                      \
+          libxcursor-dev                                                       \
+          libxi-dev                                                            \
+          libx11-dev
+
+    # Boxer
+
+    - name: Install Boxer requirements
+      shell: bash
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y -qq                                            \
+          libgtk-3-dev
+
+    # Vulkan
+
+    - name: Install Vulkan requirements
+      shell: bash
+      if: runner.os == 'Linux'
+      run: |
+        wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
+        sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-jammy.list http://packages.lunarg.com/vulkan/lunarg-vulkan-jammy.list
+        sudo apt-get update -y
+        sudo apt-get install vulkan-sdk -y
+
+    - name: Install Vulkan requirements
+      shell: bash
+      if: runner.os == 'macOS'
+      run: |
+        brew update
+        brew install molten-vk
+
+    - name: Install Vulkan requirements
+      shell: powershell
+      if: runner.os == 'Windows'
+      run: |
+        choco install vulkan-sdk --version=1.2.182.0
+
+    - name: Checkout 3rd-party
+      uses: ./.github/actions/checkout
