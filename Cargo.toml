@@ -2,6 +2,8 @@
 members = [
   "frameworks/build",
   "frameworks/foundation",
+  "frameworks/boxer-sys",
+  "frameworks/toast",
   "frameworks/glfw-sys",
   "frameworks/glfw",
   "frameworks/vulkan-sys",
