@@ -1,3 +1,4 @@
+# Schema: https://doc.rust-lang.org/cargo/reference/manifest.html
 [package]
 name = "alloy"
 version.workspace = true
@@ -9,12 +10,15 @@ repository.workspace = true
 edition.workspace = true
 
 [features]
-default = ["vulkan", "openal"]
-vulkan = ["dep:vulkan"]
+default = ["vulkan", "openal", "debug"]
+vulkan = ["dep:vulkan", "glfw/vulkan"]
 opengl = []
 openal = ["dep:openal"]
 
+# The "debug" feature enables debugging and validation logic
+debug = []
+
 [dependencies]
-glfw = { path = "../frameworks/glfw" }
+glfw = { path = "../frameworks/glfw", default-features = false}
 vulkan = { path = "../frameworks/vulkan", optional = true }
 openal = { path = "../frameworks/openal", optional = true }

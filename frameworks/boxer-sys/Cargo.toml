@@ -1,3 +1,5 @@
+# Schema: https://doc.rust-lang.org/cargo/reference/manifest.html
+
 # Note: I claim no authorship of this code. All copyright ownership goes to
 # the original author Aaron Jacobs; I only modified the sources so they can be
 # compiled and parsed in C so that bindgen could pick it up.
@@ -17,6 +19,6 @@ repository = "https://github.com/aaronmjacobs/Boxer"
 edition.workspace = true
 
 [build-dependencies]
-cmake = "0.1"
-bindgen = "0.69.1"
+cmake = { workspace = true }
+bindgen = { workspace = true }
 build = { path = "../build" }

@@ -1,3 +1,4 @@
+# Schema: https://doc.rust-lang.org/cargo/reference/manifest.html
 [package]
 name = "build"
 description = "A small internal crate for simplifying build.rs logic."
@@ -7,6 +8,3 @@ authors.workspace = true
 license.workspace = true
 repository.workspace = true
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]

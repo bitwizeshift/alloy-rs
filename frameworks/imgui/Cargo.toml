@@ -1,3 +1,4 @@
+# Schema: https://doc.rust-lang.org/cargo/reference/manifest.html
 [package]
 name = "imgui"
 version.workspace = true
@@ -8,7 +9,9 @@ keywords.workspace = true
 repository.workspace = true
 edition.workspace = true
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[features]
+default = ["vulkan"]
+vulkan = ["imgui-sys/vulkan"]
 
 [dependencies]
-imgui-sys = { path = "../imgui-sys" }
+imgui-sys = { path = "../imgui-sys", default-features = false }

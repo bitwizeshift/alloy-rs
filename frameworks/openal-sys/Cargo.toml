@@ -1,3 +1,4 @@
+# Schema: https://doc.rust-lang.org/cargo/reference/manifest.html
 [package]
 name = "openal-sys"
 version = "1.23.1"
@@ -7,8 +8,6 @@ license = "BSD-3-Clause"
 keywords.workspace = true
 repository = "https://repo.or.cz/w/openal-soft.git"
 edition.workspace = true
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
 cmake = { workspace = true }

@@ -1,3 +1,4 @@
+# Schema: https://doc.rust-lang.org/cargo/reference/manifest.html
 [package]
 name = "imgui-sys"
 version = "1.9.0"
@@ -10,12 +11,12 @@ edition.workspace = true
 
 [features]
 default = ["vulkan"]
-vulkan = ["dep:vulkan-sys"]
+vulkan = ["dep:vulkan-sys", "glfw-sys/vulkan"]
 opengl = []
 dx12 = []
 
 [dependencies]
-glfw-sys = { path = "../glfw-sys" }
+glfw-sys = { path = "../glfw-sys", default-features = false}
 vulkan-sys = { path = "../vulkan-sys", optional = true }
 
 [build-dependencies]
