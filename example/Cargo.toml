@@ -17,3 +17,6 @@ openal = { path = "../frameworks/openal" }
 imgui = { path = "../frameworks/imgui" }
 foundation = { path = "../frameworks/foundation" }
 toast = { path = "../frameworks/toast" }
+
+[build-dependencies]
+build = { path = "../frameworks/build" }

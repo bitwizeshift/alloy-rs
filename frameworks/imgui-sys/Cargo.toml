@@ -19,8 +19,7 @@ glfw-sys = { path = "../glfw-sys" }
 vulkan-sys = { path = "../vulkan-sys", optional = true }
 
 [build-dependencies]
-cmake = "0.1"
-cc = "1.0"
-bindgen = "0.69.1"
+cmake = { workspace = true }
+bindgen = { workspace = true }
 build = { path = "../build" }
 

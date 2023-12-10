@@ -16,6 +16,6 @@ links = "glfw"
 wayland = []
 
 [build-dependencies]
-cmake = "0.1"
-bindgen = "0.69.1"
+cmake = { workspace = true }
+bindgen = { workspace = true }
 build = { path = "../build" }

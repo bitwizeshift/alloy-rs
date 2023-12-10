@@ -11,6 +11,6 @@ edition.workspace = true
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-cmake = "0.1"
-bindgen = "0.69.1"
+cmake = { workspace = true }
+bindgen = { workspace = true }
 build = { path = "../build" }
