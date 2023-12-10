@@ -33,6 +33,8 @@ fn compile_glfw() {
     build::rustc_link_lib!("framework=IOKit");
     build::rustc_link_lib!("framework=CoreFoundation");
     build::rustc_link_lib!("framework=OpenGL");
+  } else if cfg!(target_os = "linux") {
+    build::rustc_link_lib!("X11");
   }
 }
 
