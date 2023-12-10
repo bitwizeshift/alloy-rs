@@ -47,7 +47,9 @@ fn generate_glfw_bindings() {
   let mut builder = bindgen::Builder::default()
     .header("../../3rd-party/glfw/include/GLFW/glfw3.h")
     .header("../../3rd-party/glfw/include/GLFW/glfw3native.h")
-    .clang_arg("-I../../3rd-party/glfw/include");
+    .clang_arg("-I../../3rd-party/glfw/include")
+    .clang_arg("-I../../3rd-party/vulkan-headers/include")
+    .clang_arg("-DGLFW_INCLUDE_VULKAN=1");
 
   builder = target_bindgen_args(builder);
 
