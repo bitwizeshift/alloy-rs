@@ -14,9 +14,11 @@ fn compile_openal() {
 
   build::rustc_link_search!("native={}", dst.join("lib").display());
   build::rustc_link_lib!("static=openal");
+  build::rustc_link_lib!("c++");
   if cfg!(any(target_os = "macos", target_os = "ios")) {
     build::rustc_link_lib!("framework=AudioToolbox");
     build::rustc_link_lib!("framework=CoreAudio");
+    build::rustc_link_lib!("framework=CoreFoundation");
   }
 }
 
