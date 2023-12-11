@@ -33,19 +33,19 @@ jobs:
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
 
-      - name: Generate Book
-        run: |
-          mdbook build docs
-          mkdir -p target/doc
-          cp -r docs/book target/doc/book
+      - name: Build
+        uses: ./.github/actions/cargo-build
 
       - name: Generate Cargo Docs
         run: |
           RUSTDOCFLAGS="--enable-index-page -Zunstable-options" \
           cargo +nightly doc --no-deps --workspace
 
-      - name: Build
-        uses: ./.github/actions/cargo-build
+      - name: Generate Book
+        run: |
+          mdbook build docs
+          mkdir -p target/doc
+          cp -r docs/book target/doc/book
 
       - name: Generate coverage report
         run: |
@@ -79,3 +79,15 @@ jobs:
       - name: Upload GH Pages
         id: deployment
         uses: actions/deploy-pages@v1
+
+      - name: Create summary
+        if: success()
+        run: |
+          echo "# Documentation successfully deployed 🚀" >> "${GITHUB_STEP_SUMMARY}"
+          echo "" >> "${GITHUB_STEP_SUMMARY}"
+          echo "Deployed documentation links:" >> "${GITHUB_STEP_SUMMARY}"
+          echo "" >> "${GITHUB_STEP_SUMMARY}"
+          echo "* [📦 Crate documentation](https://bitwizeshift.github.io/alloy-rs/)" >> "${GITHUB_STEP_SUMMARY}"
+          echo "* [📕 Handbook](https://bitwizeshift.github.io/alloy-rs/book/)" >> "${GITHUB_STEP_SUMMARY}"
+          echo "* [📈 Coverage Report](https://bitwizeshift.github.io/alloy-rs/coverage)" >> "${GITHUB_STEP_SUMMARY}"
+          echo "* [🔑 Licenses](https://bitwizeshift.github.io/alloy-rs/licenses.html)" >> "${GITHUB_STEP_SUMMARY}"
