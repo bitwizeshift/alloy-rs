@@ -18,6 +18,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Prepare Cache
+      uses: Swatinem/rust-cache@v2
+      with:
+        shared-key: ${{ inputs.cache-key }}
+
     - name: Install Rust Toolchain
       shell: bash
       run: |
@@ -29,11 +34,6 @@ runs:
       if: inputs.components != ''
       run: |
         rustup component add ${{ inputs.components }}
-
-    - name: Prepare Cache
-      uses: Swatinem/rust-cache@v2
-      with:
-        shared-key: ${{ inputs.cache-key }}
 
     - name: Prepare Rust Toolchain
       shell: bash

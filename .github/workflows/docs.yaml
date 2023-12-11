@@ -44,6 +44,9 @@ jobs:
           RUSTDOCFLAGS="--enable-index-page -Zunstable-options" \
           cargo +nightly doc --no-deps --workspace
 
+      - name: Build
+        uses: ./.github/actions/cargo-build
+
       - name: Generate coverage report
         run: |
           cargo llvm-cov --html
