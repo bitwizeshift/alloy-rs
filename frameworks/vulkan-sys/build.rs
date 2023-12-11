@@ -7,7 +7,10 @@ fn main() {
 }
 
 fn link_vulkan() {
-  build::rustc_link_lib!("vulkan");
+  if let Some(search_path) = option_env!("VULKAN_SDK") {
+    build::rustc_link_search!("native={}/lib", search_path);
+  }
+  build::rustc_link_lib!("dylib=vulkan");
 }
 
 fn generate_vulkan_bindings() {

@@ -79,17 +79,45 @@ runs:
 
     - name: Install Vulkan SDK
       uses: humbletim/setup-vulkan-sdk@v1.2.0
+      if: runner.os == 'Linux' || runner.os == 'Windows'
       with:
         vulkan-query-version: 1.3.204.0
         vulkan-components: Vulkan-Headers, Vulkan-Loader
         vulkan-use-cache: true
 
-    - name: Install MoltenVK
+    - name: Cache vulkan-sdk.dmg
+      uses: actions/cache@v3
+      if: runner.os == 'macOS'
+      id: download-vulkan
+      with:
+        path: vulkan-sdk.dmg
+        key: vulkan-sdk
+
+    - name: Download vulkan-sdk.dmg
+      shell: bash
+      if: runner.os == 'macOS' && steps.download-vulkan.outputs.cache-hit != 'true'
+      run: |
+        wget https://sdk.lunarg.com/sdk/download/latest/mac/vulkan-sdk.dmg
+
+    - name: Install Vulkan SDK
       shell: bash
       if: runner.os == 'macOS'
       run: |
-        brew update
-        brew install molten-vk
+        hdiutil attach vulkan-sdk.dmg -mountpoint vulkan-sdk
+        vulkan_root="${HOME}/VulkanSDK"
+        ./vulkan-sdk/InstallVulkan.app/Contents/MacOS/InstallVulkan            \
+          --root "${vulkan_root}"                                              \
+          --accept-licenses                                                    \
+          --default-answer                                                     \
+          --confirm-command install
+
+        export VULKAN_SDK="${vulkan_root}/macOS"
+        echo VULKAN_SDK="${VULKAN_SDK}" >> "${GITHUB_ENV}"
+        echo DYLD_LIBRARY_PATH="$VULKAN_SDK/lib:$DYLD_LIBRARY_PATH"  >> "${GITHUB_ENV}"
+        echo LD_LIBRARY_PATH="$VULKAN_SDK/lib:$LD_LIBRARY_PATH" >> "${GITHUB_ENV}"
+        echo VK_ICD_FILENAMES="$VULKAN_SDK/etc/vulkan/icd.d/MoltenVK_icd.json"  >> "${GITHUB_ENV}"
+        echo VK_LAYER_PATH="$VULKAN_SDK/share/vulkan/explicit_layer.d"  >> "${GITHUB_ENV}"
+        echo "$VULKAN_SDK/bin"  >> "${GITHUB_PATH}"
 
     - name: Checkout 3rd-party
       uses: ./.github/actions/checkout
