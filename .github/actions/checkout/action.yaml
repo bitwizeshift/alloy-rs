@@ -9,7 +9,9 @@ runs:
       uses: actions/cache@v3
       with:
         path: 3rd-party
-        key: submodules
+        key: submodules-${{ hashFiles('.gitmodules')}}
+        restore-keys: submodules-
+
     - name: Update git submodules
       if: steps.cache-submodule.outputs.cache-hit != 'true'
       uses: actions/checkout@v3
