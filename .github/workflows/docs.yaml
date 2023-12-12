@@ -54,7 +54,11 @@ jobs:
 
       - name: Generate license manifest
         run: |
-          cargo about generate .cargo-about/template.hbs -o target/doc/licenses.html
+          cargo about generate                                                 \
+            --all-features                                                     \
+            --output-file target/doc/licenses.html                             \
+            --config .cargo-about/about.toml                                   \
+            .cargo-about/template.hbs
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v1
