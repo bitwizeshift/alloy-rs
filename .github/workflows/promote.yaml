@@ -21,6 +21,7 @@ jobs:
   promote:
     name: Promote to Master
     runs-on: ubuntu-latest
+    environment: master
     if: success()
     needs:
       - verify
