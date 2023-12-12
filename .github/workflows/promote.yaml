@@ -3,6 +3,12 @@ on:
   push:
     branches: [develop]
 
+# Allow only 1 promotion to occur at any given time, to prevent the possibility
+# of multiple changes running at the same time and going in out-of-order.
+concurrency:
+  group: promote-master
+  cancel-in-progress: true
+
 jobs:
   verify:
     name: Verify build integrity
@@ -44,7 +50,7 @@ jobs:
           sha1=$(git rev-parse --short HEAD)
           echo '# ⏩ Accepted changes from `develop` into `master`'  >> "${GITHUB_STEP_SUMMARY}"
           echo ''                                                   >> "${GITHUB_STEP_SUMMARY}"
-          echo '${sha1} is the new HEAD of `master`'                >> "${GITHUB_STEP_SUMMARY}"
+          echo '${{github.sha}} is the new HEAD of `master`'        >> "${GITHUB_STEP_SUMMARY}"
           echo ''                                                   >> "${GITHUB_STEP_SUMMARY}"
           echo '## Summary'                                         >> "${GITHUB_STEP_SUMMARY}"
           echo ''                                                   >> "${GITHUB_STEP_SUMMARY}"
