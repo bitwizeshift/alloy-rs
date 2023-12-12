@@ -1,0 +1,68 @@
+name: Promote to master
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  verify:
+    name: Verify build integrity
+    uses: ./.github/workflows/build.yaml
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+  promote:
+    name: Promote to Master
+    runs-on: ubuntu-latest
+    if: success()
+    needs:
+      - verify
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.WORKFLOW_GIT_ACCESS_TOKEN }}
+          fetch-depth: 0
+
+      - name: Push
+        id: update-branch
+        run: |
+          echo "new_sha1=$(git rev-parse HEAD)" >> "${GITHUB_OUTPUT}"
+
+          git fetch origin master
+          git checkout master
+          echo "old_sha1=$(git rev-parse HEAD)" >> "${GITHUB_OUTPUT}"
+
+          git reset --hard develop
+          git push origin master
+
+
+      - name: Summarize Success
+        if: success()
+        run: |
+          sha1=$(git rev-parse --short HEAD)
+          echo "# ⏩ Accepted changes from `develop` into `master`"  >> "${GITHUB_STEP_SUMMARY}"
+          echo ""                                                   >> "${GITHUB_STEP_SUMMARY}"
+          echo "${sha1} is the new HEAD of `master`"                >> "${GITHUB_STEP_SUMMARY}"
+          echo ""                                                   >> "${GITHUB_STEP_SUMMARY}"
+          echo "## Summary"                                         >> "${GITHUB_STEP_SUMMARY}"
+          echo ""                                                   >> "${GITHUB_STEP_SUMMARY}"
+          echo "Below are commits being promoted"                   >> "${GITHUB_STEP_SUMMARY}"
+          echo ""                                                   >> "${GITHUB_STEP_SUMMARY}"
+
+          old_sha1=${{steps.update-branch.outputs.old_sha1}}
+          new_sha1=${{steps.update-branch.outputs.new_sha1}}
+          echo "| SHA1 | Message |" >> "${GITHUB_STEP_SUMMARY}"
+          git log                                                              \
+            --pretty="format:| %h | %s |"                                      \
+            --no-show-signature                                                \
+            ${old_sha1}..${new_sha1} >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Summarize Failure
+        if: failure()
+        run: |
+          sha1=$(git rev-parse --short HEAD)
+          echo "# 🛑 Rejected changes from `develop` into `master`"           >> "${GITHUB_STEP_SUMMARY}"
+          echo ""                                                            >> "${GITHUB_STEP_SUMMARY}"
+          echo "A failure occurred, and `master` was not able to be updated" >> "${GITHUB_STEP_SUMMARY}"
