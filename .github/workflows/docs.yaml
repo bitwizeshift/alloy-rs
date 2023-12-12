@@ -25,11 +25,6 @@ jobs:
         with:
           target: mdbook
 
-      - name: Install cargo-about
-        uses: ./.github/actions/cargo-install
-        with:
-          target: cargo-about
-
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
 
@@ -53,12 +48,9 @@ jobs:
           cp -r target/llvm-cov/html target/doc/coverage
 
       - name: Generate license manifest
-        run: |
-          cargo about generate                                                 \
-            --all-features                                                     \
-            --output-file target/doc/licenses.html                             \
-            --config .cargo-about/about.toml                                   \
-            .cargo-about/template.hbs
+        uses: ./.github/actions/cargo-about
+        with:
+          output-file: target/doc/licenses.html
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v1

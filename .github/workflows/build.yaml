@@ -66,20 +66,18 @@ jobs:
         with:
           target: cargo-deny
 
-      - name: Install cargo-about
-        uses: ./.github/actions/cargo-install
-        with:
-          target: cargo-about
-
       - name: Check cargo-deny
         run: cargo deny check
 
-      - name: Create license manifest
-        run: cargo about generate .cargo-about/template.hbs -o ${{ env.OUTPUT_FILE }}
+      - name: Generate license manifest
+        id: license-manifest
+        uses: ./.github/actions/cargo-about
+        with:
+          output-file: ${{env.OUTPUT_FILE}}
 
-      - name: Upload Artifact
+      - name: Upload License Manifest Artifact
         uses: actions/upload-artifact@v1
-        if: success() || failure()
+        if: steps.license-manifest.outcome == 'success'
         continue-on-error: true
         with:
           name: licenses
