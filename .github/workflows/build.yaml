@@ -158,9 +158,6 @@ jobs:
     defaults:
       run:
         shell: bash
-    env:
-      OUTPUT_FILE: ${{ matrix.os }}-codecov.json
-      COVERAGE_MINIMUM: ${{ 0.0 }}
 
     steps:
       - name: Checkout
@@ -174,9 +171,6 @@ jobs:
         with:
           components: llvm-tools-preview
 
-      - name: Install cargo-llvm-cov
-        uses: taiki-e/install-action@cargo-llvm-cov
-
       - name: Build
         id: build
         uses: ./.github/actions/cargo-build
@@ -185,28 +179,8 @@ jobs:
         id: test
         run: cargo test --verbose
 
-      - name: Generate Coverage Report
-        id: report
-        run: |
-          cargo llvm-cov --json --output-path ${{ env.OUTPUT_FILE }}
-          echo "coverage=$(cat ${{ env.OUTPUT_FILE }})" >> "${GITHUB_OUTPUT}"
-
-      - name: Check Coverage Requirement
-        if: env.COVERAGE_MINIMUM > 0.0
-        env:
-          COVERAGE: ${{fromJson(steps.report.outputs.coverage).data[0].totals.lines.percent}}
-        run: |
-          if [[ ${{env.COVERAGE_MINIMUM}} > ${{env.COVERAGE}} ]]; then
-            echo "Error: Project code coverage fell below minimum desired '${COVERAGE_MINIMUM}%'!" >&2
-            echo "The current coverage is '${COVERAGE}%.'" >&2
-            echo "Please either add more tests, or lower the requirements." >&2
-            exit 1
-          fi
-
-      - name: Upload Coverage Artifact
-        uses: actions/upload-artifact@v1
-        if: steps.report.outcome == 'success'
-        continue-on-error: true
+      - name: Coverage
+        uses: ./.github/actions/cargo-code-coverage
         with:
-          name: ${{matrix.os}}-codecov
-          path: ${{env.OUTPUT_FILE}}
+          output-file: ${{ matrix.os }}-codecov.json
+          minimum-requirement: 0.0

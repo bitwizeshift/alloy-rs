@@ -1,0 +1,57 @@
+name: cargo-code-coverage
+description: "An action for generating code-coverage for a project using cargo-llvm-cov"
+
+inputs:
+  output-file:
+    required: true
+    description: "The output file to write the coverage information to, which gets cached."
+  minimum-requirement:
+    required: false
+    description: "A decimal value indicating the minimum required coverage requirements. 0 disables this."
+    default: "0.0"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Cache Coverage
+      id: cargo-coverage
+      uses: actions/cache@v3
+      with:
+        path: ${{ inputs.output-file }}
+        key: cargo-coverage-${{ runner.os }}-${{ hashFiles('**/*.rs', '**/Cargo.toml', 'Cargo.toml') }}
+
+    - name: Install cargo-llvm-cov
+      if: steps.cargo-coverage.outputs.cache-hit != 'true'
+      uses: taiki-e/install-action@cargo-llvm-cov
+
+    - name: Generate Coverage Coverage
+      if: steps.cargo-coverage.outputs.cache-hit != 'true'
+      shell: bash
+      run: cargo llvm-cov --json --output-path ${{ inputs.output-file }}
+
+    - name: Emit 'coverage' output
+      id: report
+      shell: bash
+      run: echo "coverage=$(cat ${{ inputs.output-file }})" >> "${GITHUB_OUTPUT}"
+
+    - name: Check Coverage Requirement
+      if: inputs.minimum-requirement > 0.0
+      shell: bash
+      run: |
+        coverage=${{fromJson(steps.report.outputs.coverage).data[0].totals.lines.percent}}
+
+        if [[ ${{inputs.minimum-requirement}} > ${coverage} ]]; then
+          echo                                                                 \
+            "::error::Project code coverage fell below minimum desired '${{inputs.minimum-requirement}}%'!" \
+            "The current coverage is '${COVERAGE}%.'"                          \
+            "Please either add more tests, or lower the requirements."
+          exit 1
+        fi
+
+    - name: Upload Coverage Artifact
+      uses: actions/upload-artifact@v1
+      if: steps.report.outcome == 'success'
+      continue-on-error: true
+      with:
+        name: ${{ runner.os }}-codecov
+        path: ${{ inputs.output-file }}
