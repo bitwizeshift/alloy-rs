@@ -13,3 +13,5 @@
 #![deny(missing_docs)]
 #![deny(unused_results)]
 #![deny(rust_2018_idioms)]
+
+pub mod meta;
