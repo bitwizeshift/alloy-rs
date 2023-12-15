@@ -66,6 +66,7 @@ jobs:
       - name: Fix permissions
         run: |
           find ./target -type d -exec chmod 0755 {} \;
+          find ./target -type f -name '.lock' -delete
 
       - name: Upload Pages Artifact
         if: inputs.skip-publish != true
@@ -76,6 +77,7 @@ jobs:
   deploy:
     name: Deploy to GH Pages
     runs-on: ubuntu-latest
+    if: inputs.skip-publish != true
     needs: generate
 
     permissions:
@@ -90,11 +92,10 @@ jobs:
     steps:
       - name: Upload GH Pages
         id: deployment
-        if: inputs.skip-publish != true
         uses: actions/deploy-pages@v1
 
       - name: Create summary
-        if: success() && inputs.skip-publish != true
+        if: success()
         run: |
           echo "# Documentation successfully deployed 🚀" >> "${GITHUB_STEP_SUMMARY}"
           echo "" >> "${GITHUB_STEP_SUMMARY}"
