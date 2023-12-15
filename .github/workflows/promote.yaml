@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
+  verify-build:
     name: Verify build integrity
     uses: ./.github/workflows/build.yaml
     permissions:
@@ -18,13 +18,26 @@ jobs:
       security-events: write
       actions: read
 
+  verify-docs:
+    name: Verify documentation
+    uses: ./.github/workflows/docs.yaml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    with:
+      skip-publish: true
+
   promote:
     name: Promote to Master
     runs-on: ubuntu-latest
-    environment: master
     if: success()
-    needs:
-      - verify
+    needs: [verify-build, verify-docs]
+
+    environment:
+      name: master
+      url: https://github.com/${{github.repository}}/tree/master
+
     steps:
       - name: Checkout develop
         uses: actions/checkout@v3
@@ -51,7 +64,7 @@ jobs:
           sha1=$(git rev-parse --short HEAD)
           echo '# ⏩ Accepted changes from `develop` into `master`'  >> "${GITHUB_STEP_SUMMARY}"
           echo ''                                                   >> "${GITHUB_STEP_SUMMARY}"
-          echo '${{github.sha}} is the new HEAD of `master`'        >> "${GITHUB_STEP_SUMMARY}"
+          echo '[${{github.sha}}] is the new HEAD of `master`'      >> "${GITHUB_STEP_SUMMARY}"
           echo ''                                                   >> "${GITHUB_STEP_SUMMARY}"
           echo '## Summary'                                         >> "${GITHUB_STEP_SUMMARY}"
           echo ''                                                   >> "${GITHUB_STEP_SUMMARY}"
@@ -67,6 +80,7 @@ jobs:
             --pretty='format:| [`%h`](https://github.com/${{github.repository}}/commit/%h) | %s |' \
             --no-show-signature                                                \
             ${old_sha1}..${new_sha1} >> "${GITHUB_STEP_SUMMARY}"
+          echo '[${{github.sha}}]: https://github.com/${{github.repository}}/commit/${{github.sha}}' >> "${GITHUB_STEP_SUMMARY}"
 
       - name: Summarize Failure
         if: failure()
