@@ -19,7 +19,7 @@ runs:
   using: "composite"
   steps:
     - name: Prepare Cache
-      uses: Swatinem/rust-cache@v2
+      uses: bitwizeshift/action-rust-cache@v2
       with:
         shared-key: ${{ inputs.cache-key }}
 
