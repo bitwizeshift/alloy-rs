@@ -16,7 +16,7 @@ runs:
         path: .cargo/bin/${{ inputs.target }}
         key: cargo-install-${{ inputs.target }}
 
-    - name: Update git submodules
+    - name: Install cargo binary
       if: steps.cargo-install.outputs.cache-hit != 'true'
       shell: bash
       run: |
