@@ -52,6 +52,14 @@ jobs:
         with:
           output-file: target/doc/licenses.html
 
+      # Some of the doc generation steps above create the directories with
+      # 0750 for permissions -- which is triggering warning annotations in the
+      # workflow summaries. Manually converting this to 0755 helps to suppress
+      # this.
+      - name: Fix permissions
+        run: |
+          find ./target -type d -exec chmod 0755 {} \;
+
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v1
         with:
