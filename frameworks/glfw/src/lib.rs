@@ -14,6 +14,7 @@ pub mod c {
   #![allow(missing_docs)]
   #![allow(unused_results)]
   #![allow(rust_2018_idioms)]
+  #![allow(rustdoc::broken_intra_doc_links)]
   #[doc(inline)]
   pub use glfw_sys::*;
 }
