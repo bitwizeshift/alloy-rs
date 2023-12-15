@@ -1,0 +1,26 @@
+name: npm-install
+description: "Performs an npm install for the specified component, with caching"
+
+inputs:
+  target:
+    required: true
+    description: "The component to install"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Cache installation
+      id: npm-install
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: npm-install-${{ inputs.target }}
+
+    - name: Install markdownlint
+      if: steps.npm-install.outputs.cache-hit != 'true'
+      shell: bash
+      run: npm install ${{ inputs.target }}
+
+    - name: Update PATH
+      shell: bash
+      run: echo "$(pwd)/node_modules/.bin" >> "${GITHUB_PATH}"

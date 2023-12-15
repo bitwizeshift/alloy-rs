@@ -5,6 +5,10 @@ inputs:
   target:
     required: true
     description: "The component to install"
+  git-repo:
+    required: false
+    description: "The git repo address to install"
+    default: ""
 
 runs:
   using: "composite"
@@ -19,9 +23,18 @@ runs:
     - name: Install cargo binary
       if: steps.cargo-install.outputs.cache-hit != 'true'
       shell: bash
+      env:
+        CARGO_NET_GIT_FETCH_WITH_CLI: "true"
       run: |
+        remaining="--git ${{ inputs.git-repo }}"
+        if [[ -z "${{ inputs.git-repo }}" ]]; then
+          remaining="--locked ${{ inputs.target }}"
+        fi
+
         mkdir -p .cargo/bin
-        cargo install --locked ${{ inputs.target }} --root ./.cargo
+        cargo install                                                          \
+          --root ./.cargo                                                      \
+          ${remaining}
 
     - name: Update PATH
       shell: bash

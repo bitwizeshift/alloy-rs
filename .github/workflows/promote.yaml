@@ -57,7 +57,6 @@ jobs:
           git reset --hard develop
           git push origin master
 
-
       - name: Summarize Success
         if: success()
         run: |
