@@ -5,18 +5,21 @@ runs:
   using: "composite"
   steps:
     - name: Cache installation
-      id: cargo-install
+      id: cargo-install-gh-annotation
       uses: actions/cache@v3
       with:
         path: .cargo/bin/cargo-github-annotation
         key: cargo-install-cargo-github-annotation
 
     - name: Install cargo-github-annotation
+      if: steps.cargo-install-gh-annotation.outputs.cache-hit != 'true'
       env:
         CARGO_NET_GIT_FETCH_WITH_CLI: "true"
       shell: bash
       run: |
-        cargo install --git https://github.com/bitwizeshift/cargo-github-annotation
+        cargo install                                                          \
+          --root ./.cargo                                                      \
+          --git https://github.com/bitwizeshift/cargo-github-annotation
 
     - name: Update PATH
       shell: bash
