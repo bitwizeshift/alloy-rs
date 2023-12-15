@@ -4,6 +4,25 @@ description: "Performs a cargo build, with caching"
 runs:
   using: "composite"
   steps:
+    - name: Cache installation
+      id: cargo-install
+      uses: actions/cache@v3
+      with:
+        path: .cargo/bin/cargo-github-annotation
+        key: cargo-install-cargo-github-annotation
+
+    - name: Install cargo-github-annotation
+      env:
+        CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+      shell: bash
+      run: |
+        cargo install --git https://github.com/bitwizeshift/cargo-github-annotation
+
+    - name: Update PATH
+      shell: bash
+      run: |
+        echo "$(pwd)/.cargo/bin" >> "${GITHUB_PATH}"
+
     - name: Cache build
       id: cargo-build
       uses: actions/cache@v3
@@ -15,4 +34,5 @@ runs:
       if: steps.cargo-build.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        cargo build --verbose
+        cargo build --verbose --message-format json                            \
+          | cargo-github-annotation
