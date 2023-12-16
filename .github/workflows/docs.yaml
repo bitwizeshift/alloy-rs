@@ -36,14 +36,14 @@ jobs:
         uses: taiki-e/install-action@cargo-llvm-cov
 
       - name: Install markdownlint
-        uses: ./github/actions/npm-install
+        uses: ./.github/actions/npm-install
         with:
           target: markdownlint-cli
 
       - name: Install markdownlint-github-annotation
-        uses: ./github/actions/cargo-install
+        uses: ./.github/actions/cargo-install
         with:
-          target: cargo-github-annotation
+          target: markdownlint-github-annotation
           git-repo: https://github.com/bitwizeshift/markdownlint-github-annotation
 
       - name: Lint Markdown
