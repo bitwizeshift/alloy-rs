@@ -5,6 +5,10 @@ inputs:
     default: dev
     description: "The build profile to use"
     required: false
+  target:
+    default: ''
+    description: "The target architecture to build"
+    required: false
 
 runs:
   using: "composite"
@@ -26,8 +30,14 @@ runs:
       if: steps.cargo-build.outputs.cache-hit != 'true'
       shell: bash
       run: |
+        target_arg="--target ${{ inputs.target }}"
+        if [[ -z "${{ inputs.target }}" ]]; then
+          target_arg=""
+        fi
+
         cargo build                                                            \
           --verbose                                                            \
           --profile ${{ inputs.profile }}                                      \
+          ${target_arg}                                                        \
           --message-format json                                                \
           | cargo-github-annotation
