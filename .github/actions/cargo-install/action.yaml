@@ -18,7 +18,7 @@ runs:
       uses: actions/cache@v3
       with:
         path: .cargo/bin/${{ inputs.target }}
-        key: cargo-install-${{ inputs.target }}
+        key: cargo-install-${{ runner.os }}-${{ inputs.target }}
 
     - name: Install cargo binary
       if: steps.cargo-install.outputs.cache-hit != 'true'
