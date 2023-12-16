@@ -1,5 +1,10 @@
 name: cargo-build
 description: "Performs a cargo build, with caching"
+inputs:
+  profile:
+    default: dev
+    description: "The build profile to use"
+    required: false
 
 runs:
   using: "composite"
@@ -15,11 +20,14 @@ runs:
       uses: actions/cache@v3
       with:
         path: target
-        key: cargo-build-${{ runner.os }}-${{ hashFiles('frameworks/**/*.rs', 'alloy/**/*.rs', 'example/**/*.rs', '**/Cargo.toml', 'Cargo.toml') }}
+        key: cargo-build-${{ inputs.profile }}-${{ runner.os }}-${{ hashFiles('frameworks/**/*.rs', 'alloy/**/*.rs', 'example/**/*.rs', '**/Cargo.toml', 'Cargo.toml') }}
 
     - name: Build
       if: steps.cargo-build.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        cargo build --verbose --message-format json                            \
+        cargo build                                                            \
+          --verbose                                                            \
+          --profile ${{ inputs.profile }}                                      \
+          --message-format json                                                \
           | cargo-github-annotation
