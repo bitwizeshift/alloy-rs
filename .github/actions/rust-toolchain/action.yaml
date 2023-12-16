@@ -14,6 +14,10 @@ inputs:
     required: false
     description: "Additional components to install, separated by spaces. e.g. 'clippy', 'rustfmt', etc."
     default: ''
+  target:
+    required: false
+    description: "Sets the target build architecture to compile for"
+    default: ''
 
 runs:
   using: "composite"
@@ -28,6 +32,12 @@ runs:
       run: |
         rustup toolchain install ${{ inputs.rust }} --profile minimal --no-self-update
         rustup default ${{ inputs.rust }}
+
+    - name: Set target
+      shell: bash
+      if: inputs.target != ''
+      run: |
+        rustup target add ${{ inputs.target }}
 
     - name: Install Rust Components
       shell: bash
