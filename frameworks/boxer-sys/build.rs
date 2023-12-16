@@ -10,14 +10,17 @@ fn main() {
 fn compile_boxer() {
   let mut cfg = cmake::Config::new("src");
 
-  cfg
-    .define("CMAKE_INSTALL_LIBDIR", "lib")
-    .define("BUILD_SHARED_LIBS", "1");
+  cfg.define("CMAKE_INSTALL_LIBDIR", "lib");
 
+  if cfg!(target_os = "macos") {
+    cfg.define("BUILD_SHARED_LIBS", "0");
+    build::rustc_link_lib!("static=Boxer");
+  } else {
+    cfg.define("BUILD_SHARED_LIBS", "1");
+    build::rustc_link_lib!("dylib=Boxer");
+  }
   let dst = cfg.build();
-
-  println!("cargo:rustc-link-search={}", dst.join("lib").display());
-  println!("cargo:rustc-link-lib=dylib=Boxer");
+  build::rustc_link_search!("native={}", dst.join("lib").display());
 }
 
 // Generates bindgen bindings for GLFW.
