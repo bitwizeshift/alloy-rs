@@ -1,0 +1,42 @@
+name: Close Pull Requests
+on:
+  pull_request_target:
+    types: [opened, reopened]
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Leave comment
+        uses: ./.github/actions/github-comment
+        with:
+          message: |
+            👋🏻 Hi, thank you for your interest in this project.
+
+            I sincerely appreciate your enthusiasm and eagerness to contribute,
+            as public contributions are fundamental to the open-source community.
+
+            However, at this moment, I am **not actively accepting external
+            contributions**. This project primarily exists to experiment and
+            learn about game engine design in Rust -- and as such has a much
+            looser focus and roadmap that is currently aligned with specific
+            goals.
+
+            It is possible that this may change in the future; so please consider
+            starring this project to keep an eye on future updates for
+            opportunities to contribute and collaborate. Your support and
+            understanding are highly valued.
+
+            This project does have
+            [💬 Github Discussion](https://github.com/{{github.repo}}/discussions)
+            enabled if there are suggestions for improvements or reasonable
+            feature requests.
+
+            Thank you! 🙇‍♂️
+
+      - name: Close pull request
+        uses: ./.github/actions/github-close-pr
