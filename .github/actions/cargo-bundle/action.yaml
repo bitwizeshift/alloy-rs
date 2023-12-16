@@ -1,0 +1,56 @@
+name: cargo-bundle
+description: "Performs a cargo bundle step, with caching"
+inputs:
+  profile:
+    default: dev
+    description: "The build profile to use"
+    required: false
+  path:
+    description: "Path to the binary that is being bundled"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install cargo-bundle
+      uses: ./.github/actions/cargo-install
+      with:
+        target: cargo-bundle
+
+    - name: Bundle
+      id: bundle
+      shell: bash
+      working-directory: ${{ inputs.path }}
+      run: |
+        cargo bundle
+        if [[ "${{ inputs.profile }}" = "dev" ]]; then
+          target_type="debug"
+        else
+          target_type="${{ inputs.profile }}"
+        fi
+        target_dir=${{ github.workspace }}/target/${target_type}
+        echo "Searching in '${target_dir}'"
+        app_dir=$(find "${target_dir}" -type d -name '*.app' | head -n 1)
+        app_name=$(basename "${app_dir}")
+        cp -r ${VULKAN_SDK}/lib/libvulkan* ${app_dir}/Contents/Frameworks
+        cp -r ${VULKAN_SDK}/lib/libMoltenVK* ${app_dir}/Contents/Frameworks
+        install_name_tool -add_rpath "@executable_path/../Frameworks" ${app_dir}/Contents/MacOS/*
+
+        bundle_dir=$(cd ${app_dir}/..; pwd)
+        mkdir "${target_dir}/artifacts"
+        tar                                                                    \
+          --create                                                             \
+          --verbose                                                            \
+          --file ${target_dir}/artifacts/${app_name}.tar                       \
+          --directory "${bundle_dir}"                                          \
+          "${app_name}"
+        echo "artifact_path=${target_dir}/artifacts" >> ${GITHUB_OUTPUT}
+        echo "artifact_name=${app_name}" >> ${GITHUB_OUTPUT}
+
+    - name: Upload Bundle Artifact
+      uses: actions/upload-artifact@v1
+      if: steps.bundle.outcome == 'success'
+      continue-on-error: true
+      with:
+        name: ${{ steps.bundle.outputs.artifact_name }}
+        path: ${{ steps.bundle.outputs.artifact_path }}

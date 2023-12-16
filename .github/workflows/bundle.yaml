@@ -1,0 +1,49 @@
+name: Bundle Binaries
+on:
+  workflow_run:
+    workflows: [ build ]
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: "The build profile to use"
+        required: false
+        default: dev
+        options:
+          - dev
+          - release
+        type: choice
+  workflow_call:
+    inputs:
+      profile:
+        description: "The build profile to use"
+        default: dev
+        required: false
+        type: string
+
+jobs:
+  example-app-macos:
+    name: Bundle MacOS Binary
+    runs-on: macos-latest
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Prepare runner
+        uses: ./.github/actions/prepare-runner
+
+      - name: Install toolchain
+        uses: ./.github/actions/rust-toolchain
+
+      - name: Build
+        uses: ./.github/actions/cargo-build
+        with:
+          profile: ${{ inputs.profile }}
+
+      - name: Bundle
+        uses: ./.github/actions/cargo-bundle
+        with:
+          profile: ${{ inputs.profile }}
+          path: example
