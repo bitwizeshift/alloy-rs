@@ -2,12 +2,14 @@
 [package]
 name = "example"
 description = "A small demo using the alloy-rs engine"
-version.workspace = true
-authors.workspace = true
-license.workspace = true
-repository.workspace = true
+version = "0.1.0"
+authors = [
+  "Matthew Rodusek <bitwizeshift@users.noreply.github.com>"
+]
+license = "MIT OR Apache-2"
 categories = []
-keywords = []
+keywords = ["example", "demo"]
+repository.workspace = true
 edition.workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -22,3 +24,26 @@ toast = { path = "../frameworks/toast" }
 
 [build-dependencies]
 build = { path = "../frameworks/build" }
+
+[package.metadata.bundle]
+name = "AlloyExample"
+identifier = "com.rodusek.alloy.example"
+icon = ["assets/icon/32x32.png", "assets/icon/128x128.png", "assets/icon/128x128@2x.png"]
+version = "1.0.0"
+resources = ["assets", "images/**/*.png", "secrets/public_key.txt"]
+copyright = "Copyright (c) Matthew Rodusek 2023. All rights reserved."
+category = "Developer Tool"
+short_description = "An example alloy-rs application."
+long_description = """
+An example alloy-rs application illustrating some of the features of the
+engine.
+"""
+osx_frameworks = [
+  "CoreAudio",
+  "AudioToolbox",
+  "CoreFoundation",
+  "Cocoa",
+  "IOKit",
+  "OpenGL",
+]
+osx_url_schemes = ["com.rodusek.alloy.example"]
