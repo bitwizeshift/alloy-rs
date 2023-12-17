@@ -393,3 +393,48 @@ macro_rules! current_location {
     }
   };
 }
+
+/// A simple macro that ignores all of its contents and does nothing.
+///
+/// # Use
+///
+/// This macro exists to enable expansion of repeat or optional rule groups
+/// that may not explicitly make use of that argument. For example, sometimes
+/// the conditional inclusion of a token might want to generate something not
+/// using that meta-variable -- but expansion requires at least one meta-variable
+/// from the group to be specified to not be ambiguous. With this macro, you can
+/// still "use" the meta-variable without actually actively using it.
+///
+/// # Example
+///
+/// ```
+/// # use foundation::phantom_fragment;
+/// macro_rules! generate{
+///   ($A:ident, $($B:ident)?) => {
+///     $(
+///       phantom_fragment!($B);
+///       impl $A {
+///         // When $B is present, define this function without using $B.
+///         fn do_something(&self) { /* ... */ }
+///       }
+///     )?
+///   }
+/// }
+/// ```
+#[macro_export]
+macro_rules! phantom_fragment {
+  ($($_:tt)*) => {};
+  ($_:block) => {};
+  ($_:expr) => {};
+  ($_:ident) => {};
+  ($_:item) => {};
+  ($_:lifetime) => {};
+  ($_:literal) => {};
+  ($_:meta) => {};
+  ($_:pat) => {};
+  ($_:pat_param) => {};
+  ($_:path) => {};
+  ($_:stmt) => {};
+  ($_:ty) => {};
+  ($_:vis) => {};
+}
