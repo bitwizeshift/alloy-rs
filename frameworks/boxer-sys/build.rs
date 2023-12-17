@@ -2,6 +2,13 @@
 //! from boxer.
 
 fn main() {
+  build::rerun_if_env_changed!("CC");
+  build::rerun_if_env_changed!("CXX");
+  build::rerun_if_changed!("src/boxer_linux.cpp");
+  build::rerun_if_changed!("src/boxer_mac.mm");
+  build::rerun_if_changed!("src/boxer_win.cpp");
+  build::rerun_if_changed!("src/boxer.h");
+
   compile_boxer();
   generate_boxer_bindings();
 }
@@ -28,11 +35,6 @@ fn compile_boxer() {
 fn generate_boxer_bindings() {
   use std::env;
   use std::path::PathBuf;
-
-  build::rerun_if_changed!("src/boxer_linux.cpp");
-  build::rerun_if_changed!("src/boxer_mac.mm");
-  build::rerun_if_changed!("src/boxer_win.cpp");
-  build::rerun_if_changed!("src/boxer.h");
 
   let mut builder = bindgen::Builder::default()
     .header("src/boxer.h")

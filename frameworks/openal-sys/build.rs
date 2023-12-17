@@ -2,6 +2,11 @@ use std::env;
 use std::path::PathBuf;
 
 fn main() {
+  build::rerun_if_env_changed!("CC");
+  build::rerun_if_env_changed!("CXX");
+  build::rerun_if_changed!("../../3rd-party/openal-soft");
+  build::rerun_if_changed!("../../.gitmodules");
+
   compile_openal();
   generate_openal_bindings();
 }

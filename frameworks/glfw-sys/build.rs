@@ -2,6 +2,11 @@
 //! from GLFW.
 
 fn main() {
+  build::rerun_if_env_changed!("CC");
+  build::rerun_if_env_changed!("CXX");
+  build::rerun_if_changed!("../../3rd-party/glfw");
+  build::rerun_if_changed!("../../.gitmodules");
+
   compile_glfw();
   generate_glfw_bindings();
 }

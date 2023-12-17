@@ -2,6 +2,11 @@ use std::env;
 use std::path::PathBuf;
 
 fn main() {
+  build::rerun_if_env_changed!("CC");
+  build::rerun_if_env_changed!("CXX");
+  build::rerun_if_changed!("../../3rd-party/cimgui");
+  build::rerun_if_changed!("../../.gitmodules");
+
   compile_imgui();
   generate_imgui_bindings();
 }

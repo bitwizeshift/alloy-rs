@@ -2,6 +2,9 @@ use std::env;
 use std::path::PathBuf;
 
 fn main() {
+  build::rerun_if_changed!("../../3rd-party/vulkan-headers");
+  build::rerun_if_changed!("../../.gitmodules");
+
   link_vulkan();
   generate_vulkan_bindings();
 }
