@@ -160,7 +160,7 @@ impl Window {
   /// This will panic if `window` is `null`.
   #[inline]
   pub fn from_c(window: *mut c::GLFWwindow) -> Self {
-    debug_assert!(window != std::ptr::null_mut());
+    debug_assert!(!window.is_null());
     Self(window)
   }
 

@@ -58,10 +58,16 @@ impl Drop for Device {
 
 /// Queries whether OpenAL supports a global extension
 pub fn has_extension(name: &CStr) -> bool {
+  // SAFETY:
+  //   This function is only "unsafe" because it is a C function, but this is
+  //   called correctly as per the AL public API.
   unsafe { c::alcIsExtensionPresent(std::ptr::null_mut(), name.as_ptr()) != (c::AL_FALSE as i8) }
 }
 
 /// Gets a string for a named constant
 pub fn get_string(constant: i32) -> &'static CStr {
-  unsafe { &CStr::from_ptr(c::alcGetString(std::ptr::null_mut(), constant)) }
+  // SAFETY:
+  //   The safety here is delegated to `c::alcGetString`, which guarantees that
+  //   a string is returned and not null.
+  unsafe { CStr::from_ptr(c::alcGetString(std::ptr::null_mut(), constant)) }
 }

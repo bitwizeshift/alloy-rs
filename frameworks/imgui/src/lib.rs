@@ -24,6 +24,12 @@ pub mod c {
 /// The context is the default setup for Imgui.
 pub struct Context(*mut c::ImGuiContext);
 
+impl Default for Context {
+  fn default() -> Self {
+    Self::new()
+  }
+}
+
 impl Context {
   /// Constructs an ImGui context
   pub fn new() -> Self {

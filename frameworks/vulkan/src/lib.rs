@@ -26,13 +26,12 @@ pub fn count_extension_properties() -> usize {
   let mut count: u32 = 0;
 
   // SAFETY: This is only unsafe since it's a C call
-  let r = unsafe {
+  let _ = unsafe {
     c::vkEnumerateInstanceExtensionProperties(
       std::ptr::null(),
       &mut count as *mut u32,
       std::ptr::null_mut(),
-    );
+    )
   };
-  let _ = r;
   count as usize
 }

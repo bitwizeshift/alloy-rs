@@ -58,7 +58,7 @@ pub enum Buttons {
 }
 
 impl Buttons {
-  fn to_c(self) -> c::BoxerButtons {
+  fn to_c(&self) -> c::BoxerButtons {
     match self {
       Self::OK => c::BoxerButtons_OKButtons,
       Self::OKCancel => c::BoxerButtons_OKCancelButtons,
@@ -77,7 +77,7 @@ enum Style {
 }
 
 impl Style {
-  fn to_c(self) -> c::BoxerStyle {
+  fn to_c(&self) -> c::BoxerStyle {
     match self {
       Self::Info => c::BoxerStyle_InfoStyle,
       Self::Warning => c::BoxerStyle_WarningStyle,

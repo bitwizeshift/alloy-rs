@@ -54,8 +54,12 @@ pub fn cstring_from_str(string: &str) -> CString {
 /// # Arguments
 ///
 /// * `slice` - a slice of [`c_char`] that ends with a nul-terminator.
+///
+/// # Safety
+///
+/// This function requires that `slice` be nul-terminated.
 #[inline]
-pub unsafe fn cstr_from_char_slice(slice: &[c_char]) -> &CStr {
+pub const unsafe fn cstr_from_char_slice(slice: &[c_char]) -> &CStr {
   // SAFETY: c_char (i8) and u8 are interconvertible
   let s = unsafe { &*(slice as *const _ as *const [u8]) };
 
@@ -93,6 +97,16 @@ pub const fn _null_terminated_length_b(bytes: &[u8], index: usize, count: usize)
 
 /// Prepares a suitably aligned pointer for elements of type `T` to write output
 /// to, which will construct a vector from it.
+///
+/// # Arguments
+///
+/// * `size` - the number of elements to create storage for
+/// * `f` - the function to populate the storage with data.
+///
+/// # Safety
+///
+/// This function has the same safety contract as `f`; if `f` is safe for writing
+/// only `size` entries in the created pointer, then this function will be safe.
 pub unsafe fn read_transparent_out_vec<T, F>(size: usize, f: F) -> Vec<T>
 where
   T: Transparent,
@@ -112,6 +126,16 @@ where
 
 /// Prepares a suitably aligned pointer for elements of type `T` to write output
 /// to, which will construct a vector from it.
+///
+/// # Arguments
+///
+/// * `size` - the number of elements to create storage for
+/// * `f` - the function to populate the storage with data.
+///
+/// # Safety
+///
+/// This function has the same safety contract as `f`; if `f` is safe for writing
+/// only `size` entries in the created pointer, then this function will be safe.
 pub unsafe fn read_out_vec<T, F>(size: usize, f: F) -> Vec<T>
 where
   F: Fn(*mut T) -> *mut T,
@@ -124,7 +148,7 @@ where
 
   let out = (f)(mem.cast::<T>());
 
-  Vec::from_raw_parts(out as *mut T, size, size)
+  Vec::from_raw_parts(out, size, size)
 }
 
 /// Transparent is a trait that indicates that the implementor is a transparent
@@ -147,6 +171,13 @@ where
 /// which is licensed under ZLib OR MIT OR Apache-2. The idea has been adapted
 /// for this library's specific needs.
 ///
+/// # Safety
+///
+/// The safety contract for this type requires two things:
+///
+/// * The wrapper type implementing this must be `#[repr(transparent)]`
+/// * The implementation must not override the function definitions in the trait.
+///
 /// [`bytemuck`]: https://crates.io/crates/bytemuck
 pub unsafe trait Transparent {
   /// The type that is wrapped by the Transparent impl.
@@ -161,7 +192,7 @@ pub unsafe trait Transparent {
   /// * The wrapper type implementing this must be `#[repr(transparent)]`
   /// * This function must not be implemented in `impl`s.
   #[inline]
-  fn from_ref<'a>(wrapped: &'a Self::Wrapped) -> &'a Self {
+  fn from_ref(wrapped: &Self::Wrapped) -> &Self {
     debug_assert!(
       std::mem::size_of::<*const Self::Wrapped>() == std::mem::size_of::<*const Self>()
     );
@@ -182,7 +213,7 @@ pub unsafe trait Transparent {
   /// * The wrapper type implementing this must be `#[repr(transparent)]`
   /// * This function must not be implemented in `impl`s.
   #[inline]
-  fn from_ref_mut<'a>(wrapped: &'a mut Self::Wrapped) -> &'a mut Self {
+  fn from_ref_mut(wrapped: &mut Self::Wrapped) -> &mut Self {
     debug_assert!(std::mem::size_of::<*mut Self::Wrapped>() == std::mem::size_of::<*mut Self>());
     unsafe {
       let ptr = wrapped as *mut Self::Wrapped;
@@ -200,7 +231,7 @@ pub unsafe trait Transparent {
   /// * The wrapper type implementing this must be `#[repr(transparent)]`
   /// * This function must not be implemented in `impl`s.
   #[inline]
-  fn as_ref<'a>(&'a self) -> &'a Self::Wrapped {
+  fn as_ref(&self) -> &Self::Wrapped {
     debug_assert!(
       std::mem::size_of::<*const Self::Wrapped>() == std::mem::size_of::<*const Self>()
     );
@@ -219,7 +250,7 @@ pub unsafe trait Transparent {
   /// * The wrapper type implementing this must be `#[repr(transparent)]`
   /// * This function must not be implemented in `impl`s.
   #[inline]
-  fn as_ref_mut<'a>(&'a mut self) -> &'a mut Self::Wrapped {
+  fn as_ref_mut(&mut self) -> &mut Self::Wrapped {
     debug_assert!(std::mem::size_of::<*mut Self::Wrapped>() == std::mem::size_of::<*mut Self>());
     unsafe {
       let wrapped: *mut Self::Wrapped = std::mem::transmute_copy(&self);
@@ -324,7 +355,7 @@ unsafe impl Transparent for Uuid {
 /// log!("logging something with source location...");
 /// # }
 /// ```
-#[derive(Eq, PartialEq, PartialOrd, Ord)]
+#[derive(Eq, PartialEq, PartialOrd, Ord, Default)]
 pub struct SourceLocation {
   /// The path to the file
   pub file: &'static str,
@@ -332,16 +363,6 @@ pub struct SourceLocation {
   pub line: u32,
   /// The column
   pub column: u32,
-}
-
-impl Default for SourceLocation {
-  fn default() -> Self {
-    Self {
-      file: "",
-      line: 0,
-      column: 0,
-    }
-  }
 }
 
 impl std::fmt::Display for SourceLocation {
