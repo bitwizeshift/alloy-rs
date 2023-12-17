@@ -202,6 +202,16 @@ macro_rules! rustc_link_arg_benches {
 /// For more information, see this [cargo reference].
 ///
 /// [cargo reference]: https://doc.rust-lang.org/cargo/reference/build-scripts.html#rustc-flags
+///
+/// # Examples
+///
+/// basic use:
+///
+/// ```rust
+/// # use build::rustc_flags;
+/// rustc_flags!("-lfoo");
+/// rustc_flags!(r#"-L"{}""#, "/lib")
+/// ```
 #[macro_export]
 macro_rules! rustc_flags {
   ($($tokens:tt)*) => {
@@ -234,8 +244,8 @@ macro_rules! rustc_flags {
 ///
 /// ```rust
 /// # use build::rustc_cfg;
-/// rustc_cfg!("abc");                 // allows #[cfg(abc)]
-/// rustc_cfg!("my_component=\"foo\"") // allows #[cfg(my_component="foo")]
+/// rustc_cfg!("abc");                        // allows #[cfg(abc)]
+/// rustc_cfg!(r#"my_component="{}""#, "foo") // allows #[cfg(my_component="foo")]
 /// ```
 #[macro_export]
 macro_rules! rustc_cfg   {
