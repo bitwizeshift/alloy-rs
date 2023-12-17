@@ -22,11 +22,8 @@ fn compile_glfw() {
     cfg.define("GLFW_BUILD_WAYLAND", "OFF").build()
   };
 
-  println!(
-    "cargo:rustc-link-search=native={}",
-    dst.join("lib").display()
-  );
-  println!("cargo:rustc-link-lib=static=glfw3");
+  build::rustc_link_search!("native={}", dst.join("lib").display());
+  build::rustc_link_lib!("static=glfw3");
 
   if cfg!(any(target_os = "macos", target_os = "ios")) {
     build::rustc_link_lib!("framework=Cocoa");
