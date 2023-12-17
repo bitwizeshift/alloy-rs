@@ -27,6 +27,10 @@ jobs:
       - name: Check format
         run: cargo fmt --all -- --check
 
+  audit:
+    name: Cargo Audit
+    uses: ./.github/workflows/audit.yaml
+
   check:
     name: Check Manifest
     runs-on: ubuntu-latest
