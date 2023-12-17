@@ -130,22 +130,6 @@ jobs:
           sarif_file: rust-clippy-results.sarif
           wait-for-processing: true
 
-  doctest:
-    name: Doctest
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Prepare runner
-        uses: ./.github/actions/prepare-runner
-
-      - name: Install toolchain
-        uses: ./.github/actions/rust-toolchain
-
-      - name: Doctest
-        run: cargo test --doc --verbose
-
   build:
     name: Build and Test
     runs-on: ${{ matrix.os }}
@@ -178,6 +162,10 @@ jobs:
       - name: Test
         id: test
         run: cargo test --verbose
+
+      - name: Doctest
+        if: contains(fromJSON('["success", "failure"]'), steps.test.conclusion)
+        run: cargo test --doc --verbose
 
       - name: Coverage
         uses: ./.github/actions/cargo-code-coverage
