@@ -35,7 +35,7 @@ jobs:
             if there are suggestions for improvements or reasonable feature
             requests.
 
-            [discussions]: https://github.com/{{github.repo}}/discussions
+            [discussions]: https://github.com/${{github.repository}}/discussions
 
             Thank you! 🙇‍♂️
 
