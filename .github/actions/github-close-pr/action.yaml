@@ -1,11 +1,6 @@
 name: github-close-pr
 description: "A tool for automatically closing pull requests"
 
-inputs:
-  message:
-    required: true
-    description: "The message to comment. This may contain "
-
 runs:
   using: "composite"
   steps:
