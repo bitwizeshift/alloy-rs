@@ -1,0 +1,90 @@
+name: Feature Request
+description: 💡 Create a feature request
+title: "[Feature Request]: "
+labels: ["feature-request", "triage"]
+assignees:
+  - bitwizeshift
+
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to suggest improvements for this project!
+
+        Before submitting a feature request, we encourage you to discuss your
+        idea with the community. Open a discussion in our
+        [community forum](https://github.com/bitwizeshift/alloy-rs/discussions)
+        to get feedback and gather support for your feature.
+
+        Please search for existing discussions to avoid duplication. If there is
+        already a similar request, consider adding your thoughts and votes to the
+        existing thread.
+
+  - type: input
+    id: feature-title
+    attributes:
+      label: Feature Title
+      description: A clear and concise title for your feature request.
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: |
+        Provide a detailed description of the feature you are proposing.
+        Include any relevant use cases, scenarios, or examples.
+    validations:
+      required: true
+
+  - type: input
+    id: use-case
+    attributes:
+      label: Use Case
+      description: |
+        Describe a specific use case or scenario where this feature would be
+        beneficial.
+    validations:
+      required: true
+
+  - type: input
+    id: benefits
+    attributes:
+      label: Benefits
+      description: |
+        Explain the benefits of implementing this feature. How will it enhance
+        the overall user experience or contribute to the project's goals?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: |
+        Have you considered any alternative solutions or workarounds?
+        If so, please describe them.
+    validations:
+      required: false
+
+  - type: input
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: |
+        Provide any additional information, links, or resources that may be
+        relevant to your feature request.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](../CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
+

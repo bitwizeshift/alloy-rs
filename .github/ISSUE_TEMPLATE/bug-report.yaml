@@ -1,0 +1,70 @@
+name: Bug Report
+description: 🪲 File a Bug report
+title: "[Bug]: "
+labels: ["bug", "triage"]
+assignees:
+  - bitwizeshift
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for taking the time to fill out this bug report!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Please describe what you experienced for the bug
+      placeholder: Tell us what you see!
+      value: A bug happened
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: "How do you trigger this bug? Please walk us through it step by step."
+      placeholder: |
+        1.
+        2.
+        3.
+        ...
+      render: bash
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: What did you expect to see happen?
+      description: |
+        Please describe what you were expecting to see.
+        Include sample inputs and outputs, if relevant. Leave empty if not applicable.
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: What did you actually see happen?
+      description: |
+        Please describe what you actually saw occur.
+        Include sample inputs and outputs, if relevant. Leave empty if not applicable.
+  - type: dropdown
+    id: systems
+    attributes:
+      label: What systems are you seeing the problem on?
+      multiple: true
+      options:
+        - macOS
+        - Windows
+        - Linux
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: |
+        Please copy and paste any relevant log output.
+        This will be automatically formatted into code, so no need for backticks.
+      render: raw
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](../CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
+
