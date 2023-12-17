@@ -165,11 +165,15 @@ jobs:
 
       - name: Test
         id: test
-        run: cargo test --verbose
+        run: |
+          ls -la $VULKAN_SDK/lib
+          cargo test --verbose
 
       - name: Doctest
         if: contains(fromJSON('["success", "failure"]'), steps.test.conclusion)
-        run: cargo test --doc --verbose
+        run: |
+          ls -la $VULKAN_SDK/lib
+          cargo test --doc --verbose
 
       - name: Coverage
         uses: ./.github/actions/cargo-code-coverage

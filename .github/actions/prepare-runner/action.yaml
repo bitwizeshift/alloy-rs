@@ -118,6 +118,7 @@ runs:
         echo VK_ICD_FILENAMES="$VULKAN_SDK/etc/vulkan/icd.d/MoltenVK_icd.json"  >> "${GITHUB_ENV}"
         echo VK_LAYER_PATH="$VULKAN_SDK/share/vulkan/explicit_layer.d"  >> "${GITHUB_ENV}"
         echo "$VULKAN_SDK/bin"  >> "${GITHUB_PATH}"
+        ls -la $VULKAN_SDK/lib
 
     - name: Checkout 3rd-party
       uses: ./.github/actions/checkout
