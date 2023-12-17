@@ -15,6 +15,7 @@ pub mod c {
   #![allow(unused_results)]
   #![allow(rust_2018_idioms)]
   #![allow(rustdoc::broken_intra_doc_links)]
+  #![allow(clippy::all)]
   #[doc(inline)]
   pub use glfw_sys::*;
 }

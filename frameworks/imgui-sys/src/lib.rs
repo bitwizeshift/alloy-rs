@@ -11,6 +11,7 @@
 #![allow(unused_results)]
 #![allow(rust_2018_idioms)]
 #![allow(rustdoc::broken_intra_doc_links)]
+#![allow(clippy::all)]
 include!(concat!(env!("OUT_DIR"), "/imgui.rs"));
 
 pub mod backend {
