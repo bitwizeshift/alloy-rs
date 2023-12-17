@@ -15,6 +15,7 @@ fn compile_boxer() {
   if cfg!(target_os = "macos") {
     cfg.define("BUILD_SHARED_LIBS", "0");
     build::rustc_link_lib!("static=Boxer");
+    build::rustc_link_lib!("framework=Cocoa");
   } else {
     cfg.define("BUILD_SHARED_LIBS", "1");
     build::rustc_link_lib!("dylib=Boxer");
