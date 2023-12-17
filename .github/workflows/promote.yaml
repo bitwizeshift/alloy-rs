@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: Checkout develop
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.WORKFLOW_GIT_ACCESS_TOKEN }}
           fetch-depth: 0
