@@ -37,13 +37,22 @@ jobs:
       - name: Install toolchain
         uses: ./.github/actions/rust-toolchain
 
+      - name: Select profile
+        id: select
+        run: |
+          if [[ -z "${{ inputs.profile }}" ]]; then
+            echo "profile=dev" >> "${GITHUB_OUTPUT}"
+          else
+            echo "profile=${{ inputs.profile }}" >> "${GITHUB_OUTPUT}"
+          fi
+
       - name: Build
         uses: ./.github/actions/cargo-build
         with:
-          profile: ${{ inputs.profile }}
+          profile: ${{ steps.select.outputs.profile }}
 
       - name: Bundle
         uses: ./.github/actions/cargo-bundle
         with:
-          profile: ${{ inputs.profile }}
+          profile: ${{ steps.select.outputs.profile }}
           path: example
