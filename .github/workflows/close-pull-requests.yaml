@@ -4,6 +4,7 @@ on:
 
 jobs:
   run:
+    name: Close pull request
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
