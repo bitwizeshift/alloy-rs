@@ -1,0 +1,6 @@
+# This is largely just a flat codeowner file for automation purposes.
+# Information about the schema of this file can be found here:
+# * https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners#about-code-owners
+#
+
+*       @bitwizeshift
