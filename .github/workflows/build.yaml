@@ -6,6 +6,9 @@ on:
   #   branches: [master]
   workflow_call:
   workflow_dispatch:
+  # Run nightly checks to detect possible breakage due to upstream rustc changes
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   format:

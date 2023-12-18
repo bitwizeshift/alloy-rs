@@ -1,0 +1,38 @@
+name: Build
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  nightly-ci:
+    name: Nightly Integration
+    uses: ./.github/workflows/build.yaml
+
+  create-issue:
+    name: Create Github Issue
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs: [nightly-ci]
+    if: needs.nightly-ci.result == 'failure'
+    steps:
+    - name: Create issue if none exist
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        readarray -t exists < <(gh issue list --state open --label nightly-CI-failed --json number --jq '.[].number' --repo "$GITHUB_REPOSITORY")
+        if [[ -n "${exists[@]}" ]]; then
+          echo "Not opening another issue, already have ${#exists[@]} issue(s), latest at ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/issues/${exists[0]}."
+        else
+          cat << EOF | gh issue create \
+            --label CI-failed \
+            --title "CI run failed" \
+            --repo "$GITHUB_REPOSITORY" \
+            --body-file -
+          The nightly CI run on $(date +%F) failed to build failed.
+
+          - Check the logs at ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${{ github.run_id }}
+          - Update to the latest 'rustc-nightly' if necessary
+          - Investigate test run failures if any
+        EOF
+        fi
