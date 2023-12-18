@@ -46,3 +46,20 @@ pub use result::Error;
 
 #[doc(inline)]
 pub use result::Result;
+
+mod version;
+
+#[doc(inline)]
+pub use version::Version;
+
+/// A special constant representing the 1.0 vulkan version.
+pub const VERSION_1_0: Version = unsafe { Version::new_unchecked(0, 1, 0, 0) };
+
+/// A special constant representing the 1.1 vulkan version.
+pub const VERSION_1_1: Version = unsafe { Version::new_unchecked(0, 1, 1, 0) };
+
+/// A special constant representing the 1.2 vulkan version.
+pub const VERSION_1_2: Version = unsafe { Version::new_unchecked(0, 1, 2, 0) };
+
+/// A special constant representing the 1.3 vulkan version.
+pub const VERSION_1_3: Version = unsafe { Version::new_unchecked(0, 1, 3, 0) };
