@@ -11,8 +11,7 @@ fn main() {
 
 fn link_vulkan() {
   if let Some(search_path) = option_env!("VULKAN_SDK") {
-    build::rustc_link_search!("native={}/lib", search_path);
-    build::rustc_link_search!("dependency={}/lib", search_path);
+    build::rustc_link_search!("{}/lib", search_path);
   }
   build::rustc_link_lib!("dylib=vulkan");
 }
