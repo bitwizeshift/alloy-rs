@@ -63,3 +63,8 @@ pub const VERSION_1_2: Version = unsafe { Version::new_unchecked(0, 1, 2, 0) };
 
 /// A special constant representing the 1.3 vulkan version.
 pub const VERSION_1_3: Version = unsafe { Version::new_unchecked(0, 1, 3, 0) };
+
+mod bool32;
+
+#[doc(inline)]
+pub use bool32::*;
