@@ -7,6 +7,10 @@
 #![deny(rust_2018_idioms)]
 
 /// This module provides all that raw definitions of the C Vulkan library.
+///
+/// This is effectively a convenience alias to avoid needing to directly use and
+/// qualify [`vulkan_sys`] everywhere; but these logically are aliases of the
+/// same types.
 pub mod c {
   #![allow(non_upper_case_globals)]
   #![allow(non_camel_case_types)]
@@ -35,3 +39,10 @@ pub fn count_extension_properties() -> usize {
   };
   count as usize
 }
+mod result;
+
+#[doc(inline)]
+pub use result::Error;
+
+#[doc(inline)]
+pub use result::Result;
