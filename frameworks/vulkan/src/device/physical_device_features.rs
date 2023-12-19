@@ -6,38 +6,19 @@ use vulkan_sys as c;
 #[repr(transparent)]
 pub struct PhysicalDeviceFeatures(c::VkPhysicalDeviceFeatures);
 
-unsafe impl foundation::Transparent for PhysicalDeviceFeatures {
-  type Wrapped = c::VkPhysicalDeviceFeatures;
+foundation::define_transparent! {
+  PhysicalDeviceFeatures.0 => c::VkPhysicalDeviceFeatures
 }
 
-impl AsRef<c::VkPhysicalDeviceFeatures> for PhysicalDeviceFeatures {
-  fn as_ref(&self) -> &c::VkPhysicalDeviceFeatures {
-    &self.0
+impl From<c::VkPhysicalDeviceFeatures> for PhysicalDeviceFeatures {
+  fn from(value: c::VkPhysicalDeviceFeatures) -> Self {
+    Self(value)
   }
 }
 
-impl AsMut<c::VkPhysicalDeviceFeatures> for PhysicalDeviceFeatures {
-  fn as_mut(&mut self) -> &mut c::VkPhysicalDeviceFeatures {
-    &mut self.0
-  }
-}
-
-impl foundation::Take<c::VkPhysicalDeviceFeatures> for PhysicalDeviceFeatures {
-  unsafe fn take(self) -> c::VkPhysicalDeviceFeatures {
-    self.0
-  }
-}
-
-impl std::ops::Deref for PhysicalDeviceFeatures {
-  type Target = c::VkPhysicalDeviceFeatures;
-  fn deref(&self) -> &Self::Target {
-    &self.0
-  }
-}
-
-impl std::ops::DerefMut for PhysicalDeviceFeatures {
-  fn deref_mut(&mut self) -> &mut Self::Target {
-    &mut self.0
+impl From<PhysicalDeviceFeatures> for c::VkPhysicalDeviceFeatures {
+  fn from(value: PhysicalDeviceFeatures) -> Self {
+    *value.as_ref()
   }
 }
 
@@ -388,181 +369,125 @@ impl PhysicalDeviceFeatures {
 #[cfg(feature = "debug")]
 impl std::fmt::Debug for PhysicalDeviceFeatures {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    writeln!(f, "  robustBufferAccess: {}", self.robust_buffer_access())?;
-    writeln!(
-      f,
-      "  fullDrawIndexUint32: {}",
-      self.full_draw_index_uint32()
-    )?;
-    writeln!(f, "  imageCubeArray: {}", self.image_cube_array())?;
-    writeln!(f, "  independentBlend: {}", self.independent_blend())?;
-    writeln!(f, "  geometryShader: {}", self.geometry_shader())?;
-    writeln!(f, "  tessellationShader: {}", self.tessellation_shader())?;
-    writeln!(f, "  sampleRateShading: {}", self.sample_rate_shading())?;
-    writeln!(f, "  dualSrcBlend: {}", self.dual_src_blend())?;
-    writeln!(f, "  logicOp: {}", self.logic_op())?;
-    writeln!(f, "  multiDrawIndirect: {}", self.multi_draw_indirect())?;
-    writeln!(
-      f,
-      "  drawIndirectFirstInstance: {}",
-      self.draw_indirect_first_instance()
-    )?;
-    writeln!(f, "  depthClamp: {}", self.depth_clamp())?;
-    writeln!(f, "  depthBiasClamp: {}", self.depth_bias_clamp())?;
-    writeln!(f, "  fillModeNonSolid: {}", self.fill_mode_non_solid())?;
-    writeln!(f, "  depthBounds: {}", self.depth_bounds())?;
-    writeln!(f, "  wideLines: {}", self.wide_lines())?;
-    writeln!(f, "  largePoints: {}", self.large_points())?;
-    writeln!(f, "  alphaToOne: {}", self.alpha_to_one())?;
-    writeln!(f, "  multiViewport: {}", self.multi_viewport())?;
-    writeln!(f, "  samplerAnisotropy: {}", self.sampler_anisotropy())?;
-    writeln!(
-      f,
-      "  textureCompressionETC2: {}",
-      self.texture_compression_etc2()
-    )?;
-    writeln!(
-      f,
-      "  textureCompressionASTC_LDR: {}",
-      self.texture_compression_astc_ldr()
-    )?;
-    writeln!(
-      f,
-      "  textureCompressionBC: {}",
-      self.texture_compression_bc()
-    )?;
-    writeln!(
-      f,
-      "  occlusionQueryPrecise: {}",
-      self.occlusion_query_precise()
-    )?;
-    writeln!(
-      f,
-      "  pipelineStatisticsQuery: {}",
-      self.pipeline_statistics_query()
-    )?;
-    writeln!(
-      f,
-      "  vertexPipelineStoresAndAtomics: {}",
-      self.vertex_pipeline_stores_and_atomics()
-    )?;
-    writeln!(
-      f,
-      "  fragmentStoresAndAtomics: {}",
-      self.fragment_stores_and_atomics()
-    )?;
-    writeln!(
-      f,
-      "  shaderTessellationAndGeometryPointSize: {}",
-      self.shader_tessellation_and_geometry_point_size()
-    )?;
-    writeln!(
-      f,
-      "  shaderImageGatherExtended: {}",
-      self.shader_image_gather_extended()
-    )?;
-    writeln!(
-      f,
-      "  shaderStorageImageExtendedFormats: {}",
-      self.shader_storage_image_extended_formats()
-    )?;
-    writeln!(
-      f,
-      "  shaderStorageImageMultisample: {}",
-      self.shader_storage_image_multisample()
-    )?;
-    writeln!(
-      f,
-      "  shaderStorageImageReadWithoutFormat: {}",
-      self.shader_storage_image_read_without_format()
-    )?;
-    writeln!(
-      f,
-      "  shaderStorageImageWriteWithoutFormat: {}",
-      self.shader_storage_image_write_without_format()
-    )?;
-    writeln!(
-      f,
-      "  shaderUniformBufferArrayDynamicIndexing: {}",
-      self.shader_uniform_buffer_array_dynamic_indexing()
-    )?;
-    writeln!(
-      f,
-      "  shaderSampledImageArrayDynamicIndexing: {}",
-      self.shader_sampled_image_array_dynamic_indexing()
-    )?;
-    writeln!(
-      f,
-      "  shaderStorageBufferArrayDynamicIndexing: {}",
-      self.shader_storage_buffer_array_dynamic_indexing()
-    )?;
-    writeln!(
-      f,
-      "  shaderStorageImageArrayDynamicIndexing: {}",
-      self.shader_storage_image_array_dynamic_indexing()
-    )?;
-    writeln!(f, "  shaderClipDistance: {}", self.shader_clip_distance())?;
-    writeln!(f, "  shaderCullDistance: {}", self.shader_cull_distance())?;
-    writeln!(f, "  shaderFloat64: {}", self.shader_float64())?;
-    writeln!(f, "  shaderInt64: {}", self.shader_int64())?;
-    writeln!(f, "  shaderInt16: {}", self.shader_int16())?;
-    writeln!(
-      f,
-      "  shaderResourceResidency: {}",
-      self.shader_resource_residency()
-    )?;
-    writeln!(
-      f,
-      "  shaderResourceMinLod: {}",
-      self.shader_resource_min_lod()
-    )?;
-    writeln!(f, "  sparseBinding: {}", self.sparse_binding())?;
-    writeln!(
-      f,
-      "  sparseResidencyBuffer: {}",
-      self.sparse_residency_buffer()
-    )?;
-    writeln!(
-      f,
-      "  sparseResidencyImage2D: {}",
-      self.sparse_residency_image2d()
-    )?;
-    writeln!(
-      f,
-      "  sparseResidencyImage3D: {}",
-      self.sparse_residency_image3d()
-    )?;
-    writeln!(
-      f,
-      "  sparseResidency2Samples: {}",
-      self.sparse_residency2_samples()
-    )?;
-    writeln!(
-      f,
-      "  sparseResidency4Samples: {}",
-      self.sparse_residency4_samples()
-    )?;
-    writeln!(
-      f,
-      "  sparseResidency8Samples: {}",
-      self.sparse_residency8_samples()
-    )?;
-    writeln!(
-      f,
-      "  sparseResidency16Samples: {}",
-      self.sparse_residency16_samples()
-    )?;
-    writeln!(
-      f,
-      "  sparseResidencyAliased: {}",
-      self.sparse_residency_aliased()
-    )?;
-    writeln!(
-      f,
-      "  variableMultisampleRate: {}",
-      self.variable_multisample_rate()
-    )?;
-    writeln!(f, "  inheritedQueries: {}", self.inherited_queries())?;
-    Ok(())
+    f.debug_struct("PhysicalDeviceFeatures")
+      .field("robust_buffer_access", &self.robust_buffer_access())
+      .field("full_draw_index_uint32", &self.full_draw_index_uint32())
+      .field("image_cube_array", &self.image_cube_array())
+      .field("independent_blend", &self.independent_blend())
+      .field("geometry_shader", &self.geometry_shader())
+      .field("tessellation_shader", &self.tessellation_shader())
+      .field("sample_rate_shading", &self.sample_rate_shading())
+      .field("dual_src_blend", &self.dual_src_blend())
+      .field("logic_op", &self.logic_op())
+      .field("multi_draw_indirect", &self.multi_draw_indirect())
+      .field(
+        "draw_indirect_first_instance",
+        &self.draw_indirect_first_instance(),
+      )
+      .field("depth_clamp", &self.depth_clamp())
+      .field("depth_bias_clamp", &self.depth_bias_clamp())
+      .field("fill_mode_non_solid", &self.fill_mode_non_solid())
+      .field("depth_bounds", &self.depth_bounds())
+      .field("wide_lines", &self.wide_lines())
+      .field("large_points", &self.large_points())
+      .field("alpha_to_one", &self.alpha_to_one())
+      .field("multi_viewport", &self.multi_viewport())
+      .field("sampler_anisotropy", &self.sampler_anisotropy())
+      .field("texture_compression_etc2", &self.texture_compression_etc2())
+      .field(
+        "texture_compression_astc_ldr",
+        &self.texture_compression_astc_ldr(),
+      )
+      .field("texture_compression_bc", &self.texture_compression_bc())
+      .field("occlusion_query_precise", &self.occlusion_query_precise())
+      .field(
+        "pipeline_statistics_query",
+        &self.pipeline_statistics_query(),
+      )
+      .field(
+        "vertex_pipeline_stores_and_atomics",
+        &self.vertex_pipeline_stores_and_atomics(),
+      )
+      .field(
+        "fragment_stores_and_atomics",
+        &self.fragment_stores_and_atomics(),
+      )
+      .field(
+        "shader_tessellation_and_geometry_point_size",
+        &self.shader_tessellation_and_geometry_point_size(),
+      )
+      .field(
+        "shader_image_gather_extended",
+        &self.shader_image_gather_extended(),
+      )
+      .field(
+        "shader_storage_image_extended_formats",
+        &self.shader_storage_image_extended_formats(),
+      )
+      .field(
+        "shader_storage_image_multisample",
+        &self.shader_storage_image_multisample(),
+      )
+      .field(
+        "shader_storage_image_read_without_format",
+        &self.shader_storage_image_read_without_format(),
+      )
+      .field(
+        "shader_storage_image_write_without_format",
+        &self.shader_storage_image_write_without_format(),
+      )
+      .field(
+        "shader_uniform_buffer_array_dynamic_indexing",
+        &self.shader_uniform_buffer_array_dynamic_indexing(),
+      )
+      .field(
+        "shader_sampled_image_array_dynamic_indexing",
+        &self.shader_sampled_image_array_dynamic_indexing(),
+      )
+      .field(
+        "shader_storage_buffer_array_dynamic_indexing",
+        &self.shader_storage_buffer_array_dynamic_indexing(),
+      )
+      .field(
+        "shader_storage_image_array_dynamic_indexing",
+        &self.shader_storage_image_array_dynamic_indexing(),
+      )
+      .field("shader_clip_distance", &self.shader_clip_distance())
+      .field("shader_cull_distance", &self.shader_cull_distance())
+      .field("shader_float64", &self.shader_float64())
+      .field("shader_int64", &self.shader_int64())
+      .field("shader_int16", &self.shader_int16())
+      .field(
+        "shader_resource_residency",
+        &self.shader_resource_residency(),
+      )
+      .field("shader_resource_min_lod", &self.shader_resource_min_lod())
+      .field("sparse_binding", &self.sparse_binding())
+      .field("sparse_residency_buffer", &self.sparse_residency_buffer())
+      .field("sparse_residency_image2d", &self.sparse_residency_image2d())
+      .field("sparse_residency_image3d", &self.sparse_residency_image3d())
+      .field(
+        "sparse_residency2_samples",
+        &self.sparse_residency2_samples(),
+      )
+      .field(
+        "sparse_residency4_samples",
+        &self.sparse_residency4_samples(),
+      )
+      .field(
+        "sparse_residency8_samples",
+        &self.sparse_residency8_samples(),
+      )
+      .field(
+        "sparse_residency16_samples",
+        &self.sparse_residency16_samples(),
+      )
+      .field("sparse_residency_aliased", &self.sparse_residency_aliased())
+      .field(
+        "variable_multisample_rate",
+        &self.variable_multisample_rate(),
+      )
+      .field("inherited_queries", &self.inherited_queries())
+      .finish()
   }
 }

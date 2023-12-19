@@ -9,38 +9,19 @@ use vulkan_sys as c;
 #[repr(transparent)]
 pub struct PhysicalDeviceProperties(c::VkPhysicalDeviceProperties);
 
-unsafe impl foundation::Transparent for PhysicalDeviceProperties {
-  type Wrapped = c::VkPhysicalDeviceProperties;
+foundation::define_transparent! {
+  PhysicalDeviceProperties.0 => c::VkPhysicalDeviceProperties
 }
 
-impl AsRef<c::VkPhysicalDeviceProperties> for PhysicalDeviceProperties {
-  fn as_ref(&self) -> &c::VkPhysicalDeviceProperties {
-    &self.0
+impl From<c::VkPhysicalDeviceProperties> for PhysicalDeviceProperties {
+  fn from(value: c::VkPhysicalDeviceProperties) -> Self {
+    Self(value)
   }
 }
 
-impl AsMut<c::VkPhysicalDeviceProperties> for PhysicalDeviceProperties {
-  fn as_mut(&mut self) -> &mut c::VkPhysicalDeviceProperties {
-    &mut self.0
-  }
-}
-
-impl foundation::Take<c::VkPhysicalDeviceProperties> for PhysicalDeviceProperties {
-  unsafe fn take(self) -> c::VkPhysicalDeviceProperties {
-    self.0
-  }
-}
-
-impl std::ops::Deref for PhysicalDeviceProperties {
-  type Target = c::VkPhysicalDeviceProperties;
-  fn deref(&self) -> &Self::Target {
-    &self.0
-  }
-}
-
-impl std::ops::DerefMut for PhysicalDeviceProperties {
-  fn deref_mut(&mut self) -> &mut Self::Target {
-    &mut self.0
+impl From<PhysicalDeviceProperties> for c::VkPhysicalDeviceProperties {
+  fn from(value: PhysicalDeviceProperties) -> Self {
+    *value.as_ref()
   }
 }
 
@@ -123,16 +104,16 @@ impl PhysicalDeviceProperties {
 #[cfg(feature = "debug")]
 impl std::fmt::Debug for PhysicalDeviceProperties {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    writeln!(f, "  Name: {}", self.name())?;
-    writeln!(f, "  Pipeline Cache UUID: {}", self.pipeline_cache_uuid())?;
-    writeln!(f, "  Type: {}", self.device_type())?;
-    writeln!(f, "  Device ID: 0x{:x}", self.device_id())?;
-    writeln!(f, "  Vendor ID: 0x{:x}", self.vendor_id())?;
-    writeln!(f, "  API Version: {}", self.api_version())?;
-    writeln!(f, "  Driver Version: {}", self.driver_version())?;
-    writeln!(f, "Limits:")?;
-    writeln!(f, "{:?}", self.limits())?;
-    writeln!(f, "Sparse Properties:")?;
-    writeln!(f, "{:?}", self.sparse_properties())
+    f.debug_struct("PhysicalDeviceProperties")
+      .field("name", &self.name())
+      .field("pipeline_cache_uuid", &self.pipeline_cache_uuid())
+      .field("type", &self.device_type())
+      .field("device_id", &self.device_id())
+      .field("vendor_id", &self.vendor_id())
+      .field("api_version", &self.api_version())
+      .field("driver_version", &self.driver_version())
+      .field("limits", &self.limits())
+      .field("sparse_properties", &self.sparse_properties())
+      .finish()
   }
 }

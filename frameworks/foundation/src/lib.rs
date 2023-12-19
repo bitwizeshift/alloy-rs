@@ -221,42 +221,6 @@ pub unsafe trait Transparent {
       &mut *wrapper
     }
   }
-
-  /// Converts this wrapper into an instance of the underlying wrapped type.
-  ///
-  /// # Safety
-  ///
-  /// The safety contract for this type requires two things:
-  ///
-  /// * The wrapper type implementing this must be `#[repr(transparent)]`
-  /// * This function must not be implemented in `impl`s.
-  #[inline]
-  fn as_ref(&self) -> &Self::Wrapped {
-    debug_assert!(
-      std::mem::size_of::<*const Self::Wrapped>() == std::mem::size_of::<*const Self>()
-    );
-    unsafe {
-      let wrapped: *const Self::Wrapped = std::mem::transmute_copy(&self);
-      &*wrapped
-    }
-  }
-
-  /// Converts this wrapper into an instance of the underlying wrapped type.
-  ///
-  /// # Safety
-  ///
-  /// The safety contract for this type requires two things:
-  ///
-  /// * The wrapper type implementing this must be `#[repr(transparent)]`
-  /// * This function must not be implemented in `impl`s.
-  #[inline]
-  fn as_ref_mut(&mut self) -> &mut Self::Wrapped {
-    debug_assert!(std::mem::size_of::<*mut Self::Wrapped>() == std::mem::size_of::<*mut Self>());
-    unsafe {
-      let wrapped: *mut Self::Wrapped = std::mem::transmute_copy(&self);
-      &mut *wrapped
-    }
-  }
 }
 
 /// Slices which are [`Transparent`] are convertible to their wrapped types.
@@ -325,6 +289,49 @@ pub use uuid::Uuid;
 
 unsafe impl Transparent for Uuid {
   type Wrapped = uuid::Bytes;
+}
+
+///
+#[macro_export]
+macro_rules! define_transparent {
+  ($($Outter:ident.$Ex:tt => $Inner:ty$(,)?)+) => {
+    $(
+      unsafe impl ::foundation::Transparent for $Outter {
+        type Wrapped = $Inner;
+      }
+
+      impl AsRef<$Inner> for $Outter {
+        fn as_ref(&self) -> &$Inner {
+          &self.$Ex
+        }
+      }
+
+      impl AsMut<$Inner> for $Outter {
+        fn as_mut(&mut self) -> &mut $Inner {
+          &mut self.$Ex
+        }
+      }
+
+      impl foundation::Take<$Inner> for $Outter {
+        unsafe fn take(self) -> $Inner {
+          self.$Ex
+        }
+      }
+
+      impl std::ops::Deref for $Outter {
+        type Target = $Inner;
+        fn deref(&self) -> &Self::Target {
+          &self.$Ex
+        }
+      }
+
+      impl std::ops::DerefMut for $Outter {
+        fn deref_mut(&mut self) -> &mut Self::Target {
+          &mut self.$Ex
+        }
+      }
+    )+
+  };
 }
 
 /// The location of source code at a point in the codebase.

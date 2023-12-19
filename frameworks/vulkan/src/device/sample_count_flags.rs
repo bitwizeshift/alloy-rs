@@ -3,6 +3,16 @@ use vulkan_sys as c;
 ///
 pub struct SampleCountFlags(c::VkSampleCountFlags);
 
+foundation::define_transparent! {
+  SampleCountFlags.0 => c::VkSampleCountFlags
+}
+
+impl From<c::VkSampleCountFlags> for SampleCountFlags {
+  fn from(value: c::VkSampleCountFlags) -> Self {
+    Self(value)
+  }
+}
+
 impl SampleCountFlags {
   /// Constructs this [`SampleCountFlags`] from the underlying [`VkSampleCountFlags`]
   ///

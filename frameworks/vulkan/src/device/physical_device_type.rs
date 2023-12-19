@@ -17,6 +17,18 @@ pub enum PhysicalDeviceType {
   Other,
 }
 
+impl From<c::VkPhysicalDeviceType> for PhysicalDeviceType {
+  fn from(value: c::VkPhysicalDeviceType) -> Self {
+    Self::from_c(value)
+  }
+}
+
+impl From<PhysicalDeviceType> for c::VkPhysicalDeviceType {
+  fn from(value: PhysicalDeviceType) -> Self {
+    value.to_c()
+  }
+}
+
 impl std::fmt::Display for PhysicalDeviceType {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     match self {
@@ -43,6 +55,7 @@ impl std::fmt::Debug for PhysicalDeviceType {
     .fmt(f)
   }
 }
+
 impl PhysicalDeviceType {
   /// Constructs this [`PhysicalDeviceType`] from an instance of [`VkPhysicalDeviceType`].
   ///
@@ -56,6 +69,17 @@ impl PhysicalDeviceType {
       c::VkPhysicalDeviceType_VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU => Self::IntegratedGPU,
       c::VkPhysicalDeviceType_VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU => Self::VirtualGPU,
       _ => Self::Other,
+    }
+  }
+
+  /// Converts this [`PhysicalDeviceType`] into a C Vulkan type
+  pub fn to_c(&self) -> c::VkPhysicalDeviceType {
+    match self {
+      Self::CPU => c::VkPhysicalDeviceType_VK_PHYSICAL_DEVICE_TYPE_CPU,
+      Self::DiscreteGPU => c::VkPhysicalDeviceType_VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU,
+      Self::IntegratedGPU => c::VkPhysicalDeviceType_VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU,
+      Self::VirtualGPU => c::VkPhysicalDeviceType_VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU,
+      Self::Other => c::VkPhysicalDeviceType_VK_PHYSICAL_DEVICE_TYPE_OTHER,
     }
   }
 }

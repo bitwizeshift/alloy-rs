@@ -6,38 +6,19 @@ use vulkan_sys as c;
 #[repr(transparent)]
 pub struct PhysicalDeviceLimits(c::VkPhysicalDeviceLimits);
 
-unsafe impl foundation::Transparent for PhysicalDeviceLimits {
-  type Wrapped = c::VkPhysicalDeviceLimits;
+foundation::define_transparent! {
+  PhysicalDeviceLimits.0 => c::VkPhysicalDeviceLimits
 }
 
-impl AsRef<c::VkPhysicalDeviceLimits> for PhysicalDeviceLimits {
-  fn as_ref(&self) -> &c::VkPhysicalDeviceLimits {
-    &self.0
+impl From<c::VkPhysicalDeviceLimits> for PhysicalDeviceLimits {
+  fn from(value: c::VkPhysicalDeviceLimits) -> Self {
+    Self(value)
   }
 }
 
-impl AsMut<c::VkPhysicalDeviceLimits> for PhysicalDeviceLimits {
-  fn as_mut(&mut self) -> &mut c::VkPhysicalDeviceLimits {
-    &mut self.0
-  }
-}
-
-impl foundation::Take<c::VkPhysicalDeviceLimits> for PhysicalDeviceLimits {
-  unsafe fn take(self) -> c::VkPhysicalDeviceLimits {
-    self.0
-  }
-}
-
-impl std::ops::Deref for PhysicalDeviceLimits {
-  type Target = c::VkPhysicalDeviceLimits;
-  fn deref(&self) -> &Self::Target {
-    &self.0
-  }
-}
-
-impl std::ops::DerefMut for PhysicalDeviceLimits {
-  fn deref_mut(&mut self) -> &mut Self::Target {
-    &mut self.0
+impl From<PhysicalDeviceLimits> for c::VkPhysicalDeviceLimits {
+  fn from(value: PhysicalDeviceLimits) -> Self {
+    *value.as_ref()
   }
 }
 
@@ -694,484 +675,308 @@ impl PhysicalDeviceLimits {
 #[cfg(feature = "debug")]
 impl std::fmt::Debug for PhysicalDeviceLimits {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    writeln!(
-      f,
-      "  maxImageDimension1D: {}",
-      self.max_image_dimension_1d()
-    )?;
-    writeln!(
-      f,
-      "  maxImageDimension2D: {}",
-      self.max_image_dimension_2d()
-    )?;
-    writeln!(
-      f,
-      "  maxImageDimension3D: {}",
-      self.max_image_dimension_3d()
-    )?;
-    writeln!(
-      f,
-      "  maxImageDimensionCube: {}",
-      self.max_image_dimension_cube()
-    )?;
-    writeln!(
-      f,
-      "  maxImageArrayLayers: {}",
-      self.max_image_array_layers()
-    )?;
-    writeln!(
-      f,
-      "  maxTexelBufferElements: {}",
-      self.max_texel_buffer_elements()
-    )?;
-    writeln!(
-      f,
-      "  maxUniformBufferRange: {}",
-      self.max_uniform_buffer_range()
-    )?;
-    writeln!(
-      f,
-      "  maxStorageBufferRange: {}",
-      self.max_storage_buffer_range()
-    )?;
-    writeln!(
-      f,
-      "  maxPushConstantsSize: {}",
-      self.max_push_constants_size()
-    )?;
-    writeln!(
-      f,
-      "  maxMemoryAllocationCount: {}",
-      self.max_memory_allocation_count(),
-    )?;
-    writeln!(
-      f,
-      "  maxSamplerAllocationCount: {}",
-      self.max_sampler_allocation_count(),
-    )?;
-    writeln!(
-      f,
-      "  bufferImageGranularity: {}",
-      self.buffer_image_granularity()
-    )?;
-    writeln!(
-      f,
-      "  sparseAddressSpaceSize: {}",
-      self.sparse_address_space_size()
-    )?;
-    writeln!(
-      f,
-      "  maxBoundDescriptorSets: {}",
-      self.max_bound_descriptor_sets()
-    )?;
-    writeln!(
-      f,
-      "  maxPerStageDescriptorSamplers: {}",
-      self.max_per_stage_descriptor_samplers(),
-    )?;
-    writeln!(
-      f,
-      "  maxPerStageDescriptorUniformBuffers: {}",
-      self.max_per_stage_descriptor_uniform_buffers(),
-    )?;
-    writeln!(
-      f,
-      "  maxPerStageDescriptorStorageBuffers: {}",
-      self.max_per_stage_descriptor_storage_buffers(),
-    )?;
-    writeln!(
-      f,
-      "  maxPerStageDescriptorSampledImages: {}",
-      self.max_per_stage_descriptor_sampled_images(),
-    )?;
-    writeln!(
-      f,
-      "  maxPerStageDescriptorStorageImages: {}",
-      self.max_per_stage_descriptor_storage_images(),
-    )?;
-    writeln!(
-      f,
-      "  maxPerStageDescriptorInputAttachments: {}",
-      self.max_per_stage_descriptor_input_attachments(),
-    )?;
-    writeln!(
-      f,
-      "  maxPerStageResources: {}",
-      self.max_per_stage_resources()
-    )?;
-    writeln!(
-      f,
-      "  maxDescriptorSetSamplers: {}",
-      self.max_descriptor_set_samplers(),
-    )?;
-    writeln!(
-      f,
-      "  maxDescriptorSetUniformBuffers: {}",
-      self.max_descriptor_set_uniform_buffers(),
-    )?;
-    writeln!(
-      f,
-      "  maxDescriptorSetUniformBuffersDynamic: {}",
-      self.max_descriptor_set_uniform_buffers_dynamic(),
-    )?;
-    writeln!(
-      f,
-      "  maxDescriptorSetStorageBuffers: {}",
-      self.max_descriptor_set_storage_buffers(),
-    )?;
-    writeln!(
-      f,
-      "  maxDescriptorSetStorageBuffersDynamic: {}",
-      self.max_descriptor_set_storage_buffers_dynamic(),
-    )?;
-    writeln!(
-      f,
-      "  maxDescriptorSetSampledImages: {}",
-      self.max_descriptor_set_sampled_images(),
-    )?;
-    writeln!(
-      f,
-      "  maxDescriptorSetStorageImages: {}",
-      self.max_descriptor_set_storage_images(),
-    )?;
-    writeln!(
-      f,
-      "  maxDescriptorSetInputAttachments: {}",
-      self.max_descriptor_set_input_attachments(),
-    )?;
-    writeln!(
-      f,
-      "  maxVertexInputAttributes: {}",
-      self.max_vertex_input_attributes(),
-    )?;
-    writeln!(
-      f,
-      "  maxVertexInputBindings: {}",
-      self.max_vertex_input_bindings()
-    )?;
-    writeln!(
-      f,
-      "  maxVertexInputAttributeOffset: {}",
-      self.max_vertex_input_attribute_offset(),
-    )?;
-    writeln!(
-      f,
-      "  maxVertexInputBindingStride: {}",
-      self.max_vertex_input_binding_stride(),
-    )?;
-    writeln!(
-      f,
-      "  maxVertexOutputComponents: {}",
-      self.max_vertex_output_components(),
-    )?;
-    writeln!(
-      f,
-      "  maxTessellationGenerationLevel: {}",
-      self.max_tessellation_generation_level(),
-    )?;
-    writeln!(
-      f,
-      "  maxTessellationPatchSize: {}",
-      self.max_tessellation_patch_size(),
-    )?;
-    writeln!(
-      f,
-      "  maxTessellationControlPerVertexInputComponents: {}",
-      self.max_tessellation_control_per_vertex_input_components(),
-    )?;
-    writeln!(
-      f,
-      "  maxTessellationControlPerVertexOutputComponents: {}",
-      self.max_tessellation_control_per_vertex_output_components(),
-    )?;
-    writeln!(
-      f,
-      "  maxTessellationControlPerPatchOutputComponents: {}",
-      self.max_tessellation_control_per_patch_output_components(),
-    )?;
-    writeln!(
-      f,
-      "  maxTessellationControlTotalOutputComponents: {}",
-      self.max_tessellation_control_total_output_components(),
-    )?;
-    writeln!(
-      f,
-      "  maxTessellationEvaluationInputComponents: {}",
-      self.max_tessellation_evaluation_input_components(),
-    )?;
-    writeln!(
-      f,
-      "  maxTessellationEvaluationOutputComponents: {}",
-      self.max_tessellation_evaluation_output_components(),
-    )?;
-    writeln!(
-      f,
-      "  maxGeometryShaderInvocations: {}",
-      self.max_geometry_shader_invocations(),
-    )?;
-    writeln!(
-      f,
-      "  maxGeometryInputComponents: {}",
-      self.max_geometry_input_components(),
-    )?;
-    writeln!(
-      f,
-      "  maxGeometryOutputComponents: {}",
-      self.max_geometry_output_components(),
-    )?;
-    writeln!(
-      f,
-      "  maxGeometryOutputVertices: {}",
-      self.max_geometry_output_vertices(),
-    )?;
-    writeln!(
-      f,
-      "  maxGeometryTotalOutputComponents: {}",
-      self.max_geometry_total_output_components(),
-    )?;
-    writeln!(
-      f,
-      "  maxFragmentInputComponents: {}",
-      self.max_fragment_input_components(),
-    )?;
-    writeln!(
-      f,
-      "  maxFragmentOutputAttachments: {}",
-      self.max_fragment_output_attachments(),
-    )?;
-    writeln!(
-      f,
-      "  maxFragmentDualSrcAttachments: {}",
-      self.max_fragment_dual_src_attachments(),
-    )?;
-    writeln!(
-      f,
-      "  maxFragmentCombinedOutputResources: {}",
-      self.max_fragment_combined_output_resources(),
-    )?;
-    writeln!(
-      f,
-      "  maxComputeSharedMemorySize: {}",
-      self.max_compute_shared_memory_size(),
-    )?;
-    writeln!(
-      f,
-      "  maxComputeWorkGroupCount: {:?}",
-      self.max_compute_work_group_count(),
-    )?;
-    writeln!(
-      f,
-      "  maxComputeWorkGroupInvocations: {}",
-      self.max_compute_work_group_invocations(),
-    )?;
-    writeln!(
-      f,
-      "  maxComputeWorkGroupSize: {:?}",
-      self.max_compute_work_group_size(),
-    )?;
-    writeln!(
-      f,
-      "  subPixelPrecisionBits: {}",
-      self.sub_pixel_precision_bits()
-    )?;
-    writeln!(
-      f,
-      "  subTexelPrecisionBits: {}",
-      self.sub_texel_precision_bits()
-    )?;
-    writeln!(f, "  mipmapPrecisionBits: {}", self.mipmap_precision_bits())?;
-    writeln!(
-      f,
-      "  maxDrawIndexedIndexValue: {}",
-      self.max_draw_indexed_index_value(),
-    )?;
-    writeln!(
-      f,
-      "  maxDrawIndirectCount: {}",
-      self.max_draw_indirect_count()
-    )?;
-    writeln!(f, "  maxSamplerLodBias: {}", self.max_sampler_lod_bias())?;
-    writeln!(
-      f,
-      "  maxSamplerAnisotropy: {}",
-      self.max_sampler_anisotropy()
-    )?;
-    writeln!(f, "  maxViewports: {}", self.max_viewports())?;
-    writeln!(
-      f,
-      "  maxViewportDimensions: {:?}",
-      self.max_viewport_dimensions(),
-    )?;
-    writeln!(
-      f,
-      "  viewportBoundsRange: {:?}",
-      self.viewport_bounds_range()
-    )?;
-    writeln!(
-      f,
-      "  viewportSubPixelBits: {}",
-      self.viewport_sub_pixel_bits()
-    )?;
-    writeln!(
-      f,
-      "  minMemoryMapAlignment: {}",
-      self.min_memory_map_alignment()
-    )?;
-    writeln!(
-      f,
-      "  minTexelBufferOffsetAlignment: {}",
-      self.min_texel_buffer_offset_alignment(),
-    )?;
-    writeln!(
-      f,
-      "  minUniformBufferOffsetAlignment: {}",
-      self.min_uniform_buffer_offset_alignment(),
-    )?;
-    writeln!(
-      f,
-      "  minStorageBufferOffsetAlignment: {}",
-      self.min_storage_buffer_offset_alignment(),
-    )?;
-    writeln!(f, "  minTexelOffset: {}", self.min_texel_offset())?;
-    writeln!(f, "  maxTexelOffset: {}", self.max_texel_offset())?;
-    writeln!(
-      f,
-      "  minTexelGatherOffset: {}",
-      self.min_texel_gather_offset()
-    )?;
-    writeln!(
-      f,
-      "  maxTexelGatherOffset: {}",
-      self.max_texel_gather_offset()
-    )?;
-    writeln!(
-      f,
-      "  minInterpolationOffset: {}",
-      self.min_interpolation_offset()
-    )?;
-    writeln!(
-      f,
-      "  maxInterpolationOffset: {}",
-      self.max_interpolation_offset()
-    )?;
-    writeln!(
-      f,
-      "  subPixelInterpolationOffsetBits: {}",
-      self.sub_pixel_interpolation_offset_bits(),
-    )?;
-    writeln!(f, "  maxFramebufferWidth: {}", self.max_framebuffer_width())?;
-    writeln!(
-      f,
-      "  maxFramebufferHeight: {}",
-      self.max_framebuffer_height()
-    )?;
-    writeln!(
-      f,
-      "  maxFramebufferLayers: {}",
-      self.max_framebuffer_layers()
-    )?;
-    writeln!(
-      f,
-      "  framebufferColorSampleCounts: {:?}",
-      self.framebuffer_color_sample_counts(),
-    )?;
-    writeln!(
-      f,
-      "  framebufferDepthSampleCounts: {:?}",
-      self.framebuffer_depth_sample_counts(),
-    )?;
-    writeln!(
-      f,
-      "  framebufferStencilSampleCounts: {:?}",
-      self.framebuffer_stencil_sample_counts(),
-    )?;
-    writeln!(
-      f,
-      "  framebufferNoAttachmentsSampleCounts: {:?}",
-      self.framebuffer_no_attachments_sample_counts(),
-    )?;
-    writeln!(f, "  maxColorAttachments: {}", self.max_color_attachments())?;
-    writeln!(
-      f,
-      "  sampledImageColorSampleCounts: {:?}",
-      self.sampled_image_color_sample_counts(),
-    )?;
-    writeln!(
-      f,
-      "  sampledImageIntegerSampleCounts: {:?}",
-      self.sampled_image_integer_sample_counts(),
-    )?;
-    writeln!(
-      f,
-      "  sampledImageDepthSampleCounts: {:?}",
-      self.sampled_image_depth_sample_counts(),
-    )?;
-    writeln!(
-      f,
-      "  sampledImageStencilSampleCounts: {:?}",
-      self.sampled_image_stencil_sample_counts(),
-    )?;
-    writeln!(
-      f,
-      "  storageImageSampleCounts: {:?}",
-      self.storage_image_sample_counts(),
-    )?;
-    writeln!(f, "  maxSampleMaskWords: {}", self.max_sample_mask_words())?;
-    writeln!(
-      f,
-      "  timestampComputeAndGraphics: {}",
-      self.timestamp_compute_and_graphics(),
-    )?;
-    writeln!(f, "  timestampPeriod: {}", self.timestamp_period())?;
-    writeln!(f, "  maxClipDistances: {}", self.max_clip_distances())?;
-    writeln!(f, "  maxCullDistances: {}", self.max_cull_distances())?;
-    writeln!(
-      f,
-      "  maxCombinedClipAndCullDistances: {}",
-      self.max_combined_clip_and_cull_distances(),
-    )?;
-    writeln!(
-      f,
-      "  discreteQueuePriorities: {}",
-      self.discrete_queue_priorities(),
-    )?;
-    writeln!(
-      f,
-      "  pointSizeRange: {:?}",
-      self.point_size_range().as_slice()
-    )?;
-    writeln!(f, "  lineWidthRange: {:?}", self.line_width_range())?;
-    writeln!(
-      f,
-      "  pointSizeGranularity: {}",
-      self.point_size_granularity()
-    )?;
-    writeln!(
-      f,
-      "  lineWidthGranularity: {}",
-      self.line_width_granularity()
-    )?;
-    writeln!(f, "  strictLines: {}", self.strict_lines())?;
-    writeln!(
-      f,
-      "  standardSampleLocations: {}",
-      self.standard_sample_locations(),
-    )?;
-    writeln!(
-      f,
-      "  optimalBufferCopyOffsetAlignment: {}",
-      self.optimal_buffer_copy_offset_alignment(),
-    )?;
-    writeln!(
-      f,
-      "  optimalBufferCopyRowPitchAlignment: {}",
-      self.optimal_buffer_copy_row_pitch_alignment(),
-    )?;
-    writeln!(
-      f,
-      "  nonCoherentAtomSize: {}",
-      self.non_coherent_atom_size()
-    )?;
-    Ok(())
+    f.debug_struct("PhysicalDeviceLimits")
+      .field("max_image_dimension1d", &self.max_image_dimension_1d())
+      .field("max_image_dimension2d", &self.max_image_dimension_2d())
+      .field("max_image_dimension3d", &self.max_image_dimension_3d())
+      .field("max_image_dimension_cube", &self.max_image_dimension_cube())
+      .field("max_image_array_layers", &self.max_image_array_layers())
+      .field(
+        "max_texel_buffer_elements",
+        &self.max_texel_buffer_elements(),
+      )
+      .field("max_uniform_buffer_range", &self.max_uniform_buffer_range())
+      .field("max_storage_buffer_range", &self.max_storage_buffer_range())
+      .field("max_push_constants_size", &self.max_push_constants_size())
+      .field(
+        "max_memory_allocation_count",
+        &self.max_memory_allocation_count(),
+      )
+      .field(
+        "max_sampler_allocation_count",
+        &self.max_sampler_allocation_count(),
+      )
+      .field("buffer_image_granularity", &self.buffer_image_granularity())
+      .field(
+        "sparse_address_space_size",
+        &self.sparse_address_space_size(),
+      )
+      .field(
+        "max_bound_descriptor_sets",
+        &self.max_bound_descriptor_sets(),
+      )
+      .field(
+        "max_per_stage_descriptor_samplers",
+        &self.max_per_stage_descriptor_samplers(),
+      )
+      .field(
+        "max_per_stage_descriptor_uniform_buffers",
+        &self.max_per_stage_descriptor_uniform_buffers(),
+      )
+      .field(
+        "max_per_stage_descriptor_storage_buffers",
+        &self.max_per_stage_descriptor_storage_buffers(),
+      )
+      .field(
+        "max_per_stage_descriptor_sampled_images",
+        &self.max_per_stage_descriptor_sampled_images(),
+      )
+      .field(
+        "max_per_stage_descriptor_storage_images",
+        &self.max_per_stage_descriptor_storage_images(),
+      )
+      .field(
+        "max_per_stage_descriptor_input_attachments",
+        &self.max_per_stage_descriptor_input_attachments(),
+      )
+      .field("max_per_stage_resources", &self.max_per_stage_resources())
+      .field(
+        "max_descriptor_set_samplers",
+        &self.max_descriptor_set_samplers(),
+      )
+      .field(
+        "max_descriptor_set_uniform_buffers",
+        &self.max_descriptor_set_uniform_buffers(),
+      )
+      .field(
+        "max_descriptor_set_uniform_buffers_dynamic",
+        &self.max_descriptor_set_uniform_buffers_dynamic(),
+      )
+      .field(
+        "max_descriptor_set_storage_buffers",
+        &self.max_descriptor_set_storage_buffers(),
+      )
+      .field(
+        "max_descriptor_set_storage_buffers_dynamic",
+        &self.max_descriptor_set_storage_buffers_dynamic(),
+      )
+      .field(
+        "max_descriptor_set_sampled_images",
+        &self.max_descriptor_set_sampled_images(),
+      )
+      .field(
+        "max_descriptor_set_storage_images",
+        &self.max_descriptor_set_storage_images(),
+      )
+      .field(
+        "max_descriptor_set_input_attachments",
+        &self.max_descriptor_set_input_attachments(),
+      )
+      .field(
+        "max_vertex_input_attributes",
+        &self.max_vertex_input_attributes(),
+      )
+      .field(
+        "max_vertex_input_bindings",
+        &self.max_vertex_input_bindings(),
+      )
+      .field(
+        "max_vertex_input_attribute_offset",
+        &self.max_vertex_input_attribute_offset(),
+      )
+      .field(
+        "max_vertex_input_binding_stride",
+        &self.max_vertex_input_binding_stride(),
+      )
+      .field(
+        "max_vertex_output_components",
+        &self.max_vertex_output_components(),
+      )
+      .field(
+        "max_tessellation_generation_level",
+        &self.max_tessellation_generation_level(),
+      )
+      .field(
+        "max_tessellation_patch_size",
+        &self.max_tessellation_patch_size(),
+      )
+      .field(
+        "max_tessellation_control_per_vertex_input_components",
+        &self.max_tessellation_control_per_vertex_input_components(),
+      )
+      .field(
+        "max_tessellation_control_per_vertex_output_components",
+        &self.max_tessellation_control_per_vertex_output_components(),
+      )
+      .field(
+        "max_tessellation_control_per_patch_output_components",
+        &self.max_tessellation_control_per_patch_output_components(),
+      )
+      .field(
+        "max_tessellation_control_total_output_components",
+        &self.max_tessellation_control_total_output_components(),
+      )
+      .field(
+        "max_tessellation_evaluation_input_components",
+        &self.max_tessellation_evaluation_input_components(),
+      )
+      .field(
+        "max_tessellation_evaluation_output_components",
+        &self.max_tessellation_evaluation_output_components(),
+      )
+      .field(
+        "max_geometry_shader_invocations",
+        &self.max_geometry_shader_invocations(),
+      )
+      .field(
+        "max_geometry_input_components",
+        &self.max_geometry_input_components(),
+      )
+      .field(
+        "max_geometry_output_components",
+        &self.max_geometry_output_components(),
+      )
+      .field(
+        "max_geometry_output_vertices",
+        &self.max_geometry_output_vertices(),
+      )
+      .field(
+        "max_geometry_total_output_components",
+        &self.max_geometry_total_output_components(),
+      )
+      .field(
+        "max_fragment_input_components",
+        &self.max_fragment_input_components(),
+      )
+      .field(
+        "max_fragment_output_attachments",
+        &self.max_fragment_output_attachments(),
+      )
+      .field(
+        "max_fragment_dual_src_attachments",
+        &self.max_fragment_dual_src_attachments(),
+      )
+      .field(
+        "max_fragment_combined_output_resources",
+        &self.max_fragment_combined_output_resources(),
+      )
+      .field(
+        "max_compute_shared_memory_size",
+        &self.max_compute_shared_memory_size(),
+      )
+      .field(
+        "max_compute_work_group_count?}",
+        &self.max_compute_work_group_count(),
+      )
+      .field(
+        "max_compute_work_group_invocations",
+        &self.max_compute_work_group_invocations(),
+      )
+      .field(
+        "max_compute_work_group_size?}",
+        &self.max_compute_work_group_size(),
+      )
+      .field("sub_pixel_precision_bits", &self.sub_pixel_precision_bits())
+      .field("sub_texel_precision_bits", &self.sub_texel_precision_bits())
+      .field("mipmap_precision_bits", &self.mipmap_precision_bits())
+      .field(
+        "max_draw_indexed_index_value",
+        &self.max_draw_indexed_index_value(),
+      )
+      .field("max_draw_indirect_count", &self.max_draw_indirect_count())
+      .field("max_sampler_lod_bias", &self.max_sampler_lod_bias())
+      .field("max_sampler_anisotropy", &self.max_sampler_anisotropy())
+      .field("max_viewports", &self.max_viewports())
+      .field("max_viewport_dimensions?}", &self.max_viewport_dimensions())
+      .field("viewport_bounds_range?}", &self.viewport_bounds_range())
+      .field("viewport_sub_pixel_bits", &self.viewport_sub_pixel_bits())
+      .field("min_memory_map_alignment", &self.min_memory_map_alignment())
+      .field(
+        "min_texel_buffer_offset_alignment",
+        &self.min_texel_buffer_offset_alignment(),
+      )
+      .field(
+        "min_uniform_buffer_offset_alignment",
+        &self.min_uniform_buffer_offset_alignment(),
+      )
+      .field(
+        "min_storage_buffer_offset_alignment",
+        &self.min_storage_buffer_offset_alignment(),
+      )
+      .field("min_texel_offset", &self.min_texel_offset())
+      .field("max_texel_offset", &self.max_texel_offset())
+      .field("min_texel_gather_offset", &self.min_texel_gather_offset())
+      .field("max_texel_gather_offset", &self.max_texel_gather_offset())
+      .field("min_interpolation_offset", &self.min_interpolation_offset())
+      .field("max_interpolation_offset", &self.max_interpolation_offset())
+      .field(
+        "sub_pixel_interpolation_offset_bits",
+        &self.sub_pixel_interpolation_offset_bits(),
+      )
+      .field("max_framebuffer_width", &self.max_framebuffer_width())
+      .field("max_framebuffer_height", &self.max_framebuffer_height())
+      .field("max_framebuffer_layers", &self.max_framebuffer_layers())
+      .field(
+        "framebuffer_color_sample_counts?}",
+        &self.framebuffer_color_sample_counts(),
+      )
+      .field(
+        "framebuffer_depth_sample_counts?}",
+        &self.framebuffer_depth_sample_counts(),
+      )
+      .field(
+        "framebuffer_stencil_sample_counts?}",
+        &self.framebuffer_stencil_sample_counts(),
+      )
+      .field(
+        "framebuffer_no_attachments_sample_counts?}",
+        &self.framebuffer_no_attachments_sample_counts(),
+      )
+      .field("max_color_attachments", &self.max_color_attachments())
+      .field(
+        "sampled_image_color_sample_counts?}",
+        &self.sampled_image_color_sample_counts(),
+      )
+      .field(
+        "sampled_image_integer_sample_counts?}",
+        &self.sampled_image_integer_sample_counts(),
+      )
+      .field(
+        "sampled_image_depth_sample_counts?}",
+        &self.sampled_image_depth_sample_counts(),
+      )
+      .field(
+        "sampled_image_stencil_sample_counts?}",
+        &self.sampled_image_stencil_sample_counts(),
+      )
+      .field(
+        "storage_image_sample_counts?}",
+        &self.storage_image_sample_counts(),
+      )
+      .field("max_sample_mask_words", &self.max_sample_mask_words())
+      .field(
+        "timestamp_compute_and_graphics",
+        &self.timestamp_compute_and_graphics(),
+      )
+      .field("timestamp_period", &self.timestamp_period())
+      .field("max_clip_distances", &self.max_clip_distances())
+      .field("max_cull_distances", &self.max_cull_distances())
+      .field(
+        "max_combined_clip_and_cull_distances",
+        &self.max_combined_clip_and_cull_distances(),
+      )
+      .field(
+        "discrete_queue_priorities",
+        &self.discrete_queue_priorities(),
+      )
+      .field("point_size_range?}", &self.point_size_range().as_slice())
+      .field("line_width_range?}", &self.line_width_range())
+      .field("point_size_granularity", &self.point_size_granularity())
+      .field("line_width_granularity", &self.line_width_granularity())
+      .field("strict_lines", &self.strict_lines())
+      .field(
+        "standard_sample_locations",
+        &self.standard_sample_locations(),
+      )
+      .field(
+        "optimal_buffer_copy_offset_alignment",
+        &self.optimal_buffer_copy_offset_alignment(),
+      )
+      .field(
+        "optimal_buffer_copy_row_pitch_alignment",
+        &self.optimal_buffer_copy_row_pitch_alignment(),
+      )
+      .field("non_coherent_atom_size", &self.non_coherent_atom_size())
+      .finish()
   }
 }

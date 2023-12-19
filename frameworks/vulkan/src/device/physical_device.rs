@@ -146,6 +146,17 @@ impl<'a> AsMut<c::VkPhysicalDevice> for PhysicalDevice<'a> {
   }
 }
 
+#[cfg(feature = "debug")]
+impl std::fmt::Debug for PhysicalDevice<'_> {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    f.debug_struct("debug")
+      .field("properties", &self.properties())
+      .field("features", &self.features())
+      .field("queue_family_properties", &self.queue_family_properties())
+      .finish()
+  }
+}
+
 ///
 pub struct RawPhysicalDevice(c::VkPhysicalDevice);
 
@@ -179,20 +190,5 @@ impl AsMut<c::VkPhysicalDevice> for RawPhysicalDevice {
   /// [`VkPhysicalDevice`]: c::VkPhysicalDevice
   fn as_mut(&mut self) -> &mut c::VkPhysicalDevice {
     &mut self.0
-  }
-}
-
-#[cfg(feature = "debug")]
-impl std::fmt::Debug for PhysicalDevice<'_> {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    let properties = self.properties();
-    let features = self.features();
-    writeln!(f, "Properties:")?;
-    writeln!(f, "{:?}", properties)?;
-    writeln!(f, "Features:")?;
-    writeln!(f, "{:?}", features)?;
-    writeln!(f, "Queue Families:")?;
-    writeln!(f, "{:?}", self.queue_family_properties())?;
-    Ok(())
   }
 }

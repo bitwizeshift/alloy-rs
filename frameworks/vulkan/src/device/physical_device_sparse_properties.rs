@@ -6,38 +6,19 @@ use vulkan_sys as c;
 #[repr(transparent)]
 pub struct PhysicalDeviceSparseProperties(c::VkPhysicalDeviceSparseProperties);
 
-unsafe impl foundation::Transparent for PhysicalDeviceSparseProperties {
-  type Wrapped = c::VkPhysicalDeviceSparseProperties;
+foundation::define_transparent! {
+  PhysicalDeviceSparseProperties.0 => c::VkPhysicalDeviceSparseProperties
 }
 
-impl AsRef<c::VkPhysicalDeviceSparseProperties> for PhysicalDeviceSparseProperties {
-  fn as_ref(&self) -> &c::VkPhysicalDeviceSparseProperties {
-    &self.0
+impl From<c::VkPhysicalDeviceSparseProperties> for PhysicalDeviceSparseProperties {
+  fn from(value: c::VkPhysicalDeviceSparseProperties) -> Self {
+    Self(value)
   }
 }
 
-impl AsMut<c::VkPhysicalDeviceSparseProperties> for PhysicalDeviceSparseProperties {
-  fn as_mut(&mut self) -> &mut c::VkPhysicalDeviceSparseProperties {
-    &mut self.0
-  }
-}
-
-impl foundation::Take<c::VkPhysicalDeviceSparseProperties> for PhysicalDeviceSparseProperties {
-  unsafe fn take(self) -> c::VkPhysicalDeviceSparseProperties {
-    self.0
-  }
-}
-
-impl std::ops::Deref for PhysicalDeviceSparseProperties {
-  type Target = c::VkPhysicalDeviceSparseProperties;
-  fn deref(&self) -> &Self::Target {
-    &self.0
-  }
-}
-
-impl std::ops::DerefMut for PhysicalDeviceSparseProperties {
-  fn deref_mut(&mut self) -> &mut Self::Target {
-    &mut self.0
+impl From<PhysicalDeviceSparseProperties> for c::VkPhysicalDeviceSparseProperties {
+  fn from(value: PhysicalDeviceSparseProperties) -> Self {
+    *value.as_ref()
   }
 }
 
