@@ -44,4 +44,5 @@ mod primitives;
 #[doc(inline)]
 pub use primitives::*;
 
+pub mod extension;
 pub mod layer;
