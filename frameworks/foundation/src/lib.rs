@@ -378,6 +378,21 @@ impl std::fmt::Debug for SourceLocation {
   }
 }
 
+/// A trait that provides a mechanism for taking ownership of the internal
+/// underlying API. This is used in C APIs to allow direct access to the wrapped
+/// type, at which point it is the caller's responsibility to handle the
+/// lifetime of the object.
+pub trait Take<T: ?Sized> {
+  /// Adopts ownership of the internal object. The caller is now responsible
+  /// for managing the underlying type's lifetime.
+  ///
+  /// # Safety
+  ///
+  /// This function is unsafe, as it becomes the caller's responsibility to
+  /// manage the lifetime of the returned object.
+  unsafe fn take(self) -> T;
+}
+
 /// Creates a [`SourceLocation`] object that represents the exact point in the
 /// source file where this macro is invoked.
 ///
