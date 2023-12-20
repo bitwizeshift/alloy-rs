@@ -46,4 +46,7 @@ pub use primitives::*;
 
 pub mod extension;
 pub mod layer;
+
+pub mod alloc;
+
 pub mod device;
