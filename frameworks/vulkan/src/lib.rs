@@ -44,9 +44,9 @@ mod primitives;
 #[doc(inline)]
 pub use primitives::*;
 
+pub mod alloc;
+pub mod debug;
 pub mod extension;
 pub mod layer;
-
-pub mod alloc;
 
 pub mod device;
