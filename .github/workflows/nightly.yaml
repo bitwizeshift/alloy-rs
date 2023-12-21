@@ -6,6 +6,10 @@ on:
 jobs:
   nightly-ci:
     name: Nightly Integration
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
     uses: ./.github/workflows/build.yaml
 
   create-issue:
