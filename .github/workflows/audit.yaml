@@ -4,10 +4,9 @@ on:
   workflow_call:
 
 jobs:
-  format:
+  audit:
     name: Audit packages
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,3 +23,38 @@ jobs:
 
       - name: Audit packages
         run: cargo audit
+
+  create-issue:
+    name: Create Github Issue
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs: [audit]
+    if: always() && needs.audit.result == 'failure'
+    permissions:
+      issues: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get date variable
+        id: variables
+        run: echo "date=$(date +%F)" >> "${GITHUB_OUTPUT}"
+
+      - name: Create issue if none exist
+        uses: ./.github/actions/github-issue-if-noexist
+        with:
+          title: Cargo audit failed
+          body: |
+            ⚠️ The Audit workflow run on ${{ steps.variables.outputs.date }} failed!
+
+            ### Useful Links
+
+            * [📖 Github Workflow Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            * [🔀 Failing commit](${{ github.server_url }}/${{ github.repository }}/commit/${{github.sha}})
+
+            ### Suggested Fixes
+
+            * Update the failed dependency
+            * Replace dependency with a secure one
+          label: audit-failed
+          assignee: bitwizeshift
