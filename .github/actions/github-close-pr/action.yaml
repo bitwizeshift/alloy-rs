@@ -1,13 +1,24 @@
 name: github-close-pr
 description: "A tool for automatically closing pull requests"
 
+inputs:
+  retries:
+    required: false
+    default: "3"
+    description: "The number of times to try retrying"
+  retry-exempt-status-codes:
+    required: false
+    default: "400,401,403,404,422"
+    description: "The retry exempt status codes"
+
 runs:
   using: "composite"
   steps:
     - name: Leave Issue or Pull Request comment
       uses: actions/github-script@v7
       with:
-        retries: 3
+        retries: ${{ inputs.retries }}
+        retry-exempt-status-codes: ${{ inputs.retry-exempt-status-codes }}
         script: |
           github.rest.pulls.update({
             pull_number: context.issue.number,

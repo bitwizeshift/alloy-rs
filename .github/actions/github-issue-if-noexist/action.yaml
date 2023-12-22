@@ -21,7 +21,7 @@ inputs:
     description: "The number of times to try retrying"
   retry-exempt-status-codes:
     required: false
-    default: "400,401"
+    default: "400,401,403,404,422"
     description: "The retry exempt status codes"
 
 runs:
