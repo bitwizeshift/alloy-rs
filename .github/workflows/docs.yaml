@@ -32,6 +32,11 @@ jobs:
         with:
           target: mdbook
 
+      - name: Install mdbook-mermaid
+        uses: ./.github/actions/cargo-install
+        with:
+          target: mdbook-mermaid
+
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
 
@@ -60,6 +65,10 @@ jobs:
         run: |
           RUSTDOCFLAGS="--enable-index-page -Zunstable-options" \
           cargo +nightly doc --no-deps --workspace
+
+      - name: Get mdbook dependencies
+        shell: bash
+        run: ./docs/get-dependencies.bash
 
       - name: Generate Book
         run: |

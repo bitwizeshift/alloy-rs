@@ -1,19 +1,27 @@
 <!-- markdownlint-disable single-title -->
 # Summary
 
-* [Introduction](./introduction.md)
-
-# Development
-
-* [Commit standards](./development/commit-standards.md)
-* [Definition of done](./development/definition-of-done.md)
-* [Legal](./development/legal.md)
-
-# Community
-
-* [Code of Conduct](./community/CODE_OF_CONDUCT.md)
-* [Contributing](./community/CONTRIBUTING.md)
-* [Project Governance](./community/GOVERNANCE.md)
-* [Privacy Policy](./community/PRIVACY.md)
-* [Security Policy](./community/SECURITY.md)
-* [Support](./community/SUPPORT.md)
+* [👋🏻 Introduction](./introduction.md)
+* [🔭 A tour of Alloy](./tour.md)
+  * [Alloy Engine API](./tour/engine.md)
+    * [Setting up an Application](./tour/engine/setting-up-an-application.md)
+    * [Building a Game Loop](./tour/engine/building-a-game-loop.md)
+    * [Rendering](./tour/engine/rendering.md)
+  * [Editors](./tour/editors.md)
+    * [Material Editor](./tour/editors/material-editor.md)
+    * [Localization Editor](./tour/editors/localization-editor.md)
+    * [Tileset Manager](./tour/editors/tileset-manager.md)
+    * [Resource Pipeline](./tour/editors/resource-pipeline.md)
+    * [Storage Formats](./tour/editors/storage-formats.md)
+* [📦 Additional Resources](./resources.md)
+* [🛠️ Development](./development.md)
+  * [Commit standards](./development/commit-standards.md)
+  * [Definition of done](./development/definition-of-done.md)
+  * [Legal](./development/legal.md)
+* [👥 Community](./community.md)
+  * [Contributing](./community/CONTRIBUTING.md)
+  * [Code of Conduct](./community/CODE_OF_CONDUCT.md)
+  * [Project Governance](./community/GOVERNANCE.md)
+  * [Privacy Policy](./community/PRIVACY.md)
+  * [Security Policy](./community/SECURITY.md)
+  * [Support](./community/SUPPORT.md)

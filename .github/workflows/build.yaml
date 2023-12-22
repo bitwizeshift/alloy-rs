@@ -6,9 +6,6 @@ on:
   #   branches: [master]
   workflow_call:
   workflow_dispatch:
-  # Run nightly checks to detect possible breakage due to upstream rustc changes
-  schedule:
-    - cron: '0 0 * * *'
 
 jobs:
   format:
@@ -32,7 +29,24 @@ jobs:
 
   audit:
     name: Cargo Audit
-    uses: ./.github/workflows/audit.yaml
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install toolchain
+        uses: ./.github/actions/rust-toolchain
+        with:
+          components: rustfmt
+
+      - name: Install cargo-audit
+        uses: ./.github/actions/cargo-install
+        with:
+          target: cargo-audit
+
+      - name: Audit packages
+        run: cargo audit
 
   check:
     name: Check Manifest

@@ -1,4 +1,4 @@
-name: Build
+name: Nightly Build
 on:
   schedule:
     - cron: '0 0 * * *'
@@ -6,6 +6,10 @@ on:
 jobs:
   nightly-ci:
     name: Nightly Integration
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
     uses: ./.github/workflows/build.yaml
 
   create-issue:
@@ -13,26 +17,35 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     needs: [nightly-ci]
-    if: needs.nightly-ci.result == 'failure'
+    if: always() && needs.nightly-ci.result == 'failure'
+    permissions:
+      issues: write
     steps:
-    - name: Create issue if none exist
-      shell: bash
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        readarray -t exists < <(gh issue list --state open --label nightly-CI-failed --json number --jq '.[].number' --repo "$GITHUB_REPOSITORY")
-        if [[ -n "${exists[@]}" ]]; then
-          echo "Not opening another issue, already have ${#exists[@]} issue(s), latest at ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/issues/${exists[0]}."
-        else
-          cat << EOF | gh issue create \
-            --label CI-failed \
-            --title "CI run failed" \
-            --repo "$GITHUB_REPOSITORY" \
-            --body-file -
-          The nightly CI run on $(date +%F) failed to build failed.
+      - name: Checkout
+        uses: actions/checkout@v4
 
-          - Check the logs at ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${{ github.run_id }}
-          - Update to the latest 'rustc-nightly' if necessary
-          - Investigate test run failures if any
-        EOF
-        fi
+      - name: Get date variable
+        id: variables
+        run: echo "date=$(date +%F)" >> "${GITHUB_OUTPUT}"
+
+      - name: Create issue if none exist
+        uses: ./.github/actions/github-issue-if-noexist
+        with:
+          title: Nightly CI failed
+          body: |
+            ⚠️ The nightly CI workflow run on ${{ steps.variables.outputs.date }} failed!
+
+            ### Useful Links
+
+            * [📖 Github Workflow Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            * [🔀 Failing commit](${{ github.server_url }}/${{ github.repository }}/commit/${{github.sha}})
+
+            ### Suggested Fixes
+
+            * Investigate test run failures
+            * Rerun the workflow to check for flaky tests
+            * Check linker outputs
+            * Revert commit that triggered failure
+            * Update to the latest toolchain or dependencies
+          label: nightly-ci-failed
+          assignee: bitwizeshift
