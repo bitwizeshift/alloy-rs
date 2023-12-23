@@ -11,3 +11,4 @@ edition.workspace = true
 
 [dependencies]
 openal-sys = { path = "../openal-sys" }
+foundation = { path = "../foundation" }
