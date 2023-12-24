@@ -116,6 +116,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Prepare runner
+        uses: ./.github/actions/prepare-runner
+
       - name: Checkout 3rd-party
         uses: ./.github/actions/checkout
 
