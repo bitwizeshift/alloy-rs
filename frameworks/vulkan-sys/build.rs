@@ -11,11 +11,12 @@ fn main() {
 
 fn link_vulkan() {
   if let Some(search_path) = option_env!("VULKAN_SDK") {
-    build::rustc_link_search!("{}/lib", search_path);
+    build::rustc_link_search!("native={}/lib", search_path);
 
     if cfg!(any(target_os = "macos", target_os = "ios")) {
       let out = std::env::var("OUT_DIR").unwrap();
       let _ = std::fs::create_dir(format!("{}/lib", out));
+      build::rustc_link_search!("native={}/lib", std::env::var("OUT_DIR").unwrap());
       copy_file(search_path, &out, "libvulkan.dylib");
       copy_file(search_path, &out, "libvulkan.1.dylib");
     }
