@@ -1,0 +1,17 @@
+# Schema: https://doc.rust-lang.org/cargo/reference/manifest.html
+[package]
+name = "ansi"
+description = """
+  A tiny internal crate for simplifying working with ANSI formatting.
+  Used as a component of the `alloy-rs` framework.
+"""
+version = "0.9.0"
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+edition.workspace = true
+categories = ["value-formatting"]
+keywords = ["ansi", "escape-codes"]
+
+[dependencies]
+lazy_static = { version = "1.4.0" }
