@@ -41,7 +41,14 @@ runs:
           })
           for (const issue of issues) {
             if (!issue.pull_request) {
-              return // Issue already exists
+               // Issue already exists; so just comment on existing one instead.
+               await github.rest.issues.createComment({
+                issue_number: issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `${{ inputs.body }}`
+              })
+              return
             }
           }
 
