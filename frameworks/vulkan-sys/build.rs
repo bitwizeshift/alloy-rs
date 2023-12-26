@@ -1,4 +1,3 @@
-use std::env;
 use std::path::{Path, PathBuf};
 
 fn main() {
@@ -14,9 +13,9 @@ fn link_vulkan() {
     build::rustc_link_search!("native={}/lib", search_path);
 
     if cfg!(any(target_os = "macos", target_os = "ios")) {
-      let out = std::env::var("OUT_DIR").unwrap();
+      let out = build::out_dir!();
       let _ = std::fs::create_dir(format!("{}/lib", out));
-      build::rustc_link_search!("native={}/lib", std::env::var("OUT_DIR").unwrap());
+      build::rustc_link_search!("native={}/lib", build::out_dir!());
       copy_file(search_path, &out, "libvulkan.dylib");
       copy_file(search_path, &out, "libvulkan.1.dylib");
     }
@@ -50,7 +49,7 @@ fn generate_vulkan_bindings() {
     .expect("Unable to generate bindings");
 
   // Write the bindings to the $OUT_DIR/bindings.rs file.
-  let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+  let out_path = PathBuf::from(build::out_dir!());
   bindings
     .write_to_file(out_path.join("bindings.rs"))
     .expect("Couldn't write bindings!");

@@ -23,3 +23,6 @@ debug = []
 glfw = { path = "../frameworks/glfw", default-features = false}
 vulkan = { path = "../frameworks/vulkan", optional = true }
 openal = { path = "../frameworks/openal", optional = true }
+
+[build-dependencies]
+build = { path = "../frameworks/build" }

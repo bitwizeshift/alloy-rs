@@ -2,7 +2,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 
 pub fn main() {
-  let out_dir = PathBuf::from(std::env::var("OUT_DIR").unwrap());
+  let out_dir = PathBuf::from(build::out_dir!());
 
   generate_version(&out_dir)
 }

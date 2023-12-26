@@ -288,6 +288,15 @@ macro_rules! rustc_cdylib_link_arg {
   };
 }
 
+/// The [`out_dir`] macro provides an easy mechanism for retrieving the `OUT_DIR`
+/// environment variable that is implicitly defined at runtime in build scripts.
+#[macro_export]
+macro_rules! out_dir {
+  () => {
+    std::env::var("OUT_DIR").expect("OUT_DIR must be defined in build.rs scripts")
+  };
+}
+
 /// A module that is only available when building for Apple devices.
 #[cfg(any(target_os = "macos", target_os = "ios"))]
 pub mod apple {
