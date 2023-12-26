@@ -1,16 +1,17 @@
 name: Nightly Build
 on:
   schedule:
+    # Scheduled to run at the same time every day
     - cron: '0 0 * * *'
 
 jobs:
   nightly-ci:
-    name: Nightly Integration
+    name: Build and Test
     permissions:
       contents: read
       security-events: write
       actions: read
-    uses: ./.github/workflows/build.yaml
+    uses: ./.github/workflows/build-and-test.yaml
 
   create-issue:
     name: Create Github Issue
@@ -28,10 +29,10 @@ jobs:
         id: variables
         run: echo "date=$(date +%F)" >> "${GITHUB_OUTPUT}"
 
-      - name: Create issue if none exist
+      - name: Create issue or comment
         uses: ./.github/actions/github-issue-or-comment
         with:
-          title: Nightly CI failed
+          title: ${{ github.workflow }} failed
           body: |
             ⚠️ The nightly CI workflow run on ${{ steps.variables.outputs.date }} failed!
 

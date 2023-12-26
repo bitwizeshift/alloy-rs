@@ -1,4 +1,4 @@
-name: Build
+name: Continuous Integration
 on:
   push:
     branches: [master, feature/*]
@@ -156,47 +156,4 @@ jobs:
 
   build:
     name: Build and Test
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-          # - windows-latest
-    defaults:
-      run:
-        shell: bash
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Prepare runner
-        uses: ./.github/actions/prepare-runner
-
-      - name: Install toolchain
-        uses: ./.github/actions/rust-toolchain
-        with:
-          components: llvm-tools-preview
-
-      - name: Build
-        id: build
-        uses: ./.github/actions/cargo-build
-
-      - name: Test
-        id: test
-        run: |
-          ls -la $VULKAN_SDK/lib
-          cargo test --verbose
-
-      - name: Doctest
-        if: contains(fromJSON('["success", "failure"]'), steps.test.conclusion)
-        run: |
-          ls -la $VULKAN_SDK/lib
-          cargo test --doc --verbose
-
-      - name: Coverage
-        uses: ./.github/actions/cargo-code-coverage
-        with:
-          output-file: ${{ matrix.os }}-codecov.json
-          minimum-requirement: 0.0
+    uses: ./.github/workflows/build-and-test.yaml

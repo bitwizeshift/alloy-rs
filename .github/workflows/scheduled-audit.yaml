@@ -1,7 +1,8 @@
-name: Audit
+name: Weekly Audit
 on:
-  schedule: [cron: "0 0 * * 0"]
-  workflow_call:
+  schedule:
+    # Scheduled to run once per week
+    - cron: '0 0 * * 0'
 
 jobs:
   audit:
@@ -40,10 +41,10 @@ jobs:
         id: variables
         run: echo "date=$(date +%F)" >> "${GITHUB_OUTPUT}"
 
-      - name: Create issue if none exist
+      - name: Create issue or comment
         uses: ./.github/actions/github-issue-or-comment
         with:
-          title: Cargo audit failed
+          title: ${{ github.workflow }} failed
           body: |
             ⚠️ The Audit workflow run on ${{ steps.variables.outputs.date }} failed!
 

@@ -12,7 +12,7 @@ concurrency:
 jobs:
   verify-build:
     name: Verify build integrity
-    uses: ./.github/workflows/build.yaml
+    uses: ./.github/workflows/ci.yaml
     permissions:
       contents: read
       security-events: write
@@ -20,7 +20,7 @@ jobs:
 
   verify-docs:
     name: Verify documentation
-    uses: ./.github/workflows/docs.yaml
+    uses: ./.github/workflows/deploy-github-pages.yaml
     permissions:
       contents: read
       pages: write

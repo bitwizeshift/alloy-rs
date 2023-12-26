@@ -1,9 +1,8 @@
 name: Bundle Binaries
 on:
-  workflow_run:
-    workflows: [ build ]
-    types:
-      - completed
+  push:
+    branches:
+      - master
   workflow_dispatch:
     inputs:
       profile:
