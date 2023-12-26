@@ -163,8 +163,8 @@ impl<'a, 'b> ToastBuilder<'a, 'b> {
   fn from_style(s: Style) -> Self {
     Self {
       style: s,
-      title: foundation::cstr!("untitled"),
-      message: foundation::cstr!(""),
+      title: astd::ffi::cstr!("untitled"),
+      message: astd::ffi::cstr!(""),
       buttons: Buttons::OK,
     }
   }

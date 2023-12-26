@@ -6,7 +6,7 @@
 
 use std::time::SystemTime;
 
-use foundation::SourceLocation;
+use astd::SourceLocation;
 
 mod severity;
 
@@ -277,7 +277,7 @@ macro_rules! metadata {
 #[cfg(feature = "log-source")]
 macro_rules! source_location {
   () => {
-    Some(::foundation::current_location!())
+    Some(::astd::current_location!())
   };
 }
 

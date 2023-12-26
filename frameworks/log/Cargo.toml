@@ -14,5 +14,5 @@ default = ["log-source"]
 log-source = []
 
 [dependencies]
-foundation = { path = "../foundation" }
+astd = { path = "../astd" }
 ansi = { path = "../ansi" }

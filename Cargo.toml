@@ -2,7 +2,7 @@
 [workspace]
 members = [
   "frameworks/build",
-  "frameworks/foundation",
+  "frameworks/astd",
   "frameworks/boxer-sys",
   "frameworks/toast",
   "frameworks/glfw-sys",

@@ -19,7 +19,7 @@ glfw = { path = "../frameworks/glfw" }
 vulkan = { path = "../frameworks/vulkan" }
 openal = { path = "../frameworks/openal" }
 imgui = { path = "../frameworks/imgui" }
-foundation = { path = "../frameworks/foundation" }
+astd = { path = "../frameworks/astd" }
 toast = { path = "../frameworks/toast" }
 log = { path = "../frameworks/log" }
 

@@ -1,0 +1,17 @@
+# Schema: https://doc.rust-lang.org/cargo/reference/manifest.html
+[package]
+name = "astd"
+description = """
+A micro standard-library crate that provides additional functionality not found
+out-of-the-box with the Rust standard library.
+"""
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+categories = ["development-tools"]
+keywords = []
+repository.workspace = true
+edition.workspace = true
+
+[dependencies]
+uuid = "1.6.1"

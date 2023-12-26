@@ -1,3 +1,5 @@
+use astd::ffi::cstr;
+
 fn main() {
   let context = glfw::Context::new().expect("GLFW should be initialized");
 
@@ -5,7 +7,7 @@ fn main() {
     glfw::c::glfwCreateWindow(
       640,
       480,
-      foundation::cstr!("My first window").as_ptr(),
+      cstr!("My first window").as_ptr(),
       std::ptr::null_mut(),
       std::ptr::null_mut(),
     )
@@ -33,15 +35,15 @@ fn main() {
   log::debug!(logger, "Vulkan extensions: {}", count);
 
   let _device = openal::Device::open_default();
-  if openal::has_extension(foundation::cstr!("ALC_ENUMERATION_EXT")) {
+  if openal::has_extension(cstr!("ALC_ENUMERATION_EXT")) {
     log::debug!(logger, "OpenAL has enumeration extension!")
   } else {
     log::debug!(logger, "OpenAL does NOT have enumeration extension!")
   }
 
   toast::ToastBuilder::question()
-    .title_cstr(foundation::cstr!("Hello world"))
-    .message_cstr(foundation::cstr!("something went wrong?"))
+    .title_cstr(cstr!("Hello world"))
+    .message_cstr(cstr!("something went wrong?"))
     .show();
 
   let _imgui = imgui::Context::new();

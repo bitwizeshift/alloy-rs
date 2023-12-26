@@ -21,4 +21,4 @@ vulkan = ["dep:vulkan", "glfw-sys/vulkan"]
 [dependencies]
 glfw-sys = { path = "../glfw-sys", default-features = false }
 vulkan = { path = "../vulkan", optional = true }
-foundation = { path = "../foundation" }
+astd = { path = "../astd" }

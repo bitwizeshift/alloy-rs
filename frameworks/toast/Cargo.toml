@@ -11,4 +11,4 @@ edition.workspace = true
 
 [dependencies]
 boxer-sys = { path = "../boxer-sys"}
-foundation = { path = "../foundation" }
+astd = { path = "../astd" }
