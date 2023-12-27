@@ -1,0 +1,43 @@
+name: Label issues
+on:
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  run:
+    name: Label github issue
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const assignees = issue.assignees?.map((v) => v.login).filter((v) => v == 'bitwizeshift');
+            if (assignees?.length == 0) {
+              core.notice("Adding assignee")
+              github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                assignees: ['bitwizeshift']
+              });
+            }
+
+            let labels = issue.labels?.map((v) => v.name).filter((v) => ["p0", "p1", "p2", "p3"].includes(v));
+            if (labels?.length == 0) {
+              core.notice("No priority assigned")
+              github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: ['triage-required']
+              });
+            }
+
