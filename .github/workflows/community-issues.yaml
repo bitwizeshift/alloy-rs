@@ -30,7 +30,7 @@ jobs:
               });
             }
 
-            let labels = issue.labels?.map((v) => v.name).filter((v) => ["p0", "p1", "p2", "p3"].includes(v));
+            let labels = issue.labels?.map((v) => v.name).filter((v) => ["P0", "P1", "P2", "P3"].includes(v));
             if (labels?.length == 0) {
               core.notice("No priority assigned")
               github.rest.issues.addLabels({
