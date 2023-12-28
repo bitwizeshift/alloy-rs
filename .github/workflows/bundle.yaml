@@ -20,12 +20,29 @@ on:
         default: dev
         required: false
         type: string
-
+      artifact-prefix:
+        description: "A prefix to append to created artifact names"
+        default: ""
+        required: false
+        type: string
+    outputs:
+      macos-example-artifact-name:
+        description: "The name of the created macOS Example artifact"
+        value: ${{ jobs.example-app-macos.outputs.artifact-name }}
+      macos-example-artifact-id:
+        description: "The id of the created macOS Example artifact"
+        value: ${{ jobs.example-app-macos.outputs.artifact-id }}
+      macos-example-artifact-url:
+        description: "The url to the created macOS Example artifact"
+        value: ${{ jobs.example-app-macos.outputs.artifact-url }}
 jobs:
   example-app-macos:
     name: Bundle MacOS Binary
     runs-on: macos-latest
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    outputs:
+      artifact-name: ${{ steps.out.outputs.artifact-name }}
+      artifact-id: ${{ steps.out.outputs.artifact-id }}
+      artifact-url: ${{ steps.out.outputs.artifact-url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -51,7 +68,31 @@ jobs:
           profile: ${{ steps.select.outputs.profile }}
 
       - name: Bundle
+        id: bundle
         uses: ./.github/actions/cargo-bundle
         with:
           profile: ${{ steps.select.outputs.profile }}
           path: example
+
+      - name: Upload Bundle Artifact
+        id: upload
+        uses: actions/upload-artifact@v4
+        if: steps.bundle.outcome == 'success'
+        continue-on-error: true
+        with:
+          name: ${{ inputs.artifact-prefix }}${{ steps.bundle.outputs.artifact_name }}
+          path: ${{ steps.bundle.outputs.artifact_path }}
+
+      - name: Set outputs
+        id: out
+        continue-on-error: true
+        run: |
+          echo "artifact-name=${{ inputs.artifact-prefix }}${{ steps.bundle.outputs.artifact_name }}" >> "${GITHUB_OUTPUT}"
+          echo "artifact-id=${{ steps.upload.outputs.artifact-id }}" >> "${GITHUB_OUTPUT}"
+          echo "artifact-url=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.upload.outputs.artifact-id }}" >> "${GITHUB_OUTPUT}"
+
+      - name: Summarize
+        run: |
+          echo "# 📦 Artifacts" >> "${GITHUB_STEP_SUMMARY}"
+          echo "" >> "${GITHUB_STEP_SUMMARY}"
+          echo "* [${{ steps.out.outputs.artifact-name }}](${{ steps.out.outputs.artifact-url }})" >> "${GITHUB_STEP_SUMMARY}"

@@ -8,6 +8,13 @@ inputs:
   path:
     description: "Path to the binary that is being bundled"
     required: true
+outputs:
+  artifact_name:
+    value: ${{ steps.bundle.outputs.artifact_name }}
+    description: "The name of the artifact"
+  artifact_path:
+    value: ${{ steps.bundle.outputs.artifact_path }}
+    description: "The path to the artifact"
 
 runs:
   using: "composite"
@@ -46,11 +53,3 @@ runs:
           "${app_name}"
         echo "artifact_path=${target_dir}/artifacts" >> ${GITHUB_OUTPUT}
         echo "artifact_name=${app_name}" >> ${GITHUB_OUTPUT}
-
-    - name: Upload Bundle Artifact
-      uses: actions/upload-artifact@v1
-      if: steps.bundle.outcome == 'success'
-      continue-on-error: true
-      with:
-        name: ${{ steps.bundle.outputs.artifact_name }}
-        path: ${{ steps.bundle.outputs.artifact_path }}
