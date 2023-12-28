@@ -30,7 +30,7 @@ jobs:
         run: echo "date=$(date +%F)" >> "${GITHUB_OUTPUT}"
 
       - name: Create issue or comment
-        uses: ./.github/actions/github-issue-or-comment
+        uses: bitwizeshift/actions-github/issues/create-or-comment@v1
         with:
           title: ${{ github.workflow }} failed
           body: |
@@ -48,5 +48,7 @@ jobs:
             * Check linker outputs
             * Revert commit that triggered failure
             * Update to the latest toolchain or dependencies
-          label: nightly-ci-failed
-          assignee: bitwizeshift
+          labels: |
+            nightly-ci-failed
+            triage-required
+          assignees: bitwizeshift

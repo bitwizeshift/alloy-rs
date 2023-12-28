@@ -12,9 +12,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Leave comment
-        uses: ./.github/actions/github-comment
+        uses: bitwizeshift/actions-github/issues/create-comment@v1
         with:
-          message: |
+          body: |
             👋🏻 Hi, thank you for your interest in this project.
 
             I sincerely appreciate your enthusiasm and eagerness to contribute,
@@ -40,4 +40,4 @@ jobs:
             Thank you! 🙇‍♂️
 
       - name: Close pull request
-        uses: ./.github/actions/github-close-pr
+        uses: bitwizeshift/actions-github/pulls/close@v1
