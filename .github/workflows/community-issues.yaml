@@ -10,34 +10,16 @@ jobs:
     permissions:
       issues: write
     steps:
-      - uses: actions/github-script@v7
+      - name: Get issue
+        uses: bitwizeshift/actions-github/issues/get@v1
+        id: issue
+      - name: Add assignee
+        if: ${{ !contains(steps.issue.outputs.assignees, 'bitwizeshift') }}
+        uses: bitwizeshift/actions-github/issues/add-assignees@v1
         with:
-          script: |
-            const { data: issue } = await github.rest.issues.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-
-            const assignees = issue.assignees?.map((v) => v.login).filter((v) => v == 'bitwizeshift');
-            if (assignees?.length == 0) {
-              core.notice("Adding assignee")
-              github.rest.issues.addAssignees({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                assignees: ['bitwizeshift']
-              });
-            }
-
-            let labels = issue.labels?.map((v) => v.name).filter((v) => ["P0", "P1", "P2", "P3"].includes(v));
-            if (labels?.length == 0) {
-              core.notice("No priority assigned")
-              github.rest.issues.addLabels({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                labels: ['triage-required']
-              });
-            }
-
+          assignees: bitwizeshift
+      - name: Add labels
+        if: ${{ !contains(steps.issue.outputs.labels, 'triaged') }}
+        uses: bitwizeshift/actions-github/issues/add-labels@v1
+        with:
+          labels: triage-required
