@@ -9,8 +9,6 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
       - name: Leave comment
         uses: bitwizeshift/actions-github/issues/create-comment@v1
         with:
