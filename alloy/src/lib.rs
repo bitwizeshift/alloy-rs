@@ -15,5 +15,6 @@
 #![deny(rust_2018_idioms)]
 
 pub mod cmp;
+pub mod math;
 pub mod meta;
 pub mod ops;
