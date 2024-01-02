@@ -14,4 +14,5 @@
 #![deny(unused_results)]
 #![deny(rust_2018_idioms)]
 
+pub mod cmp;
 pub mod meta;
