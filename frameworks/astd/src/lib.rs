@@ -7,7 +7,6 @@
 mod macros;
 mod source_location;
 
-pub use macros::*;
 pub use source_location::*;
 
 pub mod convert;
