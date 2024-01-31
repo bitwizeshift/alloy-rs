@@ -3,3 +3,5 @@
 mod angle;
 
 pub use angle::*;
+
+pub mod vec;

@@ -86,7 +86,8 @@ pub trait TryDot<Rhs: ?Sized = Self> {
   ///
   /// # Safety
   ///
-  /// This function call will be unsafe is `try_dot` does not yield a value.
+  /// This function call will be undefined-behavior if `try_dot` does not yield
+  /// a value.
   unsafe fn dot_unchecked(&self, rhs: &Rhs) -> Self::Output {
     self.try_dot(rhs).unwrap_unchecked()
   }
@@ -165,4 +166,17 @@ pub trait Cross<Rhs: ?Sized = Self> {
 
   ///
   fn cross(&self, other: &Rhs) -> Self::Output;
+}
+
+/// Computes a midpoint of two types.
+pub trait Midpoint {
+  /// The output type
+  type Output;
+
+  /// Computes the midpoint of this type, returning the result
+  ///
+  /// # Arguments
+  ///
+  /// * `other` - the other value
+  fn midpoint(&self, other: &Self) -> Self::Output;
 }
