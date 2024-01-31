@@ -64,7 +64,12 @@ where
 {
   fn near(&self, other: &Self, tolerance: &U) -> bool {
     for i in 0..N {
-      if !self[i].near(&other[i], tolerance) {
+      // SAFETY: The size is bound between [0, N)
+      if !unsafe {
+        self
+          .get_unchecked(i)
+          .near(other.get_unchecked(i), tolerance)
+      } {
         return false;
       }
     }
@@ -92,13 +97,25 @@ impl Near<f64, f32> for f64 {
 /// Trait for comparing objects for near-equality relative to a default tolerance.
 ///
 /// This is effectively a short-hand for `Near` with a default `f32` tolerance.
-pub trait AlmostEq<Rhs: ?Sized>: Near<Rhs> {
+pub trait AlmostEq<Rhs: ?Sized = Self>: Near<Rhs> {
   /// Tests whether `self` is almost equal to `other`
   ///
   /// # Arguments
   ///
   /// * `other` - the other value to compare against
   fn almost_eq(&self, other: &Rhs) -> bool;
+}
+
+impl AlmostEq for f32 {
+  fn almost_eq(&self, other: &Self) -> bool {
+    self.near(other, &std::f32::EPSILON)
+  }
+}
+
+impl AlmostEq for f64 {
+  fn almost_eq(&self, other: &Self) -> bool {
+    self.near(other, &std::f64::EPSILON)
+  }
 }
 
 impl<T> AlmostEq<[T]> for [T]
@@ -112,6 +129,22 @@ where
     }
     for i in 0..self.len() {
       if !self[i].almost_eq(&other[i]) {
+        return false;
+      }
+    }
+    true
+  }
+}
+
+impl<const N: usize, T> AlmostEq<[T; N]> for [T; N]
+where
+  T: AlmostEq<T>,
+{
+  #[inline]
+  fn almost_eq(&self, other: &[T; N]) -> bool {
+    for i in 0..N {
+      // SAFETY: the index is bound between [0, N)
+      if !unsafe { self.get_unchecked(i).almost_eq(other.get_unchecked(i)) } {
         return false;
       }
     }
