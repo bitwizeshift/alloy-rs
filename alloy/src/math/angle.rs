@@ -45,6 +45,9 @@ pub trait Trig: sealed::Sealed {
   /// Computes the tangent of this angle.
   fn tan(self) -> f32;
 
+  /// Computes the sine and tangent of this angle.
+  fn sin_cos(self) -> (f32, f32);
+
   /// Computes the arc-sine of the input value, returning the [`Angle`]
   ///
   /// # Arguments
@@ -106,7 +109,7 @@ const UNIT_EPSILON: f32 = f32::EPSILON;
 /// equal in length to the radius
 ///
 /// [Radian]: https://en.wikipedia.org/wiki/Radian
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 #[repr(transparent)]
 pub struct Radian(pub f32);
 
@@ -287,7 +290,7 @@ impl AlmostEq<Unit> for Radian {
 /// equals 2π radians, one degree is equivalent to π/180 radians.
 ///
 /// [Degree]: https://en.wikipedia.org/wiki/Degree_(angle)
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 #[repr(transparent)]
 pub struct Degree(pub f32);
 
@@ -471,7 +474,7 @@ impl AlmostEq<Unit> for Degree {
 /// angular arithmetic, where desired.
 ///
 /// [Gradian]: https://en.wikipedia.org/wiki/Gradian
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 #[repr(transparent)]
 pub struct Gradian(pub f32);
 
@@ -652,7 +655,7 @@ impl AlmostEq<Unit> for Gradian {
 /// to and from other angular units simple; e.g. 1 [`Unit`] is 360 [`Degree`]
 /// units which means conversion to [`Degree`] is just a simple multiplication.
 /// Likewise, the inverse conversion is a simple division operation.
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 #[repr(transparent)]
 pub struct Unit(pub f32);
 
@@ -921,6 +924,10 @@ macro_rules! define_angle {
 
         fn tan(self) -> f32 {
           self.to_radians().0.tan()
+        }
+
+        fn sin_cos(self) -> (f32, f32) {
+          self.to_radians().0.sin_cos()
         }
 
         fn asin(value: f32) -> Self {
