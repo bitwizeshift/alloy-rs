@@ -331,6 +331,30 @@ impl Vec3 {
     self.set_x(x);
     self.set_y(y);
   }
+
+  /// Returns whether all components of this Vec are finite.
+  pub fn is_finite(&self) -> bool {
+    self.x().is_finite() && self.y().is_finite() && self.z().is_finite()
+  }
+
+  /// Returns whether any component of this vec are infinite.
+  pub fn is_infinite(&self) -> bool {
+    self.x().is_infinite() || self.y().is_infinite() || self.z().is_infinite()
+  }
+
+  /// Returns whether any component of this vec are nan.
+  pub fn is_nan(&self) -> bool {
+    self.x().is_nan() || self.y().is_nan() || self.z().is_nan()
+  }
+
+  /// Computes the absolute value of `self`
+  pub fn abs(&self) -> Vector3 {
+    Vector3 {
+      x: self.x().abs(),
+      y: self.y().abs(),
+      z: self.z().abs(),
+    }
+  }
 }
 
 impl Midpoint for Vec3 {
@@ -610,6 +634,9 @@ pub struct Vector3 {
 }
 
 impl Vector3 {
+  /// A constant for a vector of magnitude 0 at the origin.
+  pub const ZERO: Vector3 = Vector3::new(0.0, 0.0, 0.0);
+
   /// A constant for a unit vector in the positive X-direction.
   pub const UNIT_X: Vector3 = Vector3::new(1.0, 0.0, 0.0);
 

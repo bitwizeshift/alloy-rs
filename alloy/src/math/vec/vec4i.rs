@@ -329,6 +329,32 @@ impl Vec4i {
   pub fn set_yzw(&mut self, yzw: &Vec3i) {
     self.yzw_mut().set(yzw)
   }
+
+  /// Sets all the components of this vector the values from other.
+  ///
+  /// # Arguments
+  ///
+  /// * `other` - the other [`Vec3i`] to set.
+  pub fn set(&mut self, other: &Vec4i) {
+    let src_ptr = other.as_ptr();
+    let dest_ptr = self.0.as_mut_ptr();
+
+    unsafe {
+      for i in 0..4 {
+        *dest_ptr.add(i) = *src_ptr.add(i);
+      }
+    }
+  }
+
+  /// Computes the absolute value of `self`
+  pub fn abs(&self) -> Vector4i {
+    Vector4i {
+      x: self.x().abs(),
+      y: self.y().abs(),
+      z: self.z().abs(),
+      w: self.w().abs(),
+    }
+  }
 }
 
 impl<I> Index<I> for Vec4i
@@ -579,6 +605,33 @@ pub struct Vector4i {
 }
 
 impl Vector4i {
+  /// A constant for a vector of magnitude 0 at the origin.
+  pub const ZERO: Vector4i = Vector4i::new(0, 0, 0, 0);
+
+  /// A constant for a unit vector in the positive X-direction.
+  pub const UNIT_X: Vector4i = Vector4i::new(1, 0, 0, 0);
+
+  /// A constant for a unit vector in the positive Y-direction.
+  pub const UNIT_Y: Vector4i = Vector4i::new(0, 1, 0, 0);
+
+  /// A constant for a unit vector in the positive Z-direction.
+  pub const UNIT_Z: Vector4i = Vector4i::new(0, 0, 1, 0);
+
+  /// A constant for a unit vector in the positive W-direction.
+  pub const UNIT_W: Vector4i = Vector4i::new(0, 0, 0, 1);
+
+  /// A constant for a unit vector in the negative X-direction.
+  pub const NEG_UNIT_X: Vector4i = Vector4i::new(-1, 0, 0, 0);
+
+  /// A constant for a unit vector in the negative Y-direction.
+  pub const NEG_UNIT_Y: Vector4i = Vector4i::new(0, -1, 0, 0);
+
+  /// A constant for a unit vector in the negative Z-direction.
+  pub const NEG_UNIT_Z: Vector4i = Vector4i::new(0, 0, -1, 0);
+
+  /// A constant for a unit vector in the negative W-direction.
+  pub const NEG_UNIT_W: Vector4i = Vector4i::new(0, 0, 0, -1);
+
   /// Constructs this vector from an x, y, z, and w coordinate.
   ///
   /// # Arguments

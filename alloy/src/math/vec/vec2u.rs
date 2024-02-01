@@ -405,6 +405,15 @@ pub struct Vector2u {
 }
 
 impl Vector2u {
+  /// A constant for a vector of magnitude 0 at the origin.
+  pub const ZERO: Vector2u = Vector2u::new(0, 0);
+
+  /// A constant for a unit vector in the positive X-direction.
+  pub const UNIT_X: Vector2u = Vector2u::new(1, 0);
+
+  /// A constant for a unit vector in the positive Y-direction.
+  pub const UNIT_Y: Vector2u = Vector2u::new(0, 1);
+
   /// Constructs this vector from an x and y coordinate.
   ///
   /// # Arguments

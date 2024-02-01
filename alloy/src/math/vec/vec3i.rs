@@ -258,6 +258,15 @@ impl Vec3i {
       }
     }
   }
+
+  /// Computes the absolute value of `self`
+  pub fn abs(&self) -> Vector3i {
+    Vector3i {
+      x: self.x().abs(),
+      y: self.y().abs(),
+      z: self.z().abs(),
+    }
+  }
 }
 
 impl<I> Index<I> for Vec3i
@@ -490,6 +499,27 @@ pub struct Vector3i {
 }
 
 impl Vector3i {
+  /// A constant for a vector of magnitude 0 at the origin.
+  pub const ZERO: Vector3i = Vector3i::new(0, 0, 0);
+
+  /// A constant for a unit vector in the positive X-direction.
+  pub const UNIT_X: Vector3i = Vector3i::new(1, 0, 0);
+
+  /// A constant for a unit vector in the positive Y-direction.
+  pub const UNIT_Y: Vector3i = Vector3i::new(0, 1, 0);
+
+  /// A constant for a unit vector in the positive Z-direction.
+  pub const UNIT_Z: Vector3i = Vector3i::new(0, 0, 1);
+
+  /// A constant for a unit vector in the negative X-direction.
+  pub const NEG_UNIT_X: Vector3i = Vector3i::new(-1, 0, 0);
+
+  /// A constant for a unit vector in the negative Y-direction.
+  pub const NEG_UNIT_Y: Vector3i = Vector3i::new(0, -1, 0);
+
+  /// A constant for a unit vector in the negative Z-direction.
+  pub const NEG_UNIT_Z: Vector3i = Vector3i::new(0, 0, -1);
+
   /// Constructs this vector from an x, y, and z coordinate.
   ///
   /// # Arguments

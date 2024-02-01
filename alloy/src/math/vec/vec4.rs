@@ -332,6 +332,22 @@ impl Vec4 {
     self.yzw_mut().set(yzw)
   }
 
+  /// Sets all the components of this vector the values from other.
+  ///
+  /// # Arguments
+  ///
+  /// * `other` - the other [`Vec3`] to set.
+  pub fn set(&mut self, other: &Vec4) {
+    let src_ptr = other.as_ptr();
+    let dest_ptr = self.0.as_mut_ptr();
+
+    unsafe {
+      for i in 0..4 {
+        *dest_ptr.add(i) = *src_ptr.add(i);
+      }
+    }
+  }
+
   /// Computes the square magnitude of this two-component vector.
   #[inline(always)]
   pub fn square_magnitude(&self) -> f32 {
@@ -359,6 +375,34 @@ impl Vec4 {
   /// Returns normalized vector.
   pub fn normalized(&self) -> Vector4 {
     self / self.magnitude()
+  }
+
+  /// Returns whether all components of this Vec are finite.
+  pub fn is_finite(&self) -> bool {
+    self.x().is_finite() && self.y().is_finite() && self.z().is_finite() && self.w().is_finite()
+  }
+
+  /// Returns whether any component of this vec are infinite.
+  pub fn is_infinite(&self) -> bool {
+    self.x().is_infinite()
+      || self.y().is_infinite()
+      || self.z().is_infinite()
+      || self.w().is_infinite()
+  }
+
+  /// Returns whether any component of this vec are nan.
+  pub fn is_nan(&self) -> bool {
+    self.x().is_nan() || self.y().is_nan() || self.z().is_nan() || self.w().is_nan()
+  }
+
+  /// Computes the absolute value of `self`
+  pub fn abs(&self) -> Vector4 {
+    Vector4 {
+      x: self.x().abs(),
+      y: self.y().abs(),
+      z: self.z().abs(),
+      w: self.w().abs(),
+    }
   }
 }
 
@@ -660,6 +704,9 @@ pub struct Vector4 {
 }
 
 impl Vector4 {
+  /// A constant for a vector of magnitude 0 at the origin.
+  pub const ZERO: Vector4 = Vector4::new(0.0, 0.0, 0.0, 0.0);
+
   /// A constant for a unit vector in the positive X-direction.
   pub const UNIT_X: Vector4 = Vector4::new(1.0, 0.0, 0.0, 0.0);
 

@@ -566,6 +566,21 @@ pub struct Vector4u {
 }
 
 impl Vector4u {
+  /// A constant for a vector of magnitude 0 at the origin.
+  pub const ZERO: Vector4u = Vector4u::new(0, 0, 0, 0);
+
+  /// A constant for a unit vector in the positive X-direction.
+  pub const UNIT_X: Vector4u = Vector4u::new(1, 0, 0, 0);
+
+  /// A constant for a unit vector in the positive Y-direction.
+  pub const UNIT_Y: Vector4u = Vector4u::new(0, 1, 0, 0);
+
+  /// A constant for a unit vector in the positive Z-direction.
+  pub const UNIT_Z: Vector4u = Vector4u::new(0, 0, 1, 0);
+
+  /// A constant for a unit vector in the positive W-direction.
+  pub const UNIT_W: Vector4u = Vector4u::new(0, 0, 0, 1);
+
   /// Constructs this vector from an x, y, z, and w coordinate.
   ///
   /// # Arguments

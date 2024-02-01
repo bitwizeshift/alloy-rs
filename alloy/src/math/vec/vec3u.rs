@@ -478,6 +478,18 @@ pub struct Vector3u {
 }
 
 impl Vector3u {
+  /// A constant for a vector of magnitude 0 at the origin.
+  pub const ZERO: Vector3u = Vector3u::new(0, 0, 0);
+
+  /// A constant for a unit vector in the positive X-direction.
+  pub const UNIT_X: Vector3u = Vector3u::new(1, 0, 0);
+
+  /// A constant for a unit vector in the positive Y-direction.
+  pub const UNIT_Y: Vector3u = Vector3u::new(0, 1, 0);
+
+  /// A constant for a unit vector in the positive Z-direction.
+  pub const UNIT_Z: Vector3u = Vector3u::new(0, 0, 1);
+
   /// Constructs this vector from an x, y, and z coordinate.
   ///
   /// # Arguments
