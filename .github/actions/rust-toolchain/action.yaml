@@ -23,7 +23,7 @@ runs:
   using: "composite"
   steps:
     - name: Prepare Cache
-      uses: bitwizeshift/action-rust-cache@v2
+      uses: bitwizeshift/action-rust-cache@v3
       with:
         shared-key: ${{ inputs.cache-key }}
 
