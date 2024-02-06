@@ -6,16 +6,60 @@ use std::ops::{
 };
 use std::slice::SliceIndex;
 
-/// A 2-component view of a vector-like object.
+/// A 2-component non-owning view of an integral [Euclidean vector].
 ///
-/// [`Vec2i`] objects are to [`Vector2i`] as [`str`] is to [`String`]; that is to
-/// say that [`Vec2`] objects represent an immutable view of the owning
-/// [`Vector2i`] counter-part.
+/// [Euclidean vector]: https://en.wikipedia.org/wiki/Euclidean_vector
+///
+/// # Guarantees
+///
+/// This type has the strict requirement that it can only reference a
+/// 2-component slice of [`i32`] values. It is guaranteed to never refer to
+/// more or less than 2 entries.
+///
+/// # Relation to [`Vector2i`]
+///
+/// [`Vec2i`] is a non-owning equivalent of [`Vector2i`]. This enables non-vector
+/// types to either [`Deref`] or provide conversion-related utilities into
+/// [`Vec2i`] types to be able to access and benefit from vector operations.
 #[repr(transparent)]
 #[derive(PartialEq, PartialOrd, Eq, Ord)]
 pub struct Vec2i([i32]);
 
 impl Vec2i {
+  /// Forms a reference to a [`Vec2i`] from a 2-component [`i32`] array.
+  ///
+  /// This function is identical to [`from_slice_unchecked`], except it is not
+  /// marked `unsafe`.
+  ///
+  /// [`from_slice_unchecked`]: Self::from_slice_unchecked
+  ///
+  /// # Arguments
+  ///
+  /// * `array` - an array containing 2 [`i32`] values.
+  #[must_use]
+  #[inline(always)]
+  pub const fn from_array(array: &[i32; 2]) -> &Self {
+    // SAFETY: `array` is guaranteed to be 2-components
+    unsafe { std::mem::transmute(array.as_slice()) }
+  }
+
+  /// Forms a mutable reference to a [`Vec2i`] from a 2-component [`i32`] array.
+  ///
+  /// This function is identical to [`from_mut_slice_unchecked`], except it is
+  /// not marked `unsafe`.
+  ///
+  /// [`from_mut_slice_unchecked`]: Self::from_mut_slice_unchecked
+  ///
+  /// # Arguments
+  ///
+  /// * `array` - an array containing 2 [`i32`] values.
+  #[must_use]
+  #[inline(always)]
+  pub fn from_mut_array(array: &mut [i32; 2]) -> &Self {
+    // SAFETY: `array` is guaranteed to be 2-components
+    unsafe { std::mem::transmute(array.as_mut_slice()) }
+  }
+
   /// Forms a reference to a [`Vec2`] from a slice of [`i32`].
   ///
   /// This requires that `slice.len() == 2`, otherwise this returns [`None`].
@@ -23,6 +67,7 @@ impl Vec2i {
   /// # Arguments
   ///
   /// * `slice` - the slice of [`i32`]s.
+  #[must_use]
   pub const fn from_slice(slice: &[i32]) -> Option<&Self> {
     if slice.len() == 2 {
       // SAFETY: Vec2 is transparent, and implemented directly in terms of a
@@ -41,6 +86,7 @@ impl Vec2i {
   /// # Arguments
   ///
   /// * `slice` - the mutable slice of [`i32`]s.
+  #[must_use]
   pub fn from_mut_slice(slice: &mut [i32]) -> Option<&mut Self> {
     if slice.len() == 2 {
       // SAFETY: Vec2 is transparent, and implemented directly in terms of a
@@ -62,6 +108,7 @@ impl Vec2i {
   /// # Safety
   ///
   /// `slice.len()` must be equal to `2`.
+  #[must_use]
   #[inline(always)]
   pub const unsafe fn from_slice_unchecked(slice: &[i32]) -> &Self {
     debug_assert!(slice.len() == 2);
@@ -82,6 +129,7 @@ impl Vec2i {
   /// # Safety
   ///
   /// `slice.len()` must be equal to `2`.
+  #[must_use]
   #[inline(always)]
   pub unsafe fn from_mut_slice_unchecked(slice: &mut [i32]) -> &mut Self {
     debug_assert!(slice.len() == 2);
@@ -100,6 +148,7 @@ impl Vec2i {
   ///
   /// `ptr` must point to an allocated object that references at least two
   /// entries
+  #[must_use]
   #[inline(always)]
   pub const unsafe fn from_ptr_unchecked<'a>(ptr: *const i32) -> &'a Vec2i {
     Vec2i::from_slice_unchecked(std::slice::from_raw_parts(ptr, 2))
@@ -116,42 +165,49 @@ impl Vec2i {
   ///
   /// `ptr` must point to an allocated object that references at least two
   /// entries
+  #[must_use]
   #[inline(always)]
   pub unsafe fn from_mut_ptr_unchecked<'a>(ptr: *mut i32) -> &'a mut Vec2i {
     Vec2i::from_mut_slice_unchecked(std::slice::from_raw_parts_mut(ptr, 2))
   }
 
   /// Returns this [`Vec2`] as a slice of [`i32`].
+  #[must_use]
   #[inline(always)]
   pub const fn as_slice(&self) -> &[i32] {
     &self.0
   }
 
   /// Returns this [`Vec2`] as a mutable slice of [`i32`].
+  #[must_use]
   #[inline(always)]
   pub fn as_mut_slice(&mut self) -> &mut [i32] {
     &mut self.0
   }
 
   /// Returns the X-coordinate of this 2-component vector.
+  #[must_use]
   #[inline(always)]
   pub const fn x(&self) -> i32 {
     unsafe { *self.0.as_ptr() }
   }
 
   /// Returns the Y-coordinate of this 2-component vector.
+  #[must_use]
   #[inline(always)]
   pub const fn y(&self) -> i32 {
     unsafe { *self.0.as_ptr().add(1) }
   }
 
   /// Returns a mutable reference to the X-coordinate of this 2-component vector.
+  #[must_use]
   #[inline(always)]
   pub fn x_mut(&mut self) -> &mut i32 {
     unsafe { &mut *self.0.as_mut_ptr() }
   }
 
   /// Returns a mutable reference to the Y-coordinate of this 2-component vector.
+  #[must_use]
   #[inline(always)]
   pub fn y_mut(&mut self) -> &mut i32 {
     unsafe { &mut *self.0.as_mut_ptr().add(1) }
@@ -194,6 +250,7 @@ impl Vec2i {
   }
 
   /// Computes the absolute value of `self`
+  #[must_use]
   pub fn abs(&self) -> Vector2i {
     Vector2i {
       x: self.x().abs(),
@@ -208,6 +265,7 @@ where
 {
   type Output = I::Output;
 
+  #[must_use]
   #[inline(always)]
   fn index(&self, index: I) -> &Self::Output {
     self.0.index(index)
@@ -218,6 +276,7 @@ impl<I> IndexMut<I> for Vec2i
 where
   I: SliceIndex<[i32]>,
 {
+  #[must_use]
   #[inline(always)]
   fn index_mut(&mut self, index: I) -> &mut Self::Output {
     self.0.index_mut(index)
@@ -227,6 +286,7 @@ where
 impl Deref for Vec2i {
   type Target = [i32];
 
+  #[must_use]
   #[inline(always)]
   fn deref(&self) -> &Self::Target {
     &self.0
@@ -234,6 +294,7 @@ impl Deref for Vec2i {
 }
 
 impl DerefMut for Vec2i {
+  #[must_use]
   #[inline(always)]
   fn deref_mut(&mut self) -> &mut Self::Target {
     &mut self.0
@@ -241,6 +302,7 @@ impl DerefMut for Vec2i {
 }
 
 impl AsRef<[i32]> for Vec2i {
+  #[must_use]
   #[inline(always)]
   fn as_ref(&self) -> &[i32] {
     &self.0
@@ -248,6 +310,7 @@ impl AsRef<[i32]> for Vec2i {
 }
 
 impl AsMut<[i32]> for Vec2i {
+  #[must_use]
   #[inline(always)]
   fn as_mut(&mut self) -> &mut [i32] {
     &mut self.0
@@ -256,6 +319,7 @@ impl AsMut<[i32]> for Vec2i {
 
 impl Dot for Vec2i {
   type Output = i32;
+  #[must_use]
   fn dot(&self, rhs: &Self) -> Self::Output {
     self.x() * rhs.x() + self.y() * rhs.y()
   }
@@ -264,6 +328,7 @@ impl Dot for Vec2i {
 impl Add for &'_ Vec2i {
   type Output = Vector2i;
 
+  #[must_use]
   fn add(self, rhs: Self) -> Self::Output {
     Vector2i {
       x: self.x() + rhs.x(),
@@ -287,6 +352,7 @@ impl AddAssign<&Vec2i> for Vec2i {
 impl Sub for &'_ Vec2i {
   type Output = Vector2i;
 
+  #[must_use]
   fn sub(self, rhs: Self) -> Self::Output {
     Vector2i {
       x: self.x() - rhs.x(),
@@ -310,6 +376,7 @@ impl SubAssign<&Vec2i> for Vec2i {
 impl Mul<i32> for &'_ Vec2i {
   type Output = Vector2i;
 
+  #[must_use]
   fn mul(self, rhs: i32) -> Self::Output {
     Vector2i {
       x: self.x() * rhs,
@@ -321,6 +388,7 @@ impl Mul<i32> for &'_ Vec2i {
 impl Mul<&'_ Vec2i> for i32 {
   type Output = Vector2i;
 
+  #[must_use]
   fn mul(self, rhs: &'_ Vec2i) -> Self::Output {
     Vector2i {
       x: self * rhs.x(),
@@ -343,6 +411,7 @@ impl MulAssign<i32> for Vec2i {
 impl Div<i32> for &'_ Vec2i {
   type Output = Vector2i;
 
+  #[must_use]
   fn div(self, rhs: i32) -> Self::Output {
     Vector2i {
       x: self.x() / rhs,
@@ -365,6 +434,7 @@ impl DivAssign<i32> for Vec2i {
 impl Rem<i32> for &'_ Vec2i {
   type Output = Vector2i;
 
+  #[must_use]
   fn rem(self, rhs: i32) -> Self::Output {
     Vector2i {
       x: self.x().rem(rhs),
@@ -387,6 +457,7 @@ impl RemAssign<i32> for Vec2i {
 impl Neg for &'_ Vec2i {
   type Output = Vector2i;
 
+  #[must_use]
   fn neg(self) -> Self::Output {
     Vector2i {
       x: -self.x(),
@@ -410,10 +481,13 @@ impl std::fmt::Display for Vec2i {
   }
 }
 
-/// An owning representation of a 2-dimensional Vector object.
+/// An owning representation of an integral 2-component [Euclidean vector].
 ///
-/// Unlike [`Vec2`], which is solely referential, [`Vector2`] is an owning
-/// instance.
+/// Like [`Vec2i`], the [`Vector2i`] object represents a [Euclidean vector] in
+/// 2D. Unlike the [`Vec2i`], this is an owning representation that stores the
+/// actual content of the vector.
+///
+/// [Euclidean vector]: https://en.wikipedia.org/wiki/Euclidean_vector
 #[repr(C)]
 #[derive(Clone, Copy, Default, PartialEq, PartialOrd, Debug, Eq, Ord)]
 pub struct Vector2i {
@@ -445,6 +519,7 @@ impl Vector2i {
   ///
   /// * `x` - the x-component
   /// * `y` - the y-component
+  #[must_use]
   #[inline(always)]
   pub const fn new(x: i32, y: i32) -> Self {
     Self { x, y }
@@ -455,9 +530,21 @@ impl Vector2i {
   /// # Arguments
   ///
   /// * `v` - the value to uniformly apply
+  #[must_use]
   #[inline(always)]
   pub const fn uniform(v: i32) -> Self {
     Self::new(v, v)
+  }
+
+  /// Constructs this vector from a 2-component [`i32`] array.
+  ///
+  /// # Arguments
+  ///
+  /// * `array` - an array containing 2 [`i32`] values.
+  #[must_use]
+  #[inline(always)]
+  pub const fn from_array(array: &[i32; 2]) -> Self {
+    Self::new(array[0], array[1])
   }
 
   /// Constructs this vector from a slice of floats.
@@ -467,6 +554,7 @@ impl Vector2i {
   /// # Arguments
   ///
   /// * `slice` - the slice to read from
+  #[must_use]
   pub const fn from_slice(slice: &[i32]) -> Option<Self> {
     if slice.len() != 2 {
       None
@@ -488,10 +576,25 @@ impl Vector2i {
   ///
   /// `slice.len()` must be greater or equal to `2`, otherwise this will
   /// access an out-of-bounds entry and `panic`.
+  #[must_use]
   #[inline(always)]
   pub const unsafe fn from_slice_unchecked(slice: &[i32]) -> Self {
     debug_assert!(slice.len() == 2);
     Self::from_ptr(slice.as_ptr())
+  }
+
+  /// Constructs this vector from a [`Vec2i`]
+  ///
+  /// # Arguments
+  ///
+  /// * `other` - the other vector
+  #[must_use]
+  #[inline(always)]
+  pub const fn from_vec2i(other: &Vec2i) -> Self {
+    Self {
+      x: other.x(),
+      y: other.y(),
+    }
   }
 
   /// Constructs this vector from a pointer to floating point values.
@@ -504,11 +607,14 @@ impl Vector2i {
   ///
   /// This function requires that `ptr` be non-null and point to the start of a
   /// contiguous sequence of 2 [`i32`] values.
+  #[must_use]
+  #[inline(always)]
   pub const unsafe fn from_ptr(ptr: *const i32) -> Self {
     Self::new(*ptr, *ptr.add(1))
   }
 
   /// Returns this vector as a [`Vec2`].
+  #[must_use]
   #[inline(always)]
   pub const fn as_vec2i(&self) -> &Vec2i {
     // SAFETY:
@@ -527,6 +633,7 @@ impl Vector2i {
   }
 
   /// Returns this vector as a mutable [`Vec2`].
+  #[must_use]
   #[inline(always)]
   pub fn as_mut_vec2i(&mut self) -> &mut Vec2i {
     // SAFETY: See explanation in Self::as_vec2i
@@ -539,12 +646,14 @@ impl Vector2i {
   }
 
   /// Returns this vector as a slice of [`i32`].
+  #[must_use]
   #[inline(always)]
   pub const fn as_slice(&self) -> &[i32] {
     self.as_vec2i().as_slice()
   }
 
   /// Returns this vector as a mutable slice of [`i32`].
+  #[must_use]
   #[inline(always)]
   pub fn as_mut_slice(&mut self) -> &mut [i32] {
     self.as_mut_vec2i().as_mut_slice()
@@ -552,6 +661,7 @@ impl Vector2i {
 }
 
 impl From<&'_ Vec2i> for Vector2i {
+  #[must_use]
   #[inline(always)]
   fn from(value: &'_ Vec2i) -> Self {
     value.to_owned()
@@ -562,6 +672,7 @@ impl<Vec> From<Vec> for Vector2i
 where
   Vec: AsRef<Vec2i>,
 {
+  #[must_use]
   #[inline(always)]
   fn from(value: Vec) -> Self {
     value.as_ref().to_owned()
@@ -571,6 +682,7 @@ where
 impl Add for &Vector2i {
   type Output = Vector2i;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Self) -> Self::Output {
     self.as_vec2i().add(rhs.as_vec2i())
@@ -580,6 +692,7 @@ impl Add for &Vector2i {
 impl Add for Vector2i {
   type Output = Vector2i;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Self) -> Self::Output {
     self.add(rhs.as_vec2i())
@@ -589,6 +702,7 @@ impl Add for Vector2i {
 impl Add<&Vec2i> for &Vector2i {
   type Output = Vector2i;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: &Vec2i) -> Self::Output {
     self.as_vec2i().add(rhs)
@@ -598,6 +712,7 @@ impl Add<&Vec2i> for &Vector2i {
 impl Add<&Vector2i> for &'_ Vec2i {
   type Output = Vector2i;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: &Vector2i) -> Self::Output {
     self.add(rhs.as_vec2i())
@@ -607,6 +722,7 @@ impl Add<&Vector2i> for &'_ Vec2i {
 impl Add<Vector2i> for &Vec2i {
   type Output = Vector2i;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Vector2i) -> Self::Output {
     // Addition is commutative, so reordering operations is safe
@@ -617,6 +733,7 @@ impl Add<Vector2i> for &Vec2i {
 impl Add<&Vec2i> for Vector2i {
   type Output = Vector2i;
 
+  #[must_use]
   fn add(mut self, rhs: &Vec2i) -> Self::Output {
     // Repurpose 'self' for the output, to save space (1 less lifetime)
     let dest_ptr = self.0.as_mut_ptr();
@@ -634,6 +751,7 @@ impl Add<&Vec2i> for Vector2i {
 impl Add<&Vector2i> for Vector2i {
   type Output = Vector2i;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: &Vector2i) -> Self::Output {
     // Addition is commutative, so reordering operations is safe
@@ -644,6 +762,7 @@ impl Add<&Vector2i> for Vector2i {
 impl Add<Vector2i> for &Vector2i {
   type Output = Vector2i;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Vector2i) -> Self::Output {
     // Addition is commutative, so reordering operations is safe

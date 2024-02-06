@@ -6,23 +6,68 @@ use std::ops::{
 
 use super::Vec2u;
 
-/// A 3-component view of a vector-like object.
+/// A 3-component non-owning view of an unsigned [Euclidean vector].
 ///
-/// [`Vec3u`] objects are to [`Vector3u`] as [`str`] is to [`String`]; that is to
-/// say that [`Vec3u`] objects represent an immutable view of the owning
-/// [`Vector3u`] counter-part.
+/// [Euclidean vector]: https://en.wikipedia.org/wiki/Euclidean_vector
+///
+/// # Guarantees
+///
+/// This type has the strict requirement that it can only reference a
+/// 3-component slice of [`u32`] values. It is guaranteed to never refer to
+/// more or less than 3 entries.
+///
+/// # Relation to [`Vector3u`]
+///
+/// [`Vec3u`] is a non-owning equivalent of [`Vector3u`]. This enables non-vector
+/// types to either [`Deref`] or provide conversion-related utilities into
+/// [`Vec3u`] types to be able to access and benefit from vector operations.
 #[repr(transparent)]
 #[derive(PartialEq, PartialOrd, Eq, Ord)]
 pub struct Vec3u([u32]);
 
 impl Vec3u {
-  /// Forms a reference to a [`Vec3`] from a slice of [`u32`].
+  /// Forms a reference to a [`Vec3u`] from a 3-component [`u32`] array.
+  ///
+  /// This function is identical to [`from_slice_unchecked`], except it is not
+  /// marked `unsafe`.
+  ///
+  /// [`from_slice_unchecked`]: Self::from_slice_unchecked
+  ///
+  /// # Arguments
+  ///
+  /// * `array` - an array containing 3 [`u32`] values.
+  #[must_use]
+  #[inline(always)]
+  pub const fn from_array(array: &[u32; 3]) -> &Self {
+    // SAFETY: `array` is guaranteed to be 3-components
+    unsafe { std::mem::transmute(array.as_slice()) }
+  }
+
+  /// Forms a mutable reference to a [`Vec3u`] from a 3-component [`u32`] array.
+  ///
+  /// This function is identical to [`from_mut_slice_unchecked`], except it is
+  /// not marked `unsafe`.
+  ///
+  /// [`from_mut_slice_unchecked`]: Self::from_mut_slice_unchecked
+  ///
+  /// # Arguments
+  ///
+  /// * `array` - an array containing 3 [`u32`] values.
+  #[must_use]
+  #[inline(always)]
+  pub fn from_mut_array(array: &mut [u32; 3]) -> &Self {
+    // SAFETY: `array` is guaranteed to be 3-components
+    unsafe { std::mem::transmute(array.as_mut_slice()) }
+  }
+
+  /// Forms a reference to a [`Vec3u`] from a slice of [`u32`].
   ///
   /// This requires that `slice.len() == 3`, otherwise this returns [`None`].
   ///
   /// # Arguments
   ///
   /// * `slice` - the slice of [`u32`]s.
+  #[must_use]
   pub const fn from_slice(slice: &[u32]) -> Option<&Self> {
     if slice.len() == 3 {
       // SAFETY: Vec3 is transparent, and implemented directly in terms of a
@@ -34,13 +79,14 @@ impl Vec3u {
     }
   }
 
-  /// Forms a mutable reference to a [`Vec3`] from a mutable slice of [`u32`].
+  /// Forms a mutable reference to a [`Vec3u`] from a mutable slice of [`u32`].
   ///
   /// This requires that `slice.len() == 3`, otherwise this returns [`None`].
   ///
   /// # Arguments
   ///
   /// * `slice` - the mutable slice of [`u32`]s.
+  #[must_use]
   pub fn from_mut_slice(slice: &mut [u32]) -> Option<&mut Self> {
     if slice.len() == 3 {
       // SAFETY: Vec3 is transparent, and implemented directly in terms of a
@@ -52,7 +98,7 @@ impl Vec3u {
     }
   }
 
-  /// Forms a reference to a [`Vec3`] from a slice of [`u32`] that is assumed to
+  /// Forms a reference to a [`Vec3u`] from a slice of [`u32`] that is assumed to
   /// contain two values.
   ///
   /// # Arguments
@@ -61,7 +107,8 @@ impl Vec3u {
   ///
   /// # Safety
   ///
-  /// `slice.len()` must be equal to `2`.
+  /// `slice.len()` must be equal to `3`.
+  #[must_use]
   #[inline(always)]
   pub const unsafe fn from_slice_unchecked(slice: &[u32]) -> &Self {
     debug_assert!(slice.len() == 3);
@@ -72,7 +119,7 @@ impl Vec3u {
     unsafe { std::mem::transmute(slice) }
   }
 
-  /// Forms a mutable reference to a [`Vec3`] from a slice of [`u32`] that is
+  /// Forms a mutable reference to a [`Vec3u`] from a slice of [`u32`] that is
   /// assumed to contain two values.
   ///
   /// # Arguments
@@ -82,6 +129,7 @@ impl Vec3u {
   /// # Safety
   ///
   /// `slice.len()` must be equal to `2`.
+  #[must_use]
   #[inline(always)]
   pub unsafe fn from_mut_slice_unchecked(slice: &mut [u32]) -> &mut Self {
     debug_assert!(slice.len() == 3);
@@ -89,7 +137,7 @@ impl Vec3u {
     unsafe { std::mem::transmute(slice) }
   }
 
-  /// Forms a reference to a [`Vec3`] from a pointer to a contiguous sequence
+  /// Forms a reference to a [`Vec3u`] from a pointer to a contiguous sequence
   /// of at least two [`u32`]s.
   ///
   /// # Arguments
@@ -100,12 +148,13 @@ impl Vec3u {
   ///
   /// `ptr` must point to an allocated object that references at least two
   /// entries
+  #[must_use]
   #[inline(always)]
   pub const unsafe fn from_ptr_unchecked<'a>(ptr: *const u32) -> &'a Vec3u {
     Vec3u::from_slice_unchecked(std::slice::from_raw_parts(ptr, 3))
   }
 
-  /// Forms a mutable reference to a [`Vec3`] from a pointer to a contiguous
+  /// Forms a mutable reference to a [`Vec3u`] from a pointer to a contiguous
   /// sequence of at least two [`u32`]s.
   ///
   /// # Arguments
@@ -116,30 +165,35 @@ impl Vec3u {
   ///
   /// `ptr` must point to an allocated object that references at least two
   /// entries
+  #[must_use]
   #[inline(always)]
   pub unsafe fn from_mut_ptr_unchecked<'a>(ptr: *mut u32) -> &'a mut Vec3u {
     Vec3u::from_mut_slice_unchecked(std::slice::from_raw_parts_mut(ptr, 3))
   }
 
-  /// Returns this [`Vec3`] as a slice of [`u32`].
+  /// Returns this [`Vec3u`] as a slice of [`u32`].
+  #[must_use]
   #[inline(always)]
   pub const fn as_slice(&self) -> &[u32] {
     &self.0
   }
 
-  /// Returns this [`Vec3`] as a mutable slice of [`u32`].
+  /// Returns this [`Vec3u`] as a mutable slice of [`u32`].
+  #[must_use]
   #[inline(always)]
   pub fn as_mut_slice(&mut self) -> &mut [u32] {
     &mut self.0
   }
 
   /// Returns the X-coordinate of this 3-component vector.
+  #[must_use]
   #[inline(always)]
   pub const fn x(&self) -> u32 {
     unsafe { *self.0.as_ptr() }
   }
 
   /// Returns the Y-coordinate of this 3-component vector.
+  #[must_use]
   #[inline(always)]
   pub const fn y(&self) -> u32 {
     unsafe { *self.0.as_ptr().add(1) }
@@ -151,43 +205,50 @@ impl Vec3u {
     unsafe { *self.0.as_ptr().add(2) }
   }
 
-  /// Returns the xy coordinates of this vector as a [`Vec3`].
+  /// Returns the xy coordinates of this vector as a [`Vec3u`].
+  #[must_use]
   #[inline(always)]
   pub const fn xy(&self) -> &Vec2u {
     unsafe { Vec2u::from_ptr_unchecked(self.0.as_ptr()) }
   }
 
-  /// Returns the yz coordinates of this vector as a [`Vec3`].
+  /// Returns the yz coordinates of this vector as a [`Vec3u`].
+  #[must_use]
   #[inline(always)]
   pub const fn yz(&self) -> &Vec2u {
     unsafe { Vec2u::from_ptr_unchecked(self.0.as_ptr().add(1)) }
   }
 
   /// Returns a mutable reference to the X-coordinate of this 3-component vector.
+  #[must_use]
   #[inline(always)]
   pub fn x_mut(&mut self) -> &mut u32 {
     unsafe { &mut *self.0.as_mut_ptr() }
   }
 
   /// Returns a mutable reference to the Y-coordinate of this 3-component vector.
+  #[must_use]
   #[inline(always)]
   pub fn y_mut(&mut self) -> &mut u32 {
     unsafe { &mut *self.0.as_mut_ptr().add(1) }
   }
 
   /// Returns a mutable reference to the Z-coordinate of this 3-component vector.
+  #[must_use]
   #[inline(always)]
   pub fn z_mut(&mut self) -> &mut u32 {
     unsafe { &mut *self.0.as_mut_ptr().add(2) }
   }
 
   /// Returns a mutable reference to the xy coordinates of this vector.
+  #[must_use]
   #[inline(always)]
   pub fn xy_mut(&mut self) -> &mut Vec2u {
     unsafe { Vec2u::from_mut_ptr_unchecked(self.0.as_mut_ptr()) }
   }
 
   /// Returns a mutable reference to the yz coordinates of this vector.
+  #[must_use]
   #[inline(always)]
   pub fn yz_mut(&mut self) -> &mut Vec2u {
     unsafe { Vec2u::from_mut_ptr_unchecked(self.0.as_mut_ptr().add(1)) }
@@ -237,7 +298,7 @@ impl Vec3u {
   ///
   /// # Arguments
   ///
-  /// * `yz` - the Y and Z components of the [`Vec3`]
+  /// * `yz` - the Y and Z components of the [`Vec3u`]
   #[inline(always)]
   pub fn set_yz(&mut self, xy: &Vec2u) {
     self.yz_mut().set(xy)
@@ -247,7 +308,7 @@ impl Vec3u {
   ///
   /// # Arguments
   ///
-  /// * `other` - the other [`Vec3`] to set.
+  /// * `other` - the other [`Vec3u`] to set.
   pub fn set(&mut self, other: &Vec3u) {
     let src_ptr = other.as_ptr();
     let dest_ptr = self.0.as_mut_ptr();
@@ -266,6 +327,7 @@ where
 {
   type Output = I::Output;
 
+  #[must_use]
   #[inline(always)]
   fn index(&self, index: I) -> &Self::Output {
     self.0.index(index)
@@ -276,6 +338,7 @@ impl<I> IndexMut<I> for Vec3u
 where
   I: std::slice::SliceIndex<[u32]>,
 {
+  #[must_use]
   #[inline(always)]
   fn index_mut(&mut self, index: I) -> &mut Self::Output {
     self.0.index_mut(index)
@@ -285,6 +348,7 @@ where
 impl Deref for Vec3u {
   type Target = [u32];
 
+  #[must_use]
   #[inline(always)]
   fn deref(&self) -> &Self::Target {
     &self.0
@@ -292,6 +356,7 @@ impl Deref for Vec3u {
 }
 
 impl DerefMut for Vec3u {
+  #[must_use]
   #[inline(always)]
   fn deref_mut(&mut self) -> &mut Self::Target {
     &mut self.0
@@ -299,6 +364,7 @@ impl DerefMut for Vec3u {
 }
 
 impl AsRef<[u32]> for Vec3u {
+  #[must_use]
   #[inline(always)]
   fn as_ref(&self) -> &[u32] {
     &self.0
@@ -306,6 +372,7 @@ impl AsRef<[u32]> for Vec3u {
 }
 
 impl AsMut<[u32]> for Vec3u {
+  #[must_use]
   #[inline(always)]
   fn as_mut(&mut self) -> &mut [u32] {
     &mut self.0
@@ -315,6 +382,7 @@ impl AsMut<[u32]> for Vec3u {
 impl Add for &'_ Vec3u {
   type Output = Vector3u;
 
+  #[must_use]
   fn add(self, rhs: Self) -> Self::Output {
     Vector3u {
       x: self.x() + rhs.x(),
@@ -340,6 +408,7 @@ impl AddAssign<&Vec3u> for Vec3u {
 impl Sub for &'_ Vec3u {
   type Output = Vector3u;
 
+  #[must_use]
   fn sub(self, rhs: Self) -> Self::Output {
     Vector3u {
       x: self.x() - rhs.x(),
@@ -365,6 +434,7 @@ impl SubAssign<&Vec3u> for Vec3u {
 impl Mul<u32> for &'_ Vec3u {
   type Output = Vector3u;
 
+  #[must_use]
   fn mul(self, rhs: u32) -> Self::Output {
     Vector3u {
       x: self.x() * rhs,
@@ -377,6 +447,7 @@ impl Mul<u32> for &'_ Vec3u {
 impl Mul<&'_ Vec3u> for u32 {
   type Output = Vector3u;
 
+  #[must_use]
   fn mul(self, rhs: &'_ Vec3u) -> Self::Output {
     Vector3u {
       x: self * rhs.x(),
@@ -401,6 +472,7 @@ impl MulAssign<u32> for Vec3u {
 impl Div<u32> for &'_ Vec3u {
   type Output = Vector3u;
 
+  #[must_use]
   fn div(self, rhs: u32) -> Self::Output {
     Vector3u {
       x: self.x() / rhs,
@@ -425,6 +497,7 @@ impl DivAssign<u32> for Vec3u {
 impl Rem<u32> for &'_ Vec3u {
   type Output = Vector3u;
 
+  #[must_use]
   fn rem(self, rhs: u32) -> Self::Output {
     Vector3u {
       x: self.x().rem(rhs),
@@ -462,10 +535,13 @@ impl std::fmt::Display for Vec3u {
   }
 }
 
-/// An owning representation of a 2-dimensional Vector object.
+/// An owning representation of an unsigned 3-component [Euclidean vector].
 ///
-/// Unlike [`Vec3`], which is solely referential, [`Vector3u`] is an owning
-/// instance.
+/// Like [`Vec3u`], the [`Vector3u`] object represents a [Euclidean vector] in
+/// 3D. Unlike the [`Vec3u`], this is an owning representation that stores the
+/// actual content of the vector.
+///
+/// [Euclidean vector]: https://en.wikipedia.org/wiki/Euclidean_vector
 #[repr(C)]
 #[derive(Clone, Copy, Default, PartialEq, PartialOrd, Eq, Ord, Debug)]
 pub struct Vector3u {
@@ -497,6 +573,7 @@ impl Vector3u {
   /// * `x` - the x-component
   /// * `y` - the y-component
   /// * `z` - the z-component
+  #[must_use]
   #[inline(always)]
   pub const fn new(x: u32, y: u32, z: u32) -> Self {
     Self { x, y, z }
@@ -507,9 +584,21 @@ impl Vector3u {
   /// # Arguments
   ///
   /// * `v` - the value to uniformly apply
+  #[must_use]
   #[inline(always)]
   pub const fn uniform(v: u32) -> Self {
     Self::new(v, v, v)
+  }
+
+  /// Constructs this vector from a 3-component [`u32`] array.
+  ///
+  /// # Arguments
+  ///
+  /// * `array` - an array containing 3 [`u32`] values.
+  #[must_use]
+  #[inline(always)]
+  pub const fn from_array(array: &[u32; 3]) -> Self {
+    Self::new(array[0], array[1], array[2])
   }
 
   /// Constructs this vector from a slice of floats.
@@ -519,6 +608,7 @@ impl Vector3u {
   /// # Arguments
   ///
   /// * `slice` - the slice to read from
+  #[must_use]
   pub const fn from_slice(slice: &[u32]) -> Option<Self> {
     if slice.len() != 3 {
       None
@@ -541,10 +631,26 @@ impl Vector3u {
   ///
   /// `slice.len()` must be greater or equal to `2`, otherwise this will
   /// access an out-of-bounds entry and `panic`.
+  #[must_use]
   #[inline(always)]
   pub const unsafe fn from_slice_unchecked(slice: &[u32]) -> Self {
     debug_assert!(slice.len() == 3);
     Self::from_ptr(slice.as_ptr())
+  }
+
+  /// Constructs this vector from a [`Vec3u`]
+  ///
+  /// # Arguments
+  ///
+  /// * `other` - the other vector
+  #[must_use]
+  #[inline(always)]
+  pub fn from_vec3u(other: &Vec3u) -> Self {
+    Self {
+      x: other.x(),
+      y: other.y(),
+      z: other.z(),
+    }
   }
 
   /// Constructs this vector from a pointer to floating point values.
@@ -557,11 +663,14 @@ impl Vector3u {
   ///
   /// This function requires that `ptr` be non-null and point to the start of a
   /// contiguous sequence of 3 [`u32`] values.
+  #[must_use]
+  #[inline(always)]
   pub const unsafe fn from_ptr(ptr: *const u32) -> Self {
     Self::new(*ptr, *ptr.add(1), *ptr.add(2))
   }
 
-  /// Returns this vector as a [`Vec3`].
+  /// Returns this vector as a [`Vec3u`].
+  #[must_use]
   #[inline(always)]
   pub const fn as_vec3u(&self) -> &Vec3u {
     // SAFETY:
@@ -579,7 +688,8 @@ impl Vector3u {
     }
   }
 
-  /// Returns this vector as a mutable [`Vec3`].
+  /// Returns this vector as a mutable [`Vec3u`].
+  #[must_use]
   #[inline(always)]
   pub fn as_mut_vec3u(&mut self) -> &mut Vec3u {
     // SAFETY: See explanation in Self::as_vec3
@@ -592,12 +702,14 @@ impl Vector3u {
   }
 
   /// Returns this vector as a slice of [`u32`].
+  #[must_use]
   #[inline(always)]
   pub const fn as_slice(&self) -> &[u32] {
     self.as_vec3u().as_slice()
   }
 
   /// Returns this vector as a mutable slice of [`u32`].
+  #[must_use]
   #[inline(always)]
   pub fn as_mut_slice(&mut self) -> &mut [u32] {
     self.as_mut_vec3u().as_mut_slice()
@@ -608,6 +720,7 @@ impl<Vec> From<Vec> for Vector3u
 where
   Vec: AsRef<Vec3u>,
 {
+  #[must_use]
   #[inline(always)]
   fn from(value: Vec) -> Self {
     value.as_ref().to_owned()
@@ -615,6 +728,7 @@ where
 }
 
 impl From<&'_ Vec3u> for Vector3u {
+  #[must_use]
   #[inline(always)]
   fn from(value: &'_ Vec3u) -> Self {
     value.to_owned()
@@ -624,6 +738,7 @@ impl From<&'_ Vec3u> for Vector3u {
 impl Add for &Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Self) -> Self::Output {
     self.as_vec3u().add(rhs.as_vec3u())
@@ -633,6 +748,7 @@ impl Add for &Vector3u {
 impl Add for Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Self) -> Self::Output {
     self.add(rhs.as_vec3u())
@@ -642,6 +758,7 @@ impl Add for Vector3u {
 impl Add<&Vec3u> for &Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: &Vec3u) -> Self::Output {
     self.as_vec3u().add(rhs)
@@ -651,6 +768,7 @@ impl Add<&Vec3u> for &Vector3u {
 impl Add<&Vector3u> for &'_ Vec3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: &Vector3u) -> Self::Output {
     self.add(rhs.as_vec3u())
@@ -660,6 +778,7 @@ impl Add<&Vector3u> for &'_ Vec3u {
 impl Add<Vector3u> for &Vec3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Vector3u) -> Self::Output {
     // Addition is commutative, so reordering operations is safe
@@ -670,6 +789,7 @@ impl Add<Vector3u> for &Vec3u {
 impl Add<&Vec3u> for Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   fn add(mut self, rhs: &Vec3u) -> Self::Output {
     // Repurpose 'self' for the output, to save space (1 less lifetime)
     let dest_ptr = self.0.as_mut_ptr();
@@ -687,6 +807,7 @@ impl Add<&Vec3u> for Vector3u {
 impl Add<&Vector3u> for Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: &Vector3u) -> Self::Output {
     // Addition is commutative, so reordering operations is safe
@@ -697,6 +818,7 @@ impl Add<&Vector3u> for Vector3u {
 impl Add<Vector3u> for &Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Vector3u) -> Self::Output {
     // Addition is commutative, so reordering operations is safe
@@ -728,6 +850,7 @@ impl AddAssign<&Vec3u> for Vector3u {
 impl Sub for &Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: Self) -> Self::Output {
     self.as_vec3u().sub(rhs.as_vec3u())
@@ -737,6 +860,7 @@ impl Sub for &Vector3u {
 impl Sub for Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: Self) -> Self::Output {
     self.sub(rhs.as_vec3u())
@@ -746,6 +870,7 @@ impl Sub for Vector3u {
 impl Sub<&Vec3u> for &Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: &Vec3u) -> Self::Output {
     self.as_vec3u().sub(rhs)
@@ -755,6 +880,7 @@ impl Sub<&Vec3u> for &Vector3u {
 impl Sub<&Vector3u> for &'_ Vec3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: &Vector3u) -> Self::Output {
     self.sub(rhs.as_vec3u())
@@ -764,6 +890,7 @@ impl Sub<&Vector3u> for &'_ Vec3u {
 impl Sub<Vector3u> for &Vec3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: Vector3u) -> Self::Output {
     self.sub(rhs.as_vec3u())
@@ -773,6 +900,7 @@ impl Sub<Vector3u> for &Vec3u {
 impl Sub<&Vec3u> for Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   fn sub(mut self, rhs: &Vec3u) -> Self::Output {
     // Repurpose 'self' for the output, to save space (1 less lifetime)
     let dest_ptr = self.0.as_mut_ptr();
@@ -790,6 +918,7 @@ impl Sub<&Vec3u> for Vector3u {
 impl Sub<&Vector3u> for Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: &Vector3u) -> Self::Output {
     self.sub(rhs.as_vec3u())
@@ -799,6 +928,7 @@ impl Sub<&Vector3u> for Vector3u {
 impl Sub<Vector3u> for &Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: Vector3u) -> Self::Output {
     self.sub(rhs.as_vec3u())
@@ -829,6 +959,7 @@ impl SubAssign<&Vec3u> for Vector3u {
 impl Mul<u32> for Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn mul(mut self, rhs: u32) -> Self::Output {
     self.as_mut_vec3u().mul_assign(rhs);
@@ -839,6 +970,7 @@ impl Mul<u32> for Vector3u {
 impl Mul<u32> for &Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn mul(self, rhs: u32) -> Self::Output {
     self.as_vec3u().mul(rhs)
@@ -848,6 +980,7 @@ impl Mul<u32> for &Vector3u {
 impl Mul<Vector3u> for u32 {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn mul(self, mut rhs: Vector3u) -> Self::Output {
     rhs.as_mut_vec3u().mul_assign(self);
@@ -858,6 +991,7 @@ impl Mul<Vector3u> for u32 {
 impl Mul<&Vector3u> for u32 {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn mul(self, rhs: &Vector3u) -> Self::Output {
     rhs.as_vec3u().mul(self)
@@ -874,6 +1008,7 @@ impl MulAssign<u32> for Vector3u {
 impl Div<u32> for Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn div(mut self, rhs: u32) -> Self::Output {
     self.as_mut_vec3u().div_assign(rhs);
@@ -884,6 +1019,7 @@ impl Div<u32> for Vector3u {
 impl Div<u32> for &Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn div(self, rhs: u32) -> Self::Output {
     self.as_vec3u().div(rhs)
@@ -900,6 +1036,7 @@ impl DivAssign<u32> for Vector3u {
 impl Rem<u32> for Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn rem(mut self, rhs: u32) -> Self::Output {
     self.as_mut_vec3u().rem_assign(rhs);
@@ -910,6 +1047,7 @@ impl Rem<u32> for Vector3u {
 impl Rem<u32> for &Vector3u {
   type Output = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn rem(self, rhs: u32) -> Self::Output {
     self.as_vec3u().rem(rhs)
@@ -926,6 +1064,7 @@ impl RemAssign<u32> for Vector3u {
 impl Deref for Vector3u {
   type Target = Vec3u;
 
+  #[must_use]
   #[inline(always)]
   fn deref(&self) -> &Self::Target {
     self.borrow()
@@ -933,6 +1072,7 @@ impl Deref for Vector3u {
 }
 
 impl DerefMut for Vector3u {
+  #[must_use]
   #[inline(always)]
   fn deref_mut(&mut self) -> &mut Self::Target {
     self.borrow_mut()
@@ -940,6 +1080,7 @@ impl DerefMut for Vector3u {
 }
 
 impl Borrow<Vec3u> for Vector3u {
+  #[must_use]
   #[inline(always)]
   fn borrow(&self) -> &Vec3u {
     self.as_vec3u()
@@ -947,6 +1088,7 @@ impl Borrow<Vec3u> for Vector3u {
 }
 
 impl BorrowMut<Vec3u> for Vector3u {
+  #[must_use]
   #[inline(always)]
   fn borrow_mut(&mut self) -> &mut Vec3u {
     self.as_mut_vec3u()
@@ -954,6 +1096,7 @@ impl BorrowMut<Vec3u> for Vector3u {
 }
 
 impl Borrow<[u32]> for Vector3u {
+  #[must_use]
   #[inline(always)]
   fn borrow(&self) -> &[u32] {
     <Self as Borrow<Vec3u>>::borrow(self).as_ref()
@@ -961,6 +1104,7 @@ impl Borrow<[u32]> for Vector3u {
 }
 
 impl BorrowMut<[u32]> for Vector3u {
+  #[must_use]
   #[inline(always)]
   fn borrow_mut(&mut self) -> &mut [u32] {
     <Self as BorrowMut<Vec3u>>::borrow_mut(self).as_mut()
@@ -970,6 +1114,7 @@ impl BorrowMut<[u32]> for Vector3u {
 impl ToOwned for Vec3u {
   type Owned = Vector3u;
 
+  #[must_use]
   #[inline(always)]
   fn to_owned(&self) -> Self::Owned {
     Vector3u {

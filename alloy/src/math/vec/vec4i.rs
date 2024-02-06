@@ -6,16 +6,60 @@ use std::ops::{
 
 use super::{Vec2i, Vec3i};
 
-/// A 4-component view of a vector-like object.
+/// A 4-component non-owning view of an integral [Euclidean vector].
 ///
-/// [`Vec4i`] objects are to [`Vector4i`] as [`str`] is to [`String`]; that is to
-/// say that [`Vec4i`] objects represent an immutable view of the owning
-/// [`Vector4i`] counter-part.
+/// [Euclidean vector]: https://en.wikipedia.org/wiki/Euclidean_vector
+///
+/// # Guarantees
+///
+/// This type has the strict requirement that it can only reference a
+/// 4-component slice of [`i32`] values. It is guaranteed to never refer to
+/// more or less than 4 entries.
+///
+/// # Relation to [`Vector4i`]
+///
+/// [`Vec4i`] is a non-owning equivalent of [`Vector4i`]. This enables non-vector
+/// types to either [`Deref`] or provide conversion-related utilities into
+/// [`Vec4i`] types to be able to access and benefit from vector operations.
 #[repr(transparent)]
 #[derive(PartialEq, PartialOrd, Eq, Ord)]
 pub struct Vec4i([i32]);
 
 impl Vec4i {
+  /// Forms a reference to a [`Vec4i`] from a 4-component [`i32`] array.
+  ///
+  /// This function is identical to [`from_slice_unchecked`], except it is not
+  /// marked `unsafe`.
+  ///
+  /// [`from_slice_unchecked`]: Self::from_slice_unchecked
+  ///
+  /// # Arguments
+  ///
+  /// * `array` - an array containing 4 [`i32`] values.
+  #[must_use]
+  #[inline(always)]
+  pub const fn from_array(array: &[i32; 4]) -> &Self {
+    // SAFETY: `array` is guaranteed to be 4-components
+    unsafe { std::mem::transmute(array.as_slice()) }
+  }
+
+  /// Forms a mutable reference to a [`Vec4i`] from a 4-component [`i32`] array.
+  ///
+  /// This function is identical to [`from_mut_slice_unchecked`], except it is
+  /// not marked `unsafe`.
+  ///
+  /// [`from_mut_slice_unchecked`]: Self::from_mut_slice_unchecked
+  ///
+  /// # Arguments
+  ///
+  /// * `array` - an array containing 4 [`i32`] values.
+  #[must_use]
+  #[inline(always)]
+  pub fn from_mut_array(array: &mut [i32; 4]) -> &Self {
+    // SAFETY: `array` is guaranteed to be 4-components
+    unsafe { std::mem::transmute(array.as_mut_slice()) }
+  }
+
   /// Forms a reference to a [`Vec4i`] from a slice of [`i32`].
   ///
   /// This requires that `slice.len() == 4`, otherwise this returns [`None`].
@@ -23,6 +67,7 @@ impl Vec4i {
   /// # Arguments
   ///
   /// * `slice` - the slice of [`i32`]s.
+  #[must_use]
   pub const fn from_slice(slice: &[i32]) -> Option<&Self> {
     if slice.len() == 4 {
       // SAFETY: Vec4 is transparent, and implemented directly in terms of a
@@ -41,6 +86,7 @@ impl Vec4i {
   /// # Arguments
   ///
   /// * `slice` - the mutable slice of [`i32`]s.
+  #[must_use]
   pub fn from_mut_slice(slice: &mut [i32]) -> Option<&mut Self> {
     if slice.len() == 4 {
       // SAFETY: Vec4 is transparent, and implemented directly in terms of a
@@ -62,6 +108,7 @@ impl Vec4i {
   /// # Safety
   ///
   /// `slice.len()` must be equal to `2`.
+  #[must_use]
   #[inline(always)]
   pub const unsafe fn from_slice_unchecked(slice: &[i32]) -> &Self {
     debug_assert!(slice.len() == 4);
@@ -78,6 +125,7 @@ impl Vec4i {
   /// # Safety
   ///
   /// `slice.len()` must be equal to `2`.
+  #[must_use]
   #[inline(always)]
   pub unsafe fn from_mut_slice_unchecked(slice: &mut [i32]) -> &mut Self {
     debug_assert!(slice.len() == 4);
@@ -95,6 +143,7 @@ impl Vec4i {
   ///
   /// `ptr` must point to an allocated object that references at least two
   /// entries
+  #[must_use]
   #[inline(always)]
   pub const unsafe fn from_ptr_unchecked<'a>(ptr: *const i32) -> &'a Vec4i {
     Vec4i::from_slice_unchecked(std::slice::from_raw_parts(ptr, 4))
@@ -111,24 +160,28 @@ impl Vec4i {
   ///
   /// `ptr` must point to an allocated object that references at least two
   /// entries
+  #[must_use]
   #[inline(always)]
   pub unsafe fn from_mut_ptr_unchecked<'a>(ptr: *mut i32) -> &'a mut Vec4i {
     Vec4i::from_mut_slice_unchecked(std::slice::from_raw_parts_mut(ptr, 4))
   }
 
   /// Returns this [`Vec4i`] as a slice of [`i32`].
+  #[must_use]
   #[inline(always)]
   pub const fn as_slice(&self) -> &[i32] {
     &self.0
   }
 
   /// Returns this [`Vec4i`] as a mutable slice of [`i32`].
+  #[must_use]
   #[inline(always)]
   pub fn as_mut_slice(&mut self) -> &mut [i32] {
     &mut self.0
   }
 
   /// Returns the X-coordinate of this 4-component vector.
+  #[must_use]
   #[inline(always)]
   pub fn x(&self) -> i32 {
     // SAFETY: Vec4 being of size-4 is an internal invariant
@@ -136,6 +189,7 @@ impl Vec4i {
   }
 
   /// Returns the Y-coordinate of this 4-component vector.
+  #[must_use]
   #[inline(always)]
   pub fn y(&self) -> i32 {
     // SAFETY: Vec4 being of size-4 is an internal invariant
@@ -143,6 +197,7 @@ impl Vec4i {
   }
 
   /// Returns the Z-coordinate of this 4-component vector.
+  #[must_use]
   #[inline(always)]
   pub fn z(&self) -> i32 {
     // SAFETY: Vec4 being of size-4 is an internal invariant
@@ -150,6 +205,7 @@ impl Vec4i {
   }
 
   /// Returns the W-coordinate of this 4-component vector.
+  #[must_use]
   #[inline(always)]
   pub fn w(&self) -> i32 {
     // SAFETY: Vec4 being of size-4 is an internal invariant
@@ -157,84 +213,98 @@ impl Vec4i {
   }
 
   /// Returns the xy coordinates of this vector as a [`Vec2i`].
+  #[must_use]
   #[inline(always)]
   pub const fn xy(&self) -> &Vec2i {
     unsafe { Vec2i::from_ptr_unchecked(self.0.as_ptr()) }
   }
 
   /// Returns the yz coordinates of this vector as a [`Vec2i`].
+  #[must_use]
   #[inline(always)]
   pub const fn yz(&self) -> &Vec2i {
     unsafe { Vec2i::from_ptr_unchecked(self.0.as_ptr().add(1)) }
   }
 
   /// Returns the zw coordinates of this vector as a [`Vec2i`].
+  #[must_use]
   #[inline(always)]
   pub const fn zw(&self) -> &Vec2i {
     unsafe { Vec2i::from_ptr_unchecked(self.0.as_ptr().add(2)) }
   }
 
   /// Returns the xyz coordinates of this vector as a [`Vec2i`].
+  #[must_use]
   #[inline(always)]
   pub const fn xyz(&self) -> &Vec3i {
     unsafe { Vec3i::from_ptr_unchecked(self.0.as_ptr()) }
   }
 
   /// Returns the yz coordinates of this vector as a [`Vec2i`].
+  #[must_use]
   #[inline(always)]
   pub const fn yzw(&self) -> &Vec3i {
     unsafe { Vec3i::from_ptr_unchecked(self.0.as_ptr().add(1)) }
   }
 
   /// Returns a mutable reference to the X-coordinate of this 3-component vector.
+  #[must_use]
   #[inline(always)]
   pub fn x_mut(&mut self) -> &mut i32 {
     unsafe { &mut *self.0.as_mut_ptr() }
   }
 
   /// Returns a mutable reference to the Y-coordinate of this 3-component vector.
+  #[must_use]
   #[inline(always)]
   pub fn y_mut(&mut self) -> &mut i32 {
     unsafe { &mut *self.0.as_mut_ptr().add(1) }
   }
 
   /// Returns a mutable reference to the Z-coordinate of this 3-component vector.
+  #[must_use]
   #[inline(always)]
   pub fn z_mut(&mut self) -> &mut i32 {
     unsafe { &mut *self.0.as_mut_ptr().add(2) }
   }
 
   /// Returns a mutable reference to the W-coordinate of this 3-component vector.
+  #[must_use]
   #[inline(always)]
   pub fn w_mut(&mut self) -> &mut i32 {
     unsafe { &mut *self.0.as_mut_ptr().add(3) }
   }
 
   /// Returns a mutable reference to the xy coordinates of this vector.
+  #[must_use]
   #[inline(always)]
   pub fn xy_mut(&mut self) -> &mut Vec2i {
     unsafe { Vec2i::from_mut_ptr_unchecked(self.0.as_mut_ptr()) }
   }
 
   /// Returns a mutable reference to the yz coordinates of this vector.
+  #[must_use]
   #[inline(always)]
   pub fn yz_mut(&mut self) -> &mut Vec2i {
     unsafe { Vec2i::from_mut_ptr_unchecked(self.0.as_mut_ptr().add(1)) }
   }
 
   /// Returns a mutable reference to the zw coordinates of this vector.
+  #[must_use]
   #[inline(always)]
   pub fn zw_mut(&mut self) -> &mut Vec2i {
     unsafe { Vec2i::from_mut_ptr_unchecked(self.0.as_mut_ptr().add(2)) }
   }
 
   /// Returns a mutable reference to the yz coordinates of this vector.
+  #[must_use]
   #[inline(always)]
   pub fn xyz_mut(&mut self) -> &mut Vec3i {
     unsafe { Vec3i::from_mut_ptr_unchecked(self.0.as_mut_ptr()) }
   }
 
   /// Returns a mutable reference to the zw coordinates of this vector.
+  #[must_use]
   #[inline(always)]
   pub fn yzw_mut(&mut self) -> &mut Vec3i {
     unsafe { Vec3i::from_mut_ptr_unchecked(self.0.as_mut_ptr().add(1)) }
@@ -347,6 +417,7 @@ impl Vec4i {
   }
 
   /// Computes the absolute value of `self`
+  #[must_use]
   pub fn abs(&self) -> Vector4i {
     Vector4i {
       x: self.x().abs(),
@@ -363,6 +434,7 @@ where
 {
   type Output = I::Output;
 
+  #[must_use]
   #[inline(always)]
   fn index(&self, index: I) -> &Self::Output {
     self.0.index(index)
@@ -373,6 +445,7 @@ impl<I> IndexMut<I> for Vec4i
 where
   I: std::slice::SliceIndex<[i32]>,
 {
+  #[must_use]
   #[inline(always)]
   fn index_mut(&mut self, index: I) -> &mut Self::Output {
     self.0.index_mut(index)
@@ -382,6 +455,7 @@ where
 impl Deref for Vec4i {
   type Target = [i32];
 
+  #[must_use]
   #[inline(always)]
   fn deref(&self) -> &Self::Target {
     &self.0
@@ -389,6 +463,7 @@ impl Deref for Vec4i {
 }
 
 impl DerefMut for Vec4i {
+  #[must_use]
   #[inline(always)]
   fn deref_mut(&mut self) -> &mut Self::Target {
     &mut self.0
@@ -396,6 +471,7 @@ impl DerefMut for Vec4i {
 }
 
 impl AsRef<[i32]> for Vec4i {
+  #[must_use]
   #[inline(always)]
   fn as_ref(&self) -> &[i32] {
     &self.0
@@ -403,6 +479,7 @@ impl AsRef<[i32]> for Vec4i {
 }
 
 impl AsMut<[i32]> for Vec4i {
+  #[must_use]
   #[inline(always)]
   fn as_mut(&mut self) -> &mut [i32] {
     &mut self.0
@@ -412,6 +489,7 @@ impl AsMut<[i32]> for Vec4i {
 impl Add for &'_ Vec4i {
   type Output = Vector4i;
 
+  #[must_use]
   fn add(self, rhs: Self) -> Self::Output {
     Vector4i {
       x: self.x() + rhs.x(),
@@ -438,6 +516,7 @@ impl AddAssign<&Vec4i> for Vec4i {
 impl Sub for &'_ Vec4i {
   type Output = Vector4i;
 
+  #[must_use]
   fn sub(self, rhs: Self) -> Self::Output {
     Vector4i {
       x: self.x() - rhs.x(),
@@ -464,6 +543,7 @@ impl SubAssign<&Vec4i> for Vec4i {
 impl Mul<i32> for &'_ Vec4i {
   type Output = Vector4i;
 
+  #[must_use]
   fn mul(self, rhs: i32) -> Self::Output {
     Vector4i {
       x: self.x() * rhs,
@@ -477,6 +557,7 @@ impl Mul<i32> for &'_ Vec4i {
 impl Mul<&'_ Vec4i> for i32 {
   type Output = Vector4i;
 
+  #[must_use]
   fn mul(self, rhs: &'_ Vec4i) -> Self::Output {
     Vector4i {
       x: self * rhs.x(),
@@ -502,6 +583,7 @@ impl MulAssign<i32> for Vec4i {
 impl Div<i32> for &'_ Vec4i {
   type Output = Vector4i;
 
+  #[must_use]
   fn div(self, rhs: i32) -> Self::Output {
     Vector4i {
       x: self.x() / rhs,
@@ -527,6 +609,7 @@ impl DivAssign<i32> for Vec4i {
 impl Rem<i32> for &'_ Vec4i {
   type Output = Vector4i;
 
+  #[must_use]
   fn rem(self, rhs: i32) -> Self::Output {
     Vector4i {
       x: self.x().rem(rhs),
@@ -552,6 +635,7 @@ impl RemAssign<i32> for Vec4i {
 impl Neg for &'_ Vec4i {
   type Output = Vector4i;
 
+  #[must_use]
   fn neg(self) -> Self::Output {
     Vector4i {
       x: -self.x(),
@@ -586,10 +670,13 @@ impl std::fmt::Display for Vec4i {
   }
 }
 
-/// An owning representation of a 2-dimensional Vector object.
+/// An owning representation of an integral 4-component [Euclidean vector].
 ///
-/// Unlike [`Vec4i`], which is solely referential, [`Vector4i`] is an owning
-/// instance.
+/// Like [`Vec4i`], the [`Vector4i`] object represents a [Euclidean vector] in
+/// 4D. Unlike the [`Vec4i`], this is an owning representation that stores the
+/// actual content of the vector.
+///
+/// [Euclidean vector]: https://en.wikipedia.org/wiki/Euclidean_vector
 #[repr(C)]
 #[repr(align(16))]
 #[derive(Clone, Copy, Default, PartialEq, PartialOrd, Eq, Ord, Hash, Debug)]
@@ -640,6 +727,7 @@ impl Vector4i {
   /// * `y` - the y-component
   /// * `z` - the z-component
   /// * `w` - the w-component
+  #[must_use]
   #[inline(always)]
   pub const fn new(x: i32, y: i32, z: i32, w: i32) -> Self {
     Self { x, y, z, w }
@@ -650,9 +738,21 @@ impl Vector4i {
   /// # Arguments
   ///
   /// * `v` - the value to uniformly apply
+  #[must_use]
   #[inline(always)]
   pub const fn uniform(v: i32) -> Self {
     Self::new(v, v, v, v)
+  }
+
+  /// Constructs this vector from a 4-component [`i32`] array.
+  ///
+  /// # Arguments
+  ///
+  /// * `array` - an array containing 4 [`i32`] values.
+  #[must_use]
+  #[inline(always)]
+  pub const fn from_array(array: &[i32; 4]) -> Self {
+    Self::new(array[0], array[1], array[2], array[3])
   }
 
   /// Constructs this vector from a slice of floats.
@@ -662,6 +762,7 @@ impl Vector4i {
   /// # Arguments
   ///
   /// * `slice` - the slice to read from
+  #[must_use]
   pub const fn from_slice(slice: &[i32]) -> Option<Self> {
     if slice.len() != 4 {
       None
@@ -685,10 +786,26 @@ impl Vector4i {
   ///
   /// `slice.len()` must be greater or equal to `2`, otherwise this will
   /// access an out-of-bounds entry and `panic`.
+  #[must_use]
   #[inline(always)]
   pub const unsafe fn from_slice_unchecked(slice: &[i32]) -> Self {
     debug_assert!(slice.len() == 4);
     Self::from_ptr(slice.as_ptr())
+  }
+
+  /// Constructs this vector from a [`Vec4i`]
+  ///
+  /// # Arguments
+  ///
+  /// * `other` - the other vector
+  #[must_use]
+  pub fn from_vec4i(other: &Vec4i) -> Self {
+    Self {
+      x: other.x(),
+      y: other.y(),
+      z: other.z(),
+      w: other.w(),
+    }
   }
 
   /// Constructs this vector from a pointer to floating point values.
@@ -701,11 +818,14 @@ impl Vector4i {
   ///
   /// This function requires that `ptr` be non-null and point to the start of a
   /// contiguous sequence of 4 [`i32`] values.
+  #[must_use]
+  #[inline(always)]
   pub const unsafe fn from_ptr(ptr: *const i32) -> Self {
     Self::new(*ptr, *ptr.add(1), *ptr.add(2), *ptr.add(3))
   }
 
   /// Returns this vector as a [`Vec4i`].
+  #[must_use]
   #[inline(always)]
   pub const fn as_vec4(&self) -> &Vec4i {
     // SAFETY:
@@ -724,6 +844,7 @@ impl Vector4i {
   }
 
   /// Returns this vector as a mutable [`Vec4i`].
+  #[must_use]
   #[inline(always)]
   pub fn as_mut_vec4(&mut self) -> &mut Vec4i {
     // SAFETY: See explanation in Borrow<Vec4>
@@ -736,12 +857,14 @@ impl Vector4i {
   }
 
   /// Returns this vector as a slice of [`i32`].
+  #[must_use]
   #[inline(always)]
   pub const fn as_slice(&self) -> &[i32] {
     self.as_vec4().as_slice()
   }
 
   /// Returns this vector as a mutable slice of [`i32`].
+  #[must_use]
   #[inline(always)]
   pub fn as_mut_slice(&mut self) -> &mut [i32] {
     self.as_mut_vec4().as_mut_slice()
@@ -749,6 +872,7 @@ impl Vector4i {
 }
 
 impl From<&'_ Vec4i> for Vector4i {
+  #[must_use]
   #[inline(always)]
   fn from(value: &'_ Vec4i) -> Self {
     value.to_owned()
@@ -759,6 +883,7 @@ impl<Vec> From<Vec> for Vector4i
 where
   Vec: AsRef<Vec4i>,
 {
+  #[must_use]
   #[inline(always)]
   fn from(value: Vec) -> Self {
     value.as_ref().to_owned()
@@ -768,6 +893,7 @@ where
 impl Add for &Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Self) -> Self::Output {
     self.as_vec4().add(rhs.as_vec4())
@@ -777,6 +903,7 @@ impl Add for &Vector4i {
 impl Add for Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Self) -> Self::Output {
     self.add(rhs.as_vec4())
@@ -786,6 +913,7 @@ impl Add for Vector4i {
 impl Add<&Vec4i> for &Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: &Vec4i) -> Self::Output {
     self.as_vec4().add(rhs)
@@ -795,6 +923,7 @@ impl Add<&Vec4i> for &Vector4i {
 impl Add<&Vector4i> for &'_ Vec4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: &Vector4i) -> Self::Output {
     self.add(rhs.as_vec4())
@@ -804,6 +933,7 @@ impl Add<&Vector4i> for &'_ Vec4i {
 impl Add<Vector4i> for &Vec4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Vector4i) -> Self::Output {
     // Addition is commutative, so reordering operations is safe
@@ -814,6 +944,7 @@ impl Add<Vector4i> for &Vec4i {
 impl Add<&Vec4i> for Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   fn add(mut self, rhs: &Vec4i) -> Self::Output {
     // Repurpose 'self' for the output, to save space (1 less lifetime)
     let dest_ptr = self.0.as_mut_ptr();
@@ -831,6 +962,7 @@ impl Add<&Vec4i> for Vector4i {
 impl Add<&Vector4i> for Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: &Vector4i) -> Self::Output {
     // Addition is commutative, so reordering operations is safe
@@ -841,6 +973,7 @@ impl Add<&Vector4i> for Vector4i {
 impl Add<Vector4i> for &Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn add(self, rhs: Vector4i) -> Self::Output {
     // Addition is commutative, so reordering operations is safe
@@ -872,6 +1005,7 @@ impl AddAssign<&Vec4i> for Vector4i {
 impl Sub for &Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: Self) -> Self::Output {
     self.as_vec4().sub(rhs.as_vec4())
@@ -881,6 +1015,7 @@ impl Sub for &Vector4i {
 impl Sub for Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: Self) -> Self::Output {
     self.sub(rhs.as_vec4())
@@ -890,6 +1025,7 @@ impl Sub for Vector4i {
 impl Sub<&Vec4i> for &Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: &Vec4i) -> Self::Output {
     self.as_vec4().sub(rhs)
@@ -899,6 +1035,7 @@ impl Sub<&Vec4i> for &Vector4i {
 impl Sub<&Vector4i> for &'_ Vec4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: &Vector4i) -> Self::Output {
     self.sub(rhs.as_vec4())
@@ -908,6 +1045,7 @@ impl Sub<&Vector4i> for &'_ Vec4i {
 impl Sub<Vector4i> for &Vec4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: Vector4i) -> Self::Output {
     self.sub(rhs.as_vec4())
@@ -917,6 +1055,7 @@ impl Sub<Vector4i> for &Vec4i {
 impl Sub<&Vec4i> for Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   fn sub(mut self, rhs: &Vec4i) -> Self::Output {
     // Repurpose 'self' for the output, to save space (1 less lifetime)
     let dest_ptr = self.0.as_mut_ptr();
@@ -934,6 +1073,7 @@ impl Sub<&Vec4i> for Vector4i {
 impl Sub<&Vector4i> for Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: &Vector4i) -> Self::Output {
     self.sub(rhs.as_vec4())
@@ -943,6 +1083,7 @@ impl Sub<&Vector4i> for Vector4i {
 impl Sub<Vector4i> for &Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn sub(self, rhs: Vector4i) -> Self::Output {
     self.sub(rhs.as_vec4())
@@ -973,6 +1114,7 @@ impl SubAssign<&Vec4i> for Vector4i {
 impl Mul<i32> for Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn mul(mut self, rhs: i32) -> Self::Output {
     self.as_mut_vec4().mul_assign(rhs);
@@ -983,6 +1125,7 @@ impl Mul<i32> for Vector4i {
 impl Mul<i32> for &Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn mul(self, rhs: i32) -> Self::Output {
     self.as_vec4().mul(rhs)
@@ -992,6 +1135,7 @@ impl Mul<i32> for &Vector4i {
 impl Mul<Vector4i> for i32 {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn mul(self, mut rhs: Vector4i) -> Self::Output {
     rhs.as_mut_vec4().mul_assign(self);
@@ -1002,6 +1146,7 @@ impl Mul<Vector4i> for i32 {
 impl Mul<&Vector4i> for i32 {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn mul(self, rhs: &Vector4i) -> Self::Output {
     rhs.as_vec4().mul(self)
@@ -1018,6 +1163,7 @@ impl MulAssign<i32> for Vector4i {
 impl Div<i32> for Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn div(mut self, rhs: i32) -> Self::Output {
     self.as_mut_vec4().div_assign(rhs);
@@ -1028,6 +1174,7 @@ impl Div<i32> for Vector4i {
 impl Div<i32> for &Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn div(self, rhs: i32) -> Self::Output {
     self.as_vec4().div(rhs)
@@ -1044,6 +1191,7 @@ impl DivAssign<i32> for Vector4i {
 impl Rem<i32> for Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn rem(mut self, rhs: i32) -> Self::Output {
     self.as_mut_vec4().rem_assign(rhs);
@@ -1054,6 +1202,7 @@ impl Rem<i32> for Vector4i {
 impl Rem<i32> for &Vector4i {
   type Output = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn rem(self, rhs: i32) -> Self::Output {
     self.as_vec4().rem(rhs)
@@ -1070,6 +1219,7 @@ impl RemAssign<i32> for Vector4i {
 impl Deref for Vector4i {
   type Target = Vec4i;
 
+  #[must_use]
   #[inline(always)]
   fn deref(&self) -> &Self::Target {
     self.borrow()
@@ -1084,6 +1234,7 @@ impl DerefMut for Vector4i {
 }
 
 impl Borrow<Vec4i> for Vector4i {
+  #[must_use]
   #[inline(always)]
   fn borrow(&self) -> &Vec4i {
     self.as_vec4()
@@ -1091,6 +1242,7 @@ impl Borrow<Vec4i> for Vector4i {
 }
 
 impl BorrowMut<Vec4i> for Vector4i {
+  #[must_use]
   #[inline(always)]
   fn borrow_mut(&mut self) -> &mut Vec4i {
     self.as_mut_vec4()
@@ -1098,6 +1250,7 @@ impl BorrowMut<Vec4i> for Vector4i {
 }
 
 impl Borrow<[i32]> for Vector4i {
+  #[must_use]
   #[inline(always)]
   fn borrow(&self) -> &[i32] {
     <Self as Borrow<Vec4i>>::borrow(self).as_ref()
@@ -1105,6 +1258,7 @@ impl Borrow<[i32]> for Vector4i {
 }
 
 impl BorrowMut<[i32]> for Vector4i {
+  #[must_use]
   #[inline(always)]
   fn borrow_mut(&mut self) -> &mut [i32] {
     <Self as BorrowMut<Vec4i>>::borrow_mut(self).as_mut()
@@ -1114,6 +1268,7 @@ impl BorrowMut<[i32]> for Vector4i {
 impl ToOwned for Vec4i {
   type Owned = Vector4i;
 
+  #[must_use]
   #[inline(always)]
   fn to_owned(&self) -> Self::Owned {
     Vector4i {
