@@ -15,7 +15,7 @@ runs:
   steps:
     - name: Cache Coverage
       id: cargo-coverage
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ inputs.output-file }}
         key: cargo-coverage-${{ runner.os }}-${{ hashFiles('**/*.rs', '**/Cargo.toml', 'Cargo.toml') }}

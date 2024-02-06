@@ -86,7 +86,7 @@ runs:
         vulkan-use-cache: true
 
     - name: Cache vulkan-sdk.dmg
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       if: runner.os == 'macOS'
       id: download-vulkan
       with:

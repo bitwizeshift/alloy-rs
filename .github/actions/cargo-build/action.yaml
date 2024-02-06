@@ -21,7 +21,7 @@ runs:
 
     - name: Cache build
       id: cargo-build
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: target
         key: cargo-build-${{ inputs.profile }}-${{ runner.os }}-${{ hashFiles('frameworks/**/*.rs', 'alloy/**/*.rs', 'example/**/*.rs', '**/Cargo.toml', 'Cargo.toml') }}
