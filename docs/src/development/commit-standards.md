@@ -68,3 +68,45 @@ respective change:
 would be needed. Please feel free to start a discussion if new tags would be
 more appropriate. Similarly, if there are more appropriate emojis to use as
 tags, feel free to provide suggestions!
+
+## Identifying Release-impacting Changes
+
+Rather than misusing git through the likes of _"[conventional commits]"_ or some
+other equivalent, **Alloy** uses [git trailers] to identify changes that
+impact different change categories. Specifically, commits may contain the
+following trailer(s) which will influence release generation:
+
+* `Change-Category:` -- Indicates the type of change being made. May be one of
+  `feature`, `fix`/`bugfix`. Optionally supports the word `breaking` (*) to
+  indicate a deviation from currently promised behavior.
+* `System:` -- Identifies the affected system (optional). When specified, is
+  free-form -- but messages will be grouped together in the release notes to
+  identify this.
+
+When related to a ticket, trailers may also contain `Fixes:`, `Closes:`, or any
+of the [GitHub trailers].
+
+[GitHub trailers]: https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/using-keywords-in-issues-and-pull-requests#linking-a-pull-request-to-an-issue
+[git trailers]: https://git-scm.com/docs/git-interpret-trailers
+[conventional commits]: https://www.conventionalcommits.org/en/v1.0.0/
+
+### What constitutes a breaking change
+
+**Note:** This project is far from being ready for a "breaking" change as it
+is pre-1.0, so this section is forward-thinking.
+
+A "breaking change" for **Alloy** is defined as something that, either knowingly
+or unknowingly, changes software behavior from the perspective of the
+_game engine_ itself. This dstinction is important, as it means that a change
+in behavior is not enough to constitute a "breaking" change, if the change is
+aligning behavior with what the expectation should be.
+
+For example, if **Alloy** declares the behavior of a function to do a specific
+thing, and it does not properly achieve the documented behavior -- then fixing
+this behavior will only be considered a _bug fix_ and not a breaking change.
+Users who rely on the consequence of a bug will suffer breakages, but that is
+by design.
+
+If, on the other hand, the change were to change documented behavior -- this
+will fall into the category of a "breaking change", since it deviates from
+existing behavior.

@@ -16,6 +16,7 @@
 * [📦 Additional Resources](./resources.md)
 * [🛠️ Development](./development.md)
   * [Commit standards](./development/commit-standards.md)
+  * [Branch strategy](./development/branch-strategy.md)
   * [Definition of done](./development/definition-of-done.md)
   * [Legal](./development/legal.md)
 * [👥 Community](./community.md)
