@@ -12,6 +12,9 @@
 //! easy-to-use, efficient game-engine for 2.5D graphics projects.
 #![deny(missing_docs)]
 #![deny(unused_results)]
+#![deny(unused_imports)]
+#![deny(unused_variables)]
+#![deny(unused_lifetimes)]
 #![deny(rust_2018_idioms)]
 
 pub mod cmp;
