@@ -44,7 +44,7 @@ runs:
         install_name_tool -add_rpath "@executable_path/../Frameworks" ${app_dir}/Contents/MacOS/*
 
         bundle_dir=$(cd ${app_dir}/..; pwd)
-        mkdir "${target_dir}/artifacts"
+        mkdir -p "${target_dir}/artifacts"
         tar                                                                    \
           --create                                                             \
           --verbose                                                            \
