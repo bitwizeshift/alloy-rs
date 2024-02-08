@@ -6,13 +6,11 @@ version = "0.1.0"
 authors = [
   "Matthew Rodusek <bitwizeshift@users.noreply.github.com>"
 ]
-license = "MIT OR Apache-2"
+license = "MIT OR Apache-2.0"
 categories = []
 keywords = ["example", "demo"]
 repository.workspace = true
 edition.workspace = true
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 glfw = { path = "../frameworks/glfw" }
