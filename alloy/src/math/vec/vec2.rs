@@ -1,8 +1,10 @@
-use crate::cmp::{AlmostEq, Near};
 use crate::math::vec::{Vec2i, Vec2u};
+
+use crate::cmp::{AlmostEq, Near};
 use crate::math::Angle;
-use crate::ops::{Dot, Midpoint};
+use crate::ops::{Cross, Dot, Midpoint};
 use std::borrow::{Borrow, BorrowMut};
+use std::fmt;
 use std::ops::{
   Add, AddAssign, Deref, DerefMut, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, Rem,
   RemAssign, Sub, SubAssign,
@@ -43,6 +45,21 @@ impl Vec2 {
   /// # Arguments
   ///
   /// * `array` - an array containing 2 [`f32`] values.
+  ///
+  /// # Examples
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec2;
+  /// let array: [f32; 2] = [0.1, 0.42];
+  ///
+  /// let vec = Vec2::from_array(&array);
+  ///
+  /// assert_eq!(vec.as_ptr(), array.as_ptr());
+  /// assert_eq!(vec.x(), array[0]);
+  /// assert_eq!(vec.y(), array[1]);
+  /// ```
   #[must_use]
   #[inline(always)]
   pub const fn from_array(array: &[f32; 2]) -> &Self {
@@ -60,6 +77,19 @@ impl Vec2 {
   /// # Arguments
   ///
   /// * `array` - an array containing 2 [`f32`] values.
+  ///
+  /// # Examples
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec2;
+  /// let mut array: [f32; 2] = [0.1, 0.42];
+  ///
+  /// let vec = Vec2::from_mut_array(&mut array);
+  ///
+  /// assert_eq!(vec.as_ptr(), array.as_ptr());
+  /// ```
   #[must_use]
   #[inline(always)]
   pub fn from_mut_array(array: &mut [f32; 2]) -> &Self {
@@ -74,6 +104,32 @@ impl Vec2 {
   /// # Arguments
   ///
   /// * `slice` - the slice of [`f32`]s.
+  ///
+  /// # Examples
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec2;
+  /// let slice = &[0.1, 0.42];
+  ///
+  /// let vec = Vec2::from_slice(slice).unwrap();
+  ///
+  /// assert_eq!(vec.as_ptr(), slice.as_ptr());
+  /// assert_eq!(vec.x(), slice[0]);
+  /// assert_eq!(vec.y(), slice[1]);
+  /// ```
+  ///
+  /// Invalid size:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec2;
+  /// let slice = &[0.1];
+  ///
+  /// let vec = Vec2::from_slice(slice);
+  ///
+  /// assert_eq!(vec, None);
+  /// ```
   #[must_use]
   pub const fn from_slice(slice: &[f32]) -> Option<&Self> {
     if slice.len() == 2 {
@@ -93,6 +149,30 @@ impl Vec2 {
   /// # Arguments
   ///
   /// * `slice` - the mutable slice of [`f32`]s.
+  ///
+  /// # Examples
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec2;
+  /// let slice = &mut [0.1, 0.42];
+  ///
+  /// let vec = Vec2::from_mut_slice(slice).unwrap();
+  ///
+  /// assert_eq!(vec.as_ptr(), slice.as_ptr());
+  /// ```
+  ///
+  /// Invalid size:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec2;
+  /// let slice = &mut [0.1];
+  ///
+  /// let vec = Vec2::from_mut_slice(slice);
+  ///
+  /// assert_eq!(vec, None);
+  /// ```
   #[must_use]
   pub fn from_mut_slice(slice: &mut [f32]) -> Option<&mut Self> {
     if slice.len() == 2 {
@@ -190,6 +270,32 @@ impl Vec2 {
   #[inline(always)]
   pub fn as_mut_slice(&mut self) -> &mut [f32] {
     &mut self.0
+  }
+
+  /// Returns a raw pointer to [`f32`] of the vector's buffer.
+  #[must_use]
+  #[inline(always)]
+  pub const fn as_ptr(&self) -> *const f32 {
+    self.as_slice().as_ptr()
+  }
+
+  /// Returns a raw pointer to [`f32`] of the vector's buffer.
+  #[must_use]
+  #[inline(always)]
+  pub fn as_mut_ptr(&mut self) -> *mut f32 {
+    self.as_mut_slice().as_mut_ptr()
+  }
+
+  /// Returns an iterator over the vector.
+  #[inline(always)]
+  pub fn iter(&self) -> impl Iterator<Item = &f32> {
+    self.as_slice().iter()
+  }
+
+  /// Returns a mutable iterator over the vector.
+  #[inline(always)]
+  pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut f32> {
+    self.as_mut_slice().iter_mut()
   }
 
   /// Returns the X-coordinate of this 2-component vector.
@@ -316,24 +422,83 @@ impl Vec2 {
   }
 
   /// Returns whether all components of this Vec are finite.
+  ///
+  /// # Example
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vector2;
+  ///
+  /// let finite = Vector2::UNIT_X;
+  /// let not_finite = Vector2::new(f32::INFINITY, 3.0);
+  ///
+  /// assert!(finite.is_finite());
+  /// assert!(!not_finite.is_finite());
+  /// ```
   #[must_use]
   pub fn is_finite(&self) -> bool {
     self.x().is_finite() && self.y().is_finite()
   }
 
   /// Returns whether any component of this vec are infinite.
+  ///
+  /// This is the inverse operation of [`is_finite`].
+  ///
+  /// [`is_finite`]: Self::is_finite
+  ///
+  /// # Example
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vector2;
+  ///
+  /// let finite = Vector2::UNIT_X;
+  /// let not_finite = Vector2::new(f32::INFINITY, 3.0);
+  ///
+  /// assert!(!finite.is_infinite());
+  /// assert!(not_finite.is_infinite());
+  /// ```
   #[must_use]
   pub fn is_infinite(&self) -> bool {
     self.x().is_infinite() || self.y().is_infinite()
   }
 
   /// Returns whether any component of this vec are nan.
+  ///
+  /// # Example
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vector2;
+  ///
+  /// let not_nan = Vector2::UNIT_X;
+  /// let nan = Vector2::new(f32::NAN, 3.0);
+  ///
+  /// assert!(!not_nan.is_nan());
+  /// assert!(nan.is_nan());
+  /// ```
   #[must_use]
   pub fn is_nan(&self) -> bool {
     self.x().is_nan() || self.y().is_nan()
   }
 
   /// Computes the absolute value of `self`
+  ///
+  /// # Example
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vector2;
+  ///
+  /// let vec = Vector2::new(-3.0, 4.0);
+  /// let abs = vec.abs();
+  ///
+  /// assert_eq!(abs, Vector2::new(3.0, 4.0));
+  /// ```
   #[must_use]
   pub fn abs(&self) -> Vector2 {
     Vector2 {
@@ -357,15 +522,31 @@ impl Vec2 {
   }
 }
 
-impl Midpoint for Vec2 {
-  type Output = Vector2;
-
+impl AsRef<[f32]> for Vec2 {
   #[must_use]
-  fn midpoint(&self, other: &Self) -> Self::Output {
-    Vector2 {
-      x: (self.x() + other.x()) / 2.0,
-      y: (self.y() + other.y()) / 2.0,
-    }
+  #[inline(always)]
+  fn as_ref(&self) -> &[f32] {
+    &self.0
+  }
+}
+
+impl AsMut<[f32]> for Vec2 {
+  #[must_use]
+  #[inline(always)]
+  fn as_mut(&mut self) -> &mut [f32] {
+    &mut self.0
+  }
+}
+
+impl Borrow<[f32]> for Vec2 {
+  fn borrow(&self) -> &[f32] {
+    &self.0
+  }
+}
+
+impl BorrowMut<[f32]> for Vec2 {
+  fn borrow_mut(&mut self) -> &mut [f32] {
+    &mut self.0
   }
 }
 
@@ -408,37 +589,15 @@ where
   }
 }
 
-impl Deref for Vec2 {
-  type Target = [f32];
+impl Midpoint for Vec2 {
+  type Output = Vector2;
 
   #[must_use]
-  #[inline(always)]
-  fn deref(&self) -> &Self::Target {
-    &self.0
-  }
-}
-
-impl DerefMut for Vec2 {
-  #[must_use]
-  #[inline(always)]
-  fn deref_mut(&mut self) -> &mut Self::Target {
-    &mut self.0
-  }
-}
-
-impl AsRef<[f32]> for Vec2 {
-  #[must_use]
-  #[inline(always)]
-  fn as_ref(&self) -> &[f32] {
-    &self.0
-  }
-}
-
-impl AsMut<[f32]> for Vec2 {
-  #[must_use]
-  #[inline(always)]
-  fn as_mut(&mut self) -> &mut [f32] {
-    &mut self.0
+  fn midpoint(&self, other: &Self) -> Self::Output {
+    Vector2 {
+      x: (self.x() + other.x()) / 2.0,
+      y: (self.y() + other.y()) / 2.0,
+    }
   }
 }
 
@@ -451,6 +610,27 @@ impl Dot for Vec2 {
   }
 }
 
+impl Cross for Vec2 {
+  type Output = f32;
+
+  #[must_use]
+  fn cross(&self, other: &Self) -> Self::Output {
+    self.x() * other.y() - self.y() * other.x()
+  }
+}
+
+impl Neg for &'_ Vec2 {
+  type Output = Vector2;
+
+  #[must_use]
+  fn neg(self) -> Self::Output {
+    Vector2 {
+      x: -self.x(),
+      y: -self.y(),
+    }
+  }
+}
+
 impl Add for &'_ Vec2 {
   type Output = Vector2;
 
@@ -460,36 +640,12 @@ impl Add for &'_ Vec2 {
   }
 }
 
-impl AddAssign<&Vec2> for Vec2 {
-  fn add_assign(&mut self, rhs: &Vec2) {
-    let dest_ptr = self.0.as_mut_ptr();
-    let src_ptr = rhs.0.as_ptr();
-
-    unsafe {
-      *dest_ptr += *src_ptr;
-      *dest_ptr.add(1) += *src_ptr.add(1);
-    }
-  }
-}
-
 impl Sub for &'_ Vec2 {
   type Output = Vector2;
 
   #[must_use]
   fn sub(self, rhs: Self) -> Self::Output {
     Vec2::sub_impl(self, rhs)
-  }
-}
-
-impl SubAssign<&Vec2> for Vec2 {
-  fn sub_assign(&mut self, rhs: &Vec2) {
-    let dest_ptr = self.0.as_mut_ptr();
-    let src_ptr = rhs.0.as_ptr();
-
-    unsafe {
-      *dest_ptr -= *src_ptr;
-      *dest_ptr.add(1) -= *src_ptr.add(1);
-    }
   }
 }
 
@@ -517,17 +673,6 @@ impl Mul<&'_ Vec2> for f32 {
   }
 }
 
-impl MulAssign<f32> for Vec2 {
-  fn mul_assign(&mut self, rhs: f32) {
-    let dest_ptr = self.0.as_mut_ptr();
-
-    unsafe {
-      *dest_ptr *= rhs;
-      *dest_ptr.add(1) *= rhs;
-    }
-  }
-}
-
 impl Div<f32> for &'_ Vec2 {
   type Output = Vector2;
 
@@ -537,18 +682,6 @@ impl Div<f32> for &'_ Vec2 {
     Vector2 {
       x: self.x() * inverse,
       y: self.y() * inverse,
-    }
-  }
-}
-
-impl DivAssign<f32> for Vec2 {
-  fn div_assign(&mut self, rhs: f32) {
-    let dest_ptr = self.0.as_mut_ptr();
-
-    let inverse = 1.0 / rhs;
-    unsafe {
-      *dest_ptr *= inverse;
-      *dest_ptr.add(1) *= inverse;
     }
   }
 }
@@ -565,6 +698,53 @@ impl Rem<f32> for &'_ Vec2 {
   }
 }
 
+impl AddAssign<&Vec2> for Vec2 {
+  fn add_assign(&mut self, rhs: &Vec2) {
+    let dest_ptr = self.0.as_mut_ptr();
+    let src_ptr = rhs.0.as_ptr();
+
+    unsafe {
+      *dest_ptr += *src_ptr;
+      *dest_ptr.add(1) += *src_ptr.add(1);
+    }
+  }
+}
+
+impl SubAssign<&Vec2> for Vec2 {
+  fn sub_assign(&mut self, rhs: &Vec2) {
+    let dest_ptr = self.0.as_mut_ptr();
+    let src_ptr = rhs.0.as_ptr();
+
+    unsafe {
+      *dest_ptr -= *src_ptr;
+      *dest_ptr.add(1) -= *src_ptr.add(1);
+    }
+  }
+}
+
+impl MulAssign<f32> for Vec2 {
+  fn mul_assign(&mut self, rhs: f32) {
+    let dest_ptr = self.0.as_mut_ptr();
+
+    unsafe {
+      *dest_ptr *= rhs;
+      *dest_ptr.add(1) *= rhs;
+    }
+  }
+}
+
+impl DivAssign<f32> for Vec2 {
+  fn div_assign(&mut self, rhs: f32) {
+    let dest_ptr = self.0.as_mut_ptr();
+
+    let inverse = 1.0 / rhs;
+    unsafe {
+      *dest_ptr *= inverse;
+      *dest_ptr.add(1) *= inverse;
+    }
+  }
+}
+
 impl RemAssign<f32> for Vec2 {
   fn rem_assign(&mut self, rhs: f32) {
     let dest_ptr = self.0.as_mut_ptr();
@@ -576,20 +756,8 @@ impl RemAssign<f32> for Vec2 {
   }
 }
 
-impl Neg for &'_ Vec2 {
-  type Output = Vector2;
-
-  #[must_use]
-  fn neg(self) -> Self::Output {
-    Vector2 {
-      x: -self.x(),
-      y: -self.y(),
-    }
-  }
-}
-
-impl std::fmt::Debug for Vec2 {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl fmt::Debug for Vec2 {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     f.debug_struct("Vec2")
       .field("x", &self.x())
       .field("y", &self.y())
@@ -597,9 +765,9 @@ impl std::fmt::Debug for Vec2 {
   }
 }
 
-impl std::fmt::Display for Vec2 {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    write!(f, "{{{}, {}}}", self.x(), self.y())
+impl fmt::Display for Vec2 {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    write!(f, "[{}, {}]", self.x(), self.y())
   }
 }
 
@@ -620,19 +788,31 @@ pub struct Vector2 {
 }
 
 impl Vector2 {
-  /// A constant for a vector of magnitude 0 at the origin.
+  /// A constant for a [Null vector], which has magnitude 0 and exists at the
+  /// [origin].
+  ///
+  /// [Null vector]: https://en.wikipedia.org/wiki/Null_vector
+  /// [origin]: https://en.wikipedia.org/wiki/Origin_(mathematics)
   pub const ZERO: Vector2 = Vector2::new(0.0, 0.0);
 
-  /// A constant for a unit vector in the positive X-direction.
+  /// A constant for a [unit vector] in the positive X-direction.
+  ///
+  /// [unit vector]: https://en.wikipedia.org/wiki/Unit_vector
   pub const UNIT_X: Vector2 = Vector2::new(1.0, 0.0);
 
-  /// A constant for a unit vector in the positive Y-direction.
+  /// A constant for a [unit vector] in the positive Y-direction.
+  ///
+  /// [unit vector]: https://en.wikipedia.org/wiki/Unit_vector
   pub const UNIT_Y: Vector2 = Vector2::new(0.0, 1.0);
 
-  /// A constant for a unit vector in the negative X-direction.
+  /// A constant for a [unit vector] in the negative X-direction.
+  ///
+  /// [unit vector]: https://en.wikipedia.org/wiki/Unit_vector
   pub const NEG_UNIT_X: Vector2 = Vector2::new(-1.0, 0.0);
 
-  /// A constant for a unit vector in the negative Y-direction.
+  /// A constant for a [unit vector] in the negative Y-direction.
+  ///
+  /// [unit vector]: https://en.wikipedia.org/wiki/Unit_vector
   pub const NEG_UNIT_Y: Vector2 = Vector2::new(0.0, -1.0);
 
   /// Constructs this vector from an x and y coordinate.
@@ -832,14 +1012,65 @@ impl From<&'_ Vec2u> for Vector2 {
   }
 }
 
-impl<Vec> From<Vec> for Vector2
-where
-  Vec: AsRef<Vec2>,
-{
+impl Deref for Vector2 {
+  type Target = Vec2;
+
   #[must_use]
   #[inline(always)]
-  fn from(value: Vec) -> Self {
-    value.as_ref().to_owned()
+  fn deref(&self) -> &Self::Target {
+    self.borrow()
+  }
+}
+
+impl DerefMut for Vector2 {
+  #[must_use]
+  #[inline(always)]
+  fn deref_mut(&mut self) -> &mut Self::Target {
+    self.borrow_mut()
+  }
+}
+
+impl AsRef<Vec2> for Vector2 {
+  #[must_use]
+  #[inline(always)]
+  fn as_ref(&self) -> &Vec2 {
+    self.as_vec2()
+  }
+}
+
+impl AsMut<Vec2> for Vector2 {
+  #[inline(always)]
+  fn as_mut(&mut self) -> &mut Vec2 {
+    self.as_mut_vec2()
+  }
+}
+
+impl Borrow<Vec2> for Vector2 {
+  #[must_use]
+  #[inline(always)]
+  fn borrow(&self) -> &Vec2 {
+    self.as_vec2()
+  }
+}
+
+impl BorrowMut<Vec2> for Vector2 {
+  #[must_use]
+  #[inline(always)]
+  fn borrow_mut(&mut self) -> &mut Vec2 {
+    self.as_mut_vec2()
+  }
+}
+
+impl ToOwned for Vec2 {
+  type Owned = Vector2;
+
+  #[must_use]
+  #[inline(always)]
+  fn to_owned(&self) -> Self::Owned {
+    Vector2 {
+      x: self.x(),
+      y: self.y(),
+    }
   }
 }
 
@@ -922,27 +1153,6 @@ impl Add<Vector2> for &Vector2 {
   }
 }
 
-impl AddAssign for Vector2 {
-  #[inline(always)]
-  fn add_assign(&mut self, rhs: Self) {
-    self.as_mut_vec2().add_assign(&rhs)
-  }
-}
-
-impl AddAssign<&Vector2> for Vector2 {
-  #[inline(always)]
-  fn add_assign(&mut self, rhs: &Self) {
-    self.as_mut_vec2().add_assign(rhs)
-  }
-}
-
-impl AddAssign<&Vec2> for Vector2 {
-  #[inline(always)]
-  fn add_assign(&mut self, rhs: &Vec2) {
-    self.as_mut_vec2().add_assign(rhs)
-  }
-}
-
 impl Sub for &Vector2 {
   type Output = Vector2;
 
@@ -1022,27 +1232,6 @@ impl Sub<Vector2> for &Vector2 {
   }
 }
 
-impl SubAssign for Vector2 {
-  #[inline(always)]
-  fn sub_assign(&mut self, rhs: Self) {
-    self.as_mut_vec2().sub_assign(&rhs)
-  }
-}
-
-impl SubAssign<&Vector2> for Vector2 {
-  #[inline(always)]
-  fn sub_assign(&mut self, rhs: &Self) {
-    self.as_mut_vec2().sub_assign(rhs)
-  }
-}
-
-impl SubAssign<&Vec2> for Vector2 {
-  #[inline(always)]
-  fn sub_assign(&mut self, rhs: &Vec2) {
-    self.as_mut_vec2().sub_assign(rhs)
-  }
-}
-
 impl Mul<f32> for Vector2 {
   type Output = Vector2;
 
@@ -1085,13 +1274,6 @@ impl Mul<&Vector2> for f32 {
   }
 }
 
-impl MulAssign<f32> for Vector2 {
-  #[inline(always)]
-  fn mul_assign(&mut self, rhs: f32) {
-    self.as_mut_vec2().mul_assign(rhs)
-  }
-}
-
 impl Div<f32> for Vector2 {
   type Output = Vector2;
 
@@ -1110,13 +1292,6 @@ impl Div<f32> for &Vector2 {
   #[inline(always)]
   fn div(self, rhs: f32) -> Self::Output {
     self.as_vec2().div(rhs)
-  }
-}
-
-impl DivAssign<f32> for Vector2 {
-  #[inline(always)]
-  fn div_assign(&mut self, rhs: f32) {
-    self.as_mut_vec2().div_assign(rhs)
   }
 }
 
@@ -1141,6 +1316,62 @@ impl Rem<f32> for &Vector2 {
   }
 }
 
+impl AddAssign for Vector2 {
+  #[inline(always)]
+  fn add_assign(&mut self, rhs: Self) {
+    self.as_mut_vec2().add_assign(&rhs)
+  }
+}
+
+impl AddAssign<&Vector2> for Vector2 {
+  #[inline(always)]
+  fn add_assign(&mut self, rhs: &Self) {
+    self.as_mut_vec2().add_assign(rhs)
+  }
+}
+
+impl AddAssign<&Vec2> for Vector2 {
+  #[inline(always)]
+  fn add_assign(&mut self, rhs: &Vec2) {
+    self.as_mut_vec2().add_assign(rhs)
+  }
+}
+
+impl SubAssign for Vector2 {
+  #[inline(always)]
+  fn sub_assign(&mut self, rhs: Self) {
+    self.as_mut_vec2().sub_assign(&rhs)
+  }
+}
+
+impl SubAssign<&Vector2> for Vector2 {
+  #[inline(always)]
+  fn sub_assign(&mut self, rhs: &Self) {
+    self.as_mut_vec2().sub_assign(rhs)
+  }
+}
+
+impl SubAssign<&Vec2> for Vector2 {
+  #[inline(always)]
+  fn sub_assign(&mut self, rhs: &Vec2) {
+    self.as_mut_vec2().sub_assign(rhs)
+  }
+}
+
+impl MulAssign<f32> for Vector2 {
+  #[inline(always)]
+  fn mul_assign(&mut self, rhs: f32) {
+    self.as_mut_vec2().mul_assign(rhs)
+  }
+}
+
+impl DivAssign<f32> for Vector2 {
+  #[inline(always)]
+  fn div_assign(&mut self, rhs: f32) {
+    self.as_mut_vec2().div_assign(rhs)
+  }
+}
+
 impl RemAssign<f32> for Vector2 {
   #[inline(always)]
   fn rem_assign(&mut self, rhs: f32) {
@@ -1148,72 +1379,9 @@ impl RemAssign<f32> for Vector2 {
   }
 }
 
-impl Deref for Vector2 {
-  type Target = Vec2;
-
-  #[must_use]
-  #[inline(always)]
-  fn deref(&self) -> &Self::Target {
-    self.borrow()
-  }
-}
-
-impl DerefMut for Vector2 {
-  #[must_use]
-  #[inline(always)]
-  fn deref_mut(&mut self) -> &mut Self::Target {
-    self.borrow_mut()
-  }
-}
-
-impl Borrow<Vec2> for Vector2 {
-  #[must_use]
-  #[inline(always)]
-  fn borrow(&self) -> &Vec2 {
-    self.as_vec2()
-  }
-}
-
-impl BorrowMut<Vec2> for Vector2 {
-  #[must_use]
-  #[inline(always)]
-  fn borrow_mut(&mut self) -> &mut Vec2 {
-    self.as_mut_vec2()
-  }
-}
-
-impl Borrow<[f32]> for Vector2 {
-  #[must_use]
-  #[inline(always)]
-  fn borrow(&self) -> &[f32] {
-    <Self as Borrow<Vec2>>::borrow(self).as_ref()
-  }
-}
-
-impl BorrowMut<[f32]> for Vector2 {
-  #[must_use]
-  #[inline(always)]
-  fn borrow_mut(&mut self) -> &mut [f32] {
-    <Self as BorrowMut<Vec2>>::borrow_mut(self).as_mut()
-  }
-}
-
-impl ToOwned for Vec2 {
-  type Owned = Vector2;
-
-  #[must_use]
-  #[inline(always)]
-  fn to_owned(&self) -> Self::Owned {
-    Vector2 {
-      x: self.x(),
-      y: self.y(),
-    }
-  }
-}
-
-impl std::fmt::Display for Vector2 {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    write!(f, "{{{}, {}}}", self.x, self.y)
+impl fmt::Display for Vector2 {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    write!(f, "[{}, {}]", self.x, self.y)
   }
 }
 

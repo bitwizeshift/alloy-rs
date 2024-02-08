@@ -1,10 +1,12 @@
+use crate::math::vec::{Vec2u, Vec3u};
+
 use std::borrow::{Borrow, BorrowMut};
+use std::fmt;
 use std::ops::{
   Add, AddAssign, Deref, DerefMut, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Rem, RemAssign,
   Sub, SubAssign,
 };
-
-use super::{Vec2u, Vec3u};
+use std::slice::SliceIndex;
 
 /// A 4-component non-owning view of an unsigned [Euclidean vector].
 ///
@@ -36,9 +38,26 @@ impl Vec4u {
   /// # Arguments
   ///
   /// * `array` - an array containing 4 [`u32`] values.
+  ///
+  /// # Examples
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec4u;
+  /// let array: [u32; 4] = [1, 42, 314, 9];
+  ///
+  /// let vec = Vec4u::from_array(&array);
+  ///
+  /// assert_eq!(vec.as_ptr(), array.as_ptr());
+  /// assert_eq!(vec.x(), array[0]);
+  /// assert_eq!(vec.y(), array[1]);
+  /// assert_eq!(vec.z(), array[2]);
+  /// assert_eq!(vec.w(), array[3]);
+  /// ```
   #[must_use]
   #[inline(always)]
-  pub const fn from_array(array: &[i32; 4]) -> &Self {
+  pub const fn from_array(array: &[u32; 4]) -> &Self {
     // SAFETY: `array` is guaranteed to be 4-components
     unsafe { std::mem::transmute(array.as_slice()) }
   }
@@ -53,6 +72,19 @@ impl Vec4u {
   /// # Arguments
   ///
   /// * `array` - an array containing 4 [`u32`] values.
+  ///
+  /// # Examples
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec4u;
+  /// let mut array: [u32; 4] = [1, 420, 314, 9];
+  ///
+  /// let vec = Vec4u::from_mut_array(&mut array);
+  ///
+  /// assert_eq!(vec.as_ptr(), array.as_ptr());
+  /// ```
   #[must_use]
   #[inline(always)]
   pub fn from_mut_array(array: &mut [u32; 4]) -> &Self {
@@ -67,6 +99,34 @@ impl Vec4u {
   /// # Arguments
   ///
   /// * `slice` - the slice of [`u32`]s.
+  ///
+  /// # Examples
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec4u;
+  /// let slice = &[1, 42, 314, 9];
+  ///
+  /// let vec = Vec4u::from_slice(slice).unwrap();
+  ///
+  /// assert_eq!(vec.as_ptr(), slice.as_ptr());
+  /// assert_eq!(vec.x(), slice[0]);
+  /// assert_eq!(vec.y(), slice[1]);
+  /// assert_eq!(vec.z(), slice[2]);
+  /// assert_eq!(vec.w(), slice[3]);
+  /// ```
+  ///
+  /// Invalid size:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec4u;
+  /// let slice = &[1];
+  ///
+  /// let vec = Vec4u::from_slice(slice);
+  ///
+  /// assert_eq!(vec, None);
+  /// ```
   #[must_use]
   pub const fn from_slice(slice: &[u32]) -> Option<&Self> {
     if slice.len() == 4 {
@@ -86,6 +146,30 @@ impl Vec4u {
   /// # Arguments
   ///
   /// * `slice` - the mutable slice of [`u32`]s.
+  ///
+  /// # Examples
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec4u;
+  /// let slice = &mut [1, 42, 314, 9];
+  ///
+  /// let vec = Vec4u::from_mut_slice(slice).unwrap();
+  ///
+  /// assert_eq!(vec.as_ptr(), slice.as_ptr());
+  /// ```
+  ///
+  /// Invalid size:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec4u;
+  /// let slice = &mut [1];
+  ///
+  /// let vec = Vec4u::from_mut_slice(slice);
+  ///
+  /// assert_eq!(vec, None);
+  /// ```
   #[must_use]
   pub fn from_mut_slice(slice: &mut [u32]) -> Option<&mut Self> {
     if slice.len() == 4 {
@@ -178,6 +262,32 @@ impl Vec4u {
   #[inline(always)]
   pub fn as_mut_slice(&mut self) -> &mut [u32] {
     &mut self.0
+  }
+
+  /// Returns a raw pointer to [`u32`] of the vector's buffer.
+  #[must_use]
+  #[inline(always)]
+  pub const fn as_ptr(&self) -> *const u32 {
+    self.as_slice().as_ptr()
+  }
+
+  /// Returns a mutable raw pointer to [`u32`] of the vector's buffer.
+  #[must_use]
+  #[inline(always)]
+  pub fn as_mut_ptr(&mut self) -> *mut u32 {
+    self.as_mut_slice().as_mut_ptr()
+  }
+
+  /// Returns an iterator over the vector.
+  #[inline(always)]
+  pub fn iter(&self) -> impl Iterator<Item = &u32> {
+    self.as_slice().iter()
+  }
+
+  /// Returns a mutable iterator over the vector.
+  #[inline(always)]
+  pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut u32> {
+    self.as_mut_slice().iter_mut()
   }
 
   /// Returns the X-coordinate of this 4-component vector.
@@ -401,48 +511,6 @@ impl Vec4u {
   }
 }
 
-impl<I> Index<I> for Vec4u
-where
-  I: std::slice::SliceIndex<[u32]>,
-{
-  type Output = I::Output;
-
-  #[must_use]
-  #[inline(always)]
-  fn index(&self, index: I) -> &Self::Output {
-    self.0.index(index)
-  }
-}
-
-impl<I> IndexMut<I> for Vec4u
-where
-  I: std::slice::SliceIndex<[u32]>,
-{
-  #[must_use]
-  #[inline(always)]
-  fn index_mut(&mut self, index: I) -> &mut Self::Output {
-    self.0.index_mut(index)
-  }
-}
-
-impl Deref for Vec4u {
-  type Target = [u32];
-
-  #[must_use]
-  #[inline(always)]
-  fn deref(&self) -> &Self::Target {
-    &self.0
-  }
-}
-
-impl DerefMut for Vec4u {
-  #[must_use]
-  #[inline(always)]
-  fn deref_mut(&mut self) -> &mut Self::Target {
-    &mut self.0
-  }
-}
-
 impl AsRef<[u32]> for Vec4u {
   #[must_use]
   #[inline(always)]
@@ -456,6 +524,46 @@ impl AsMut<[u32]> for Vec4u {
   #[inline(always)]
   fn as_mut(&mut self) -> &mut [u32] {
     &mut self.0
+  }
+}
+
+impl Borrow<[u32]> for Vec4u {
+  #[must_use]
+  #[inline(always)]
+  fn borrow(&self) -> &[u32] {
+    &self.0
+  }
+}
+
+impl BorrowMut<[u32]> for Vec4u {
+  #[must_use]
+  #[inline(always)]
+  fn borrow_mut(&mut self) -> &mut [u32] {
+    &mut self.0
+  }
+}
+
+impl<I> Index<I> for Vec4u
+where
+  I: SliceIndex<[u32]>,
+{
+  type Output = I::Output;
+
+  #[must_use]
+  #[inline(always)]
+  fn index(&self, index: I) -> &Self::Output {
+    self.0.index(index)
+  }
+}
+
+impl<I> IndexMut<I> for Vec4u
+where
+  I: SliceIndex<[u32]>,
+{
+  #[must_use]
+  #[inline(always)]
+  fn index_mut(&mut self, index: I) -> &mut Self::Output {
+    self.0.index_mut(index)
   }
 }
 
@@ -473,19 +581,6 @@ impl Add for &'_ Vec4u {
   }
 }
 
-impl AddAssign<&Vec4u> for Vec4u {
-  fn add_assign(&mut self, rhs: &Vec4u) {
-    let dest_ptr = self.0.as_mut_ptr();
-    let src_ptr = rhs.0.as_ptr();
-
-    unsafe {
-      for i in 0..4 {
-        *dest_ptr.add(i) += *src_ptr.add(i)
-      }
-    }
-  }
-}
-
 impl Sub for &'_ Vec4u {
   type Output = Vector4u;
 
@@ -496,19 +591,6 @@ impl Sub for &'_ Vec4u {
       y: self.y() - rhs.y(),
       z: self.z() - rhs.z(),
       w: self.w() - rhs.w(),
-    }
-  }
-}
-
-impl SubAssign<&Vec4u> for Vec4u {
-  fn sub_assign(&mut self, rhs: &Vec4u) {
-    let dest_ptr = self.0.as_mut_ptr();
-    let src_ptr = rhs.0.as_ptr();
-
-    unsafe {
-      for i in 0..4 {
-        *dest_ptr.add(i) -= *src_ptr.add(i)
-      }
     }
   }
 }
@@ -541,14 +623,16 @@ impl Mul<&'_ Vec4u> for u32 {
   }
 }
 
-impl MulAssign<u32> for Vec4u {
-  fn mul_assign(&mut self, rhs: u32) {
-    let dest_ptr = self.0.as_mut_ptr();
+impl Rem<u32> for &'_ Vec4u {
+  type Output = Vector4u;
 
-    unsafe {
-      for i in 0..4 {
-        *dest_ptr.add(i) *= rhs
-      }
+  #[must_use]
+  fn rem(self, rhs: u32) -> Self::Output {
+    Vector4u {
+      x: self.x().rem(rhs),
+      y: self.y().rem(rhs),
+      z: self.z().rem(rhs),
+      w: self.w().rem(rhs),
     }
   }
 }
@@ -567,6 +651,44 @@ impl Div<u32> for &'_ Vec4u {
   }
 }
 
+impl AddAssign<&Vec4u> for Vec4u {
+  fn add_assign(&mut self, rhs: &Vec4u) {
+    let dest_ptr = self.0.as_mut_ptr();
+    let src_ptr = rhs.0.as_ptr();
+
+    unsafe {
+      for i in 0..4 {
+        *dest_ptr.add(i) += *src_ptr.add(i)
+      }
+    }
+  }
+}
+
+impl SubAssign<&Vec4u> for Vec4u {
+  fn sub_assign(&mut self, rhs: &Vec4u) {
+    let dest_ptr = self.0.as_mut_ptr();
+    let src_ptr = rhs.0.as_ptr();
+
+    unsafe {
+      for i in 0..4 {
+        *dest_ptr.add(i) -= *src_ptr.add(i)
+      }
+    }
+  }
+}
+
+impl MulAssign<u32> for Vec4u {
+  fn mul_assign(&mut self, rhs: u32) {
+    let dest_ptr = self.0.as_mut_ptr();
+
+    unsafe {
+      for i in 0..4 {
+        *dest_ptr.add(i) *= rhs
+      }
+    }
+  }
+}
+
 impl DivAssign<u32> for Vec4u {
   fn div_assign(&mut self, rhs: u32) {
     let dest_ptr = self.0.as_mut_ptr();
@@ -575,20 +697,6 @@ impl DivAssign<u32> for Vec4u {
       for i in 0..4 {
         *dest_ptr.add(i) /= rhs
       }
-    }
-  }
-}
-
-impl Rem<u32> for &'_ Vec4u {
-  type Output = Vector4u;
-
-  #[must_use]
-  fn rem(self, rhs: u32) -> Self::Output {
-    Vector4u {
-      x: self.x().rem(rhs),
-      y: self.y().rem(rhs),
-      z: self.z().rem(rhs),
-      w: self.w().rem(rhs),
     }
   }
 }
@@ -605,8 +713,8 @@ impl RemAssign<u32> for Vec4u {
   }
 }
 
-impl std::fmt::Debug for Vec4u {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl fmt::Debug for Vec4u {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     f.debug_struct("Vec4u")
       .field("x", &self.x())
       .field("y", &self.y())
@@ -616,11 +724,11 @@ impl std::fmt::Debug for Vec4u {
   }
 }
 
-impl std::fmt::Display for Vec4u {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl fmt::Display for Vec4u {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     write!(
       f,
-      "{{{}, {}, {}, {}}}",
+      "[{}, {}, {}, {}]",
       self.x(),
       self.y(),
       self.z(),
@@ -651,19 +759,31 @@ pub struct Vector4u {
 }
 
 impl Vector4u {
-  /// A constant for a vector of magnitude 0 at the origin.
+  /// A constant for a [Null vector], which has magnitude 0 and exists at the
+  /// [origin].
+  ///
+  /// [Null vector]: https://en.wikipedia.org/wiki/Null_vector
+  /// [origin]: https://en.wikipedia.org/wiki/Origin_(mathematics)
   pub const ZERO: Vector4u = Vector4u::new(0, 0, 0, 0);
 
-  /// A constant for a unit vector in the positive X-direction.
+  /// A constant for a [unit vector] in the positive X-direction.
+  ///
+  /// [unit vector]: https://en.wikipedia.org/wiki/Unit_vector
   pub const UNIT_X: Vector4u = Vector4u::new(1, 0, 0, 0);
 
-  /// A constant for a unit vector in the positive Y-direction.
+  /// A constant for a [unit vector] in the positive Y-direction.
+  ///
+  /// [unit vector]: https://en.wikipedia.org/wiki/Unit_vector
   pub const UNIT_Y: Vector4u = Vector4u::new(0, 1, 0, 0);
 
-  /// A constant for a unit vector in the positive Z-direction.
+  /// A constant for a [unit vector] in the positive Z-direction.
+  ///
+  /// [unit vector]: https://en.wikipedia.org/wiki/Unit_vector
   pub const UNIT_Z: Vector4u = Vector4u::new(0, 0, 1, 0);
 
-  /// A constant for a unit vector in the positive W-direction.
+  /// A constant for a [unit vector] in the positive W-direction.
+  ///
+  /// [unit vector]: https://en.wikipedia.org/wiki/Unit_vector
   pub const UNIT_W: Vector4u = Vector4u::new(0, 0, 0, 1);
 
   /// Constructs this vector from an x, y, z, and w coordinate.
@@ -825,14 +945,84 @@ impl From<&'_ Vec4u> for Vector4u {
   }
 }
 
-impl<Vec> From<Vec> for Vector4u
-where
-  Vec: AsRef<Vec4u>,
-{
+impl Deref for Vector4u {
+  type Target = Vec4u;
+
   #[must_use]
   #[inline(always)]
-  fn from(value: Vec) -> Self {
-    value.as_ref().to_owned()
+  fn deref(&self) -> &Self::Target {
+    self.borrow()
+  }
+}
+
+impl DerefMut for Vector4u {
+  #[must_use]
+  #[inline(always)]
+  fn deref_mut(&mut self) -> &mut Self::Target {
+    self.borrow_mut()
+  }
+}
+
+impl AsRef<Vec4u> for Vector4u {
+  #[must_use]
+  #[inline(always)]
+  fn as_ref(&self) -> &Vec4u {
+    self.as_vec4()
+  }
+}
+
+impl AsMut<Vec4u> for Vector4u {
+  #[must_use]
+  #[inline(always)]
+  fn as_mut(&mut self) -> &mut Vec4u {
+    self.as_mut_vec4()
+  }
+}
+
+impl Borrow<Vec4u> for Vector4u {
+  #[must_use]
+  #[inline(always)]
+  fn borrow(&self) -> &Vec4u {
+    self.as_vec4()
+  }
+}
+
+impl BorrowMut<Vec4u> for Vector4u {
+  #[must_use]
+  #[inline(always)]
+  fn borrow_mut(&mut self) -> &mut Vec4u {
+    self.as_mut_vec4()
+  }
+}
+
+impl Borrow<[u32]> for Vector4u {
+  #[must_use]
+  #[inline(always)]
+  fn borrow(&self) -> &[u32] {
+    <Self as Borrow<Vec4u>>::borrow(self).as_ref()
+  }
+}
+
+impl BorrowMut<[u32]> for Vector4u {
+  #[must_use]
+  #[inline(always)]
+  fn borrow_mut(&mut self) -> &mut [u32] {
+    <Self as BorrowMut<Vec4u>>::borrow_mut(self).as_mut()
+  }
+}
+
+impl ToOwned for Vec4u {
+  type Owned = Vector4u;
+
+  #[must_use]
+  #[inline(always)]
+  fn to_owned(&self) -> Self::Owned {
+    Vector4u {
+      x: self.x(),
+      y: self.y(),
+      z: self.z(),
+      w: self.w(),
+    }
   }
 }
 
@@ -927,27 +1117,6 @@ impl Add<Vector4u> for &Vector4u {
   }
 }
 
-impl AddAssign for Vector4u {
-  #[inline(always)]
-  fn add_assign(&mut self, rhs: Self) {
-    self.as_mut_vec4().add_assign(&rhs)
-  }
-}
-
-impl AddAssign<&Vector4u> for Vector4u {
-  #[inline(always)]
-  fn add_assign(&mut self, rhs: &Self) {
-    self.as_mut_vec4().add_assign(rhs)
-  }
-}
-
-impl AddAssign<&Vec4u> for Vector4u {
-  #[inline(always)]
-  fn add_assign(&mut self, rhs: &Vec4u) {
-    self.as_mut_vec4().add_assign(rhs)
-  }
-}
-
 impl Sub for &Vector4u {
   type Output = Vector4u;
 
@@ -1036,27 +1205,6 @@ impl Sub<Vector4u> for &Vector4u {
   }
 }
 
-impl SubAssign for Vector4u {
-  #[inline(always)]
-  fn sub_assign(&mut self, rhs: Self) {
-    self.as_mut_vec4().sub_assign(&rhs)
-  }
-}
-
-impl SubAssign<&Vector4u> for Vector4u {
-  #[inline(always)]
-  fn sub_assign(&mut self, rhs: &Self) {
-    self.as_mut_vec4().sub_assign(rhs)
-  }
-}
-
-impl SubAssign<&Vec4u> for Vector4u {
-  #[inline(always)]
-  fn sub_assign(&mut self, rhs: &Vec4u) {
-    self.as_mut_vec4().sub_assign(rhs)
-  }
-}
-
 impl Mul<u32> for Vector4u {
   type Output = Vector4u;
 
@@ -1099,13 +1247,6 @@ impl Mul<&Vector4u> for u32 {
   }
 }
 
-impl MulAssign<u32> for Vector4u {
-  #[inline(always)]
-  fn mul_assign(&mut self, rhs: u32) {
-    self.as_mut_vec4().mul_assign(rhs)
-  }
-}
-
 impl Div<u32> for Vector4u {
   type Output = Vector4u;
 
@@ -1124,13 +1265,6 @@ impl Div<u32> for &Vector4u {
   #[inline(always)]
   fn div(self, rhs: u32) -> Self::Output {
     self.as_vec4().div(rhs)
-  }
-}
-
-impl DivAssign<u32> for Vector4u {
-  #[inline(always)]
-  fn div_assign(&mut self, rhs: u32) {
-    self.as_mut_vec4().div_assign(rhs)
   }
 }
 
@@ -1155,6 +1289,62 @@ impl Rem<u32> for &Vector4u {
   }
 }
 
+impl AddAssign for Vector4u {
+  #[inline(always)]
+  fn add_assign(&mut self, rhs: Self) {
+    self.as_mut_vec4().add_assign(&rhs)
+  }
+}
+
+impl AddAssign<&Vector4u> for Vector4u {
+  #[inline(always)]
+  fn add_assign(&mut self, rhs: &Self) {
+    self.as_mut_vec4().add_assign(rhs)
+  }
+}
+
+impl AddAssign<&Vec4u> for Vector4u {
+  #[inline(always)]
+  fn add_assign(&mut self, rhs: &Vec4u) {
+    self.as_mut_vec4().add_assign(rhs)
+  }
+}
+
+impl SubAssign for Vector4u {
+  #[inline(always)]
+  fn sub_assign(&mut self, rhs: Self) {
+    self.as_mut_vec4().sub_assign(&rhs)
+  }
+}
+
+impl SubAssign<&Vector4u> for Vector4u {
+  #[inline(always)]
+  fn sub_assign(&mut self, rhs: &Self) {
+    self.as_mut_vec4().sub_assign(rhs)
+  }
+}
+
+impl SubAssign<&Vec4u> for Vector4u {
+  #[inline(always)]
+  fn sub_assign(&mut self, rhs: &Vec4u) {
+    self.as_mut_vec4().sub_assign(rhs)
+  }
+}
+
+impl MulAssign<u32> for Vector4u {
+  #[inline(always)]
+  fn mul_assign(&mut self, rhs: u32) {
+    self.as_mut_vec4().mul_assign(rhs)
+  }
+}
+
+impl DivAssign<u32> for Vector4u {
+  #[inline(always)]
+  fn div_assign(&mut self, rhs: u32) {
+    self.as_mut_vec4().div_assign(rhs)
+  }
+}
+
 impl RemAssign<u32> for Vector4u {
   #[inline(always)]
   fn rem_assign(&mut self, rhs: u32) {
@@ -1162,74 +1352,9 @@ impl RemAssign<u32> for Vector4u {
   }
 }
 
-impl Deref for Vector4u {
-  type Target = Vec4u;
-
-  #[must_use]
-  #[inline(always)]
-  fn deref(&self) -> &Self::Target {
-    self.borrow()
-  }
-}
-
-impl DerefMut for Vector4u {
-  #[must_use]
-  #[inline(always)]
-  fn deref_mut(&mut self) -> &mut Self::Target {
-    self.borrow_mut()
-  }
-}
-
-impl Borrow<Vec4u> for Vector4u {
-  #[must_use]
-  #[inline(always)]
-  fn borrow(&self) -> &Vec4u {
-    self.as_vec4()
-  }
-}
-
-impl BorrowMut<Vec4u> for Vector4u {
-  #[must_use]
-  #[inline(always)]
-  fn borrow_mut(&mut self) -> &mut Vec4u {
-    self.as_mut_vec4()
-  }
-}
-
-impl Borrow<[u32]> for Vector4u {
-  #[must_use]
-  #[inline(always)]
-  fn borrow(&self) -> &[u32] {
-    <Self as Borrow<Vec4u>>::borrow(self).as_ref()
-  }
-}
-
-impl BorrowMut<[u32]> for Vector4u {
-  #[must_use]
-  #[inline(always)]
-  fn borrow_mut(&mut self) -> &mut [u32] {
-    <Self as BorrowMut<Vec4u>>::borrow_mut(self).as_mut()
-  }
-}
-
-impl ToOwned for Vec4u {
-  type Owned = Vector4u;
-
-  #[must_use]
-  #[inline(always)]
-  fn to_owned(&self) -> Self::Owned {
-    Vector4u {
-      x: self.x(),
-      y: self.y(),
-      z: self.z(),
-      w: self.w(),
-    }
-  }
-}
-
-impl std::fmt::Display for Vector4u {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    write!(f, "{{{}, {}, {}, {}}}", self.x, self.y, self.z, self.w)
+impl fmt::Display for Vector4u {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    write!(f, "[{}, {}, {}, {}]", self.x, self.y, self.z, self.w)
   }
 }
 

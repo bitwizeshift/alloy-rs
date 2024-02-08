@@ -1,5 +1,6 @@
 use crate::ops::Dot;
 use std::borrow::{Borrow, BorrowMut};
+use std::fmt;
 use std::ops::{
   Add, AddAssign, Deref, DerefMut, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, Rem,
   RemAssign, Sub, SubAssign,
@@ -36,6 +37,21 @@ impl Vec2i {
   /// # Arguments
   ///
   /// * `array` - an array containing 2 [`i32`] values.
+  ///
+  /// # Examples
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec2i;
+  /// let array: [i32; 2] = [1, 42];
+  ///
+  /// let vec = Vec2i::from_array(&array);
+  ///
+  /// assert_eq!(vec.as_ptr(), array.as_ptr());
+  /// assert_eq!(vec.x(), array[0]);
+  /// assert_eq!(vec.y(), array[1]);
+  /// ```
   #[must_use]
   #[inline(always)]
   pub const fn from_array(array: &[i32; 2]) -> &Self {
@@ -53,6 +69,19 @@ impl Vec2i {
   /// # Arguments
   ///
   /// * `array` - an array containing 2 [`i32`] values.
+  ///
+  /// # Examples
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec2i;
+  /// let mut array: [i32; 2] = [1, 42];
+  ///
+  /// let vec = Vec2i::from_mut_array(&mut array);
+  ///
+  /// assert_eq!(vec.as_ptr(), array.as_ptr());
+  /// ```
   #[must_use]
   #[inline(always)]
   pub fn from_mut_array(array: &mut [i32; 2]) -> &Self {
@@ -67,6 +96,32 @@ impl Vec2i {
   /// # Arguments
   ///
   /// * `slice` - the slice of [`i32`]s.
+  ///
+  /// # Examples
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec2i;
+  /// let slice = &[1, 02];
+  ///
+  /// let vec = Vec2i::from_slice(slice).unwrap();
+  ///
+  /// assert_eq!(vec.as_ptr(), slice.as_ptr());
+  /// assert_eq!(vec.x(), slice[0]);
+  /// assert_eq!(vec.y(), slice[1]);
+  /// ```
+  ///
+  /// Invalid size:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec2i;
+  /// let slice = &[1];
+  ///
+  /// let vec = Vec2i::from_slice(slice);
+  ///
+  /// assert_eq!(vec, None);
+  /// ```
   #[must_use]
   pub const fn from_slice(slice: &[i32]) -> Option<&Self> {
     if slice.len() == 2 {
@@ -86,6 +141,30 @@ impl Vec2i {
   /// # Arguments
   ///
   /// * `slice` - the mutable slice of [`i32`]s.
+  ///
+  /// # Examples
+  ///
+  /// Basic use:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec2i;
+  /// let slice = &mut [1, 42];
+  ///
+  /// let vec = Vec2i::from_mut_slice(slice).unwrap();
+  ///
+  /// assert_eq!(vec.as_ptr(), slice.as_ptr());
+  /// ```
+  ///
+  /// Invalid size:
+  ///
+  /// ```rust
+  /// # use alloy::math::vec::Vec2i;
+  /// let slice = &mut [1];
+  ///
+  /// let vec = Vec2i::from_mut_slice(slice);
+  ///
+  /// assert_eq!(vec, None);
+  /// ```
   #[must_use]
   pub fn from_mut_slice(slice: &mut [i32]) -> Option<&mut Self> {
     if slice.len() == 2 {
@@ -185,6 +264,32 @@ impl Vec2i {
     &mut self.0
   }
 
+  /// Returns a raw pointer to [`i32`] of the vector's buffer.
+  #[must_use]
+  #[inline(always)]
+  pub const fn as_ptr(&self) -> *const i32 {
+    self.as_slice().as_ptr()
+  }
+
+  /// Returns a mutable raw pointer to [`i32`] of the vector's buffer.
+  #[must_use]
+  #[inline(always)]
+  pub fn as_mut_ptr(&mut self) -> *mut i32 {
+    self.as_mut_slice().as_mut_ptr()
+  }
+
+  /// Returns an iterator over the vector.
+  #[inline(always)]
+  pub fn iter(&self) -> impl Iterator<Item = &i32> {
+    self.as_slice().iter()
+  }
+
+  /// Returns a mutable iterator over the vector.
+  #[inline(always)]
+  pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut i32> {
+    self.as_mut_slice().iter_mut()
+  }
+
   /// Returns the X-coordinate of this 2-component vector.
   #[must_use]
   #[inline(always)]
@@ -259,6 +364,34 @@ impl Vec2i {
   }
 }
 
+impl AsRef<[i32]> for Vec2i {
+  #[must_use]
+  #[inline(always)]
+  fn as_ref(&self) -> &[i32] {
+    &self.0
+  }
+}
+
+impl AsMut<[i32]> for Vec2i {
+  #[must_use]
+  #[inline(always)]
+  fn as_mut(&mut self) -> &mut [i32] {
+    &mut self.0
+  }
+}
+
+impl Borrow<[i32]> for Vec2i {
+  fn borrow(&self) -> &[i32] {
+    &self.0
+  }
+}
+
+impl BorrowMut<[i32]> for Vec2i {
+  fn borrow_mut(&mut self) -> &mut [i32] {
+    &mut self.0
+  }
+}
+
 impl<I> Index<I> for Vec2i
 where
   I: SliceIndex<[i32]>,
@@ -283,45 +416,23 @@ where
   }
 }
 
-impl Deref for Vec2i {
-  type Target = [i32];
-
-  #[must_use]
-  #[inline(always)]
-  fn deref(&self) -> &Self::Target {
-    &self.0
-  }
-}
-
-impl DerefMut for Vec2i {
-  #[must_use]
-  #[inline(always)]
-  fn deref_mut(&mut self) -> &mut Self::Target {
-    &mut self.0
-  }
-}
-
-impl AsRef<[i32]> for Vec2i {
-  #[must_use]
-  #[inline(always)]
-  fn as_ref(&self) -> &[i32] {
-    &self.0
-  }
-}
-
-impl AsMut<[i32]> for Vec2i {
-  #[must_use]
-  #[inline(always)]
-  fn as_mut(&mut self) -> &mut [i32] {
-    &mut self.0
-  }
-}
-
 impl Dot for Vec2i {
   type Output = i32;
   #[must_use]
   fn dot(&self, rhs: &Self) -> Self::Output {
     self.x() * rhs.x() + self.y() * rhs.y()
+  }
+}
+
+impl Neg for &'_ Vec2i {
+  type Output = Vector2i;
+
+  #[must_use]
+  fn neg(self) -> Self::Output {
+    Vector2i {
+      x: -self.x(),
+      y: -self.y(),
+    }
   }
 }
 
@@ -337,18 +448,6 @@ impl Add for &'_ Vec2i {
   }
 }
 
-impl AddAssign<&Vec2i> for Vec2i {
-  fn add_assign(&mut self, rhs: &Vec2i) {
-    let dest_ptr = self.0.as_mut_ptr();
-    let src_ptr = rhs.0.as_ptr();
-
-    unsafe {
-      *dest_ptr += *src_ptr;
-      *dest_ptr.add(1) += *src_ptr.add(1);
-    }
-  }
-}
-
 impl Sub for &'_ Vec2i {
   type Output = Vector2i;
 
@@ -357,18 +456,6 @@ impl Sub for &'_ Vec2i {
     Vector2i {
       x: self.x() - rhs.x(),
       y: self.y() - rhs.y(),
-    }
-  }
-}
-
-impl SubAssign<&Vec2i> for Vec2i {
-  fn sub_assign(&mut self, rhs: &Vec2i) {
-    let dest_ptr = self.0.as_mut_ptr();
-    let src_ptr = rhs.0.as_ptr();
-
-    unsafe {
-      *dest_ptr -= *src_ptr;
-      *dest_ptr.add(1) -= *src_ptr.add(1);
     }
   }
 }
@@ -397,17 +484,6 @@ impl Mul<&'_ Vec2i> for i32 {
   }
 }
 
-impl MulAssign<i32> for Vec2i {
-  fn mul_assign(&mut self, rhs: i32) {
-    let dest_ptr = self.0.as_mut_ptr();
-
-    unsafe {
-      *dest_ptr *= rhs;
-      *dest_ptr.add(1) *= rhs;
-    }
-  }
-}
-
 impl Div<i32> for &'_ Vec2i {
   type Output = Vector2i;
 
@@ -416,17 +492,6 @@ impl Div<i32> for &'_ Vec2i {
     Vector2i {
       x: self.x() / rhs,
       y: self.y() / rhs,
-    }
-  }
-}
-
-impl DivAssign<i32> for Vec2i {
-  fn div_assign(&mut self, rhs: i32) {
-    let dest_ptr = self.0.as_mut_ptr();
-
-    unsafe {
-      *dest_ptr /= rhs;
-      *dest_ptr.add(1) /= rhs;
     }
   }
 }
@@ -443,6 +508,52 @@ impl Rem<i32> for &'_ Vec2i {
   }
 }
 
+impl AddAssign<&Vec2i> for Vec2i {
+  fn add_assign(&mut self, rhs: &Vec2i) {
+    let dest_ptr = self.0.as_mut_ptr();
+    let src_ptr = rhs.0.as_ptr();
+
+    unsafe {
+      *dest_ptr += *src_ptr;
+      *dest_ptr.add(1) += *src_ptr.add(1);
+    }
+  }
+}
+
+impl SubAssign<&Vec2i> for Vec2i {
+  fn sub_assign(&mut self, rhs: &Vec2i) {
+    let dest_ptr = self.0.as_mut_ptr();
+    let src_ptr = rhs.0.as_ptr();
+
+    unsafe {
+      *dest_ptr -= *src_ptr;
+      *dest_ptr.add(1) -= *src_ptr.add(1);
+    }
+  }
+}
+
+impl MulAssign<i32> for Vec2i {
+  fn mul_assign(&mut self, rhs: i32) {
+    let dest_ptr = self.0.as_mut_ptr();
+
+    unsafe {
+      *dest_ptr *= rhs;
+      *dest_ptr.add(1) *= rhs;
+    }
+  }
+}
+
+impl DivAssign<i32> for Vec2i {
+  fn div_assign(&mut self, rhs: i32) {
+    let dest_ptr = self.0.as_mut_ptr();
+
+    unsafe {
+      *dest_ptr /= rhs;
+      *dest_ptr.add(1) /= rhs;
+    }
+  }
+}
+
 impl RemAssign<i32> for Vec2i {
   fn rem_assign(&mut self, rhs: i32) {
     let dest_ptr = self.0.as_mut_ptr();
@@ -454,20 +565,8 @@ impl RemAssign<i32> for Vec2i {
   }
 }
 
-impl Neg for &'_ Vec2i {
-  type Output = Vector2i;
-
-  #[must_use]
-  fn neg(self) -> Self::Output {
-    Vector2i {
-      x: -self.x(),
-      y: -self.y(),
-    }
-  }
-}
-
-impl std::fmt::Debug for Vec2i {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl fmt::Debug for Vec2i {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     f.debug_struct("Vec2i")
       .field("x", &self.x())
       .field("y", &self.y())
@@ -475,9 +574,9 @@ impl std::fmt::Debug for Vec2i {
   }
 }
 
-impl std::fmt::Display for Vec2i {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    write!(f, "{{{}, {}}}", self.x(), self.y())
+impl fmt::Display for Vec2i {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    write!(f, "[{}, {}]", self.x(), self.y())
   }
 }
 
@@ -498,19 +597,31 @@ pub struct Vector2i {
 }
 
 impl Vector2i {
-  /// A constant for a vector of magnitude 0 at the origin.
+  /// A constant for a [Null vector], which has magnitude 0 and exists at the
+  /// [origin].
+  ///
+  /// [Null vector]: https://en.wikipedia.org/wiki/Null_vector
+  /// [origin]: https://en.wikipedia.org/wiki/Origin_(mathematics)
   pub const ZERO: Vector2i = Vector2i::new(0, 0);
 
-  /// A constant for a unit vector in the positive X-direction.
+  /// A constant for a [unit vector] in the positive X-direction.
+  ///
+  /// [unit vector]: https://en.wikipedia.org/wiki/Unit_vector
   pub const UNIT_X: Vector2i = Vector2i::new(1, 0);
 
-  /// A constant for a unit vector in the positive Y-direction.
+  /// A constant for a [unit vector] in the positive Y-direction.
+  ///
+  /// [unit vector]: https://en.wikipedia.org/wiki/Unit_vector
   pub const UNIT_Y: Vector2i = Vector2i::new(0, 1);
 
-  /// A constant for a unit vector in the negative X-direction.
+  /// A constant for a [unit vector] in the negative X-direction.
+  ///
+  /// [unit vector]: https://en.wikipedia.org/wiki/Unit_vector
   pub const NEG_UNIT_X: Vector2i = Vector2i::new(-1, 0);
 
-  /// A constant for a unit vector in the negative Y-direction.
+  /// A constant for a [unit vector] in the negative Y-direction.
+  ///
+  /// [unit vector]: https://en.wikipedia.org/wiki/Unit_vector
   pub const NEG_UNIT_Y: Vector2i = Vector2i::new(0, -1);
 
   /// Constructs this vector from an x and y coordinate.
@@ -668,14 +779,60 @@ impl From<&'_ Vec2i> for Vector2i {
   }
 }
 
-impl<Vec> From<Vec> for Vector2i
-where
-  Vec: AsRef<Vec2i>,
-{
+impl Deref for Vector2i {
+  type Target = Vec2i;
+
+  #[inline(always)]
+  fn deref(&self) -> &Self::Target {
+    self.borrow()
+  }
+}
+
+impl DerefMut for Vector2i {
+  #[inline(always)]
+  fn deref_mut(&mut self) -> &mut Self::Target {
+    self.borrow_mut()
+  }
+}
+
+impl AsRef<Vec2i> for Vector2i {
   #[must_use]
   #[inline(always)]
-  fn from(value: Vec) -> Self {
-    value.as_ref().to_owned()
+  fn as_ref(&self) -> &Vec2i {
+    self.as_vec2i()
+  }
+}
+
+impl AsMut<Vec2i> for Vector2i {
+  #[inline(always)]
+  fn as_mut(&mut self) -> &mut Vec2i {
+    self.as_mut_vec2i()
+  }
+}
+
+impl Borrow<Vec2i> for Vector2i {
+  #[inline(always)]
+  fn borrow(&self) -> &Vec2i {
+    self.as_vec2i()
+  }
+}
+
+impl BorrowMut<Vec2i> for Vector2i {
+  #[inline(always)]
+  fn borrow_mut(&mut self) -> &mut Vec2i {
+    self.as_mut_vec2i()
+  }
+}
+
+impl ToOwned for Vec2i {
+  type Owned = Vector2i;
+
+  #[inline(always)]
+  fn to_owned(&self) -> Self::Owned {
+    Vector2i {
+      x: self.x(),
+      y: self.y(),
+    }
   }
 }
 
@@ -770,27 +927,6 @@ impl Add<Vector2i> for &Vector2i {
   }
 }
 
-impl AddAssign for Vector2i {
-  #[inline(always)]
-  fn add_assign(&mut self, rhs: Self) {
-    self.as_mut_vec2i().add_assign(&rhs)
-  }
-}
-
-impl AddAssign<&Vector2i> for Vector2i {
-  #[inline(always)]
-  fn add_assign(&mut self, rhs: &Self) {
-    self.as_mut_vec2i().add_assign(rhs)
-  }
-}
-
-impl AddAssign<&Vec2i> for Vector2i {
-  #[inline(always)]
-  fn add_assign(&mut self, rhs: &Vec2i) {
-    self.as_mut_vec2i().add_assign(rhs)
-  }
-}
-
 impl Sub for &Vector2i {
   type Output = Vector2i;
 
@@ -871,27 +1007,6 @@ impl Sub<Vector2i> for &Vector2i {
   }
 }
 
-impl SubAssign for Vector2i {
-  #[inline(always)]
-  fn sub_assign(&mut self, rhs: Self) {
-    self.as_mut_vec2i().sub_assign(&rhs)
-  }
-}
-
-impl SubAssign<&Vector2i> for Vector2i {
-  #[inline(always)]
-  fn sub_assign(&mut self, rhs: &Self) {
-    self.as_mut_vec2i().sub_assign(rhs)
-  }
-}
-
-impl SubAssign<&Vec2i> for Vector2i {
-  #[inline(always)]
-  fn sub_assign(&mut self, rhs: &Vec2i) {
-    self.as_mut_vec2i().sub_assign(rhs)
-  }
-}
-
 impl Mul<i32> for Vector2i {
   type Output = Vector2i;
 
@@ -930,13 +1045,6 @@ impl Mul<&Vector2i> for i32 {
   }
 }
 
-impl MulAssign<i32> for Vector2i {
-  #[inline(always)]
-  fn mul_assign(&mut self, rhs: i32) {
-    self.as_mut_vec2i().mul_assign(rhs)
-  }
-}
-
 impl Div<i32> for Vector2i {
   type Output = Vector2i;
 
@@ -953,13 +1061,6 @@ impl Div<i32> for &Vector2i {
   #[inline(always)]
   fn div(self, rhs: i32) -> Self::Output {
     self.as_vec2i().div(rhs)
-  }
-}
-
-impl DivAssign<i32> for Vector2i {
-  #[inline(always)]
-  fn div_assign(&mut self, rhs: i32) {
-    self.as_mut_vec2i().div_assign(rhs)
   }
 }
 
@@ -982,6 +1083,62 @@ impl Rem<i32> for &Vector2i {
   }
 }
 
+impl AddAssign for Vector2i {
+  #[inline(always)]
+  fn add_assign(&mut self, rhs: Self) {
+    self.as_mut_vec2i().add_assign(&rhs)
+  }
+}
+
+impl AddAssign<&Vector2i> for Vector2i {
+  #[inline(always)]
+  fn add_assign(&mut self, rhs: &Self) {
+    self.as_mut_vec2i().add_assign(rhs)
+  }
+}
+
+impl AddAssign<&Vec2i> for Vector2i {
+  #[inline(always)]
+  fn add_assign(&mut self, rhs: &Vec2i) {
+    self.as_mut_vec2i().add_assign(rhs)
+  }
+}
+
+impl SubAssign for Vector2i {
+  #[inline(always)]
+  fn sub_assign(&mut self, rhs: Self) {
+    self.as_mut_vec2i().sub_assign(&rhs)
+  }
+}
+
+impl SubAssign<&Vector2i> for Vector2i {
+  #[inline(always)]
+  fn sub_assign(&mut self, rhs: &Self) {
+    self.as_mut_vec2i().sub_assign(rhs)
+  }
+}
+
+impl SubAssign<&Vec2i> for Vector2i {
+  #[inline(always)]
+  fn sub_assign(&mut self, rhs: &Vec2i) {
+    self.as_mut_vec2i().sub_assign(rhs)
+  }
+}
+
+impl MulAssign<i32> for Vector2i {
+  #[inline(always)]
+  fn mul_assign(&mut self, rhs: i32) {
+    self.as_mut_vec2i().mul_assign(rhs)
+  }
+}
+
+impl DivAssign<i32> for Vector2i {
+  #[inline(always)]
+  fn div_assign(&mut self, rhs: i32) {
+    self.as_mut_vec2i().div_assign(rhs)
+  }
+}
+
 impl RemAssign<i32> for Vector2i {
   #[inline(always)]
   fn rem_assign(&mut self, rhs: i32) {
@@ -989,65 +1146,9 @@ impl RemAssign<i32> for Vector2i {
   }
 }
 
-impl Deref for Vector2i {
-  type Target = Vec2i;
-
-  #[inline(always)]
-  fn deref(&self) -> &Self::Target {
-    self.borrow()
-  }
-}
-
-impl DerefMut for Vector2i {
-  #[inline(always)]
-  fn deref_mut(&mut self) -> &mut Self::Target {
-    self.borrow_mut()
-  }
-}
-
-impl Borrow<Vec2i> for Vector2i {
-  #[inline(always)]
-  fn borrow(&self) -> &Vec2i {
-    self.as_vec2i()
-  }
-}
-
-impl BorrowMut<Vec2i> for Vector2i {
-  #[inline(always)]
-  fn borrow_mut(&mut self) -> &mut Vec2i {
-    self.as_mut_vec2i()
-  }
-}
-
-impl Borrow<[i32]> for Vector2i {
-  #[inline(always)]
-  fn borrow(&self) -> &[i32] {
-    <Self as Borrow<Vec2i>>::borrow(self).as_ref()
-  }
-}
-
-impl BorrowMut<[i32]> for Vector2i {
-  #[inline(always)]
-  fn borrow_mut(&mut self) -> &mut [i32] {
-    <Self as BorrowMut<Vec2i>>::borrow_mut(self).as_mut()
-  }
-}
-
-impl ToOwned for Vec2i {
-  type Owned = Vector2i;
-
-  #[inline(always)]
-  fn to_owned(&self) -> Self::Owned {
-    Vector2i {
-      x: self.x(),
-      y: self.y(),
-    }
-  }
-}
-
-impl std::fmt::Display for Vector2i {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    write!(f, "{{{}, {}}}", self.x, self.y)
+impl fmt::Display for Vector2i {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    write!(f, "[{}, {}]", self.x, self.y)
   }
 }
 

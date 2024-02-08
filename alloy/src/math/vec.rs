@@ -1,4 +1,4 @@
-//! Module containing vector definitions.
+//! Module containing [Euclidean vector] definitions.
 //!
 //! Vectors can come in 2, 3, or 4-component forms, with a base of [`f32`],
 //! [`i32`], or [`u32`], and in both owning and non-owning variations.
@@ -22,6 +22,25 @@
 //! | [`i32`]   | [`Vector4i`] | [`Vec4i`]  |
 //! | [`u32`]   | [`Vector4u`] | [`Vec4u`]  |
 //!
+//! # SIMD Operations
+//!
+//! [SIMD] support is an incubating feature, but will be provided as 4x
+//! operations of vectors at a time. For example, a `dot4` implementation can
+//! take 8 vectors at once to produce 4 simultaneous dot-products.
+//!
+//! **Note:** It's common for engines to miss-characterize 4-component vectors
+//! as needing to be SIMD-ified, since 4-components aligns with a `float32x4`
+//! data-structure mental-model; however this is frequently an incorrect
+//! interpretation of single-core parallelism concepts, and often pessimizes
+//! systems by forcing additional unnecessary instructions.
+//!
+//! Parallelizing the data and the algorithms can be benchmarked to yield far
+//! better returns. The goal of this incubating feature is to model the latter
+//! by enabling `Vector4x4` and `Vector4` types that fit with standard SIMD
+//! intent.
+//!
+//! [SIMD]: https://en.wikipedia.org/wiki/SIMD
+//! [Euclidean vector]: https://en.wikipedia.org/wiki/Euclidean_vector
 //! [`Borrow`]: std::borrow::Borrow
 //! [`Deref`]: std::ops::Deref
 mod vec2;
