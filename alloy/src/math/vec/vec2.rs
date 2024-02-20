@@ -1387,15 +1387,12 @@ impl fmt::Display for Vector2 {
 
 #[cfg(test)]
 mod test {
-  use crate::cmp::AlmostEq;
-
   use super::*;
 
   #[test]
   fn test_vec2() {
     let vec = Vector2::new(4.0, 2.0);
 
-    use crate::cmp::AlmostEq;
     let magnitude = vec.square_magnitude();
 
     assert!(magnitude.almost_eq(&20.0))
