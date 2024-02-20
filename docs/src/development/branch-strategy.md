@@ -114,8 +114,6 @@ gitGraph
   checkout hotfix
   checkout release/v1.2
   merge hotfix tag: "v1.2.1"
-  checkout develop
-  merge release/v1.2
 ```
 
 Using this strategy allows the SHA1 of the initial fix to be checked against the
