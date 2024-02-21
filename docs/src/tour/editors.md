@@ -1,5 +1,10 @@
 # Tour of the Editors
 
+```admonish note
+Many of these sections are "forward-thinking" as these are still
+in-progress unless otherwise specified.
+```
+
 This section provides a tour of the different editors that are available within
 Alloy.
 

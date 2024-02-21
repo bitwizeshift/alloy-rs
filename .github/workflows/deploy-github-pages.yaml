@@ -37,6 +37,15 @@ jobs:
         with:
           target: mdbook-mermaid
 
+      - name: Install mdbook-admonish
+        uses: ./.github/actions/cargo-install
+        with:
+          target: mdbook-admonish
+
+      - name: Install mdbook-dependencies
+        working-directory: docs
+        run: mdbook-admonish install
+
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
 
