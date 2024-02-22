@@ -39,6 +39,7 @@ jobs:
   example-app-macos:
     name: Bundle MacOS Binary
     runs-on: macos-latest
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/master')
     outputs:
       artifact-name: ${{ steps.out.outputs.artifact-name }}
       artifact-id: ${{ steps.out.outputs.artifact-id }}
