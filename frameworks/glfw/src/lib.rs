@@ -164,6 +164,15 @@ impl Window {
     Self(window)
   }
 
+  /// Makes this window's context current.
+  ///
+  /// For more details, see [`glfwMakeContextCurrent`].
+  ///
+  /// [`glfwMakeContextCurrent`]: https://www.glfw.org/docs/3.3/group__context.html#gad94e80185397a6cf5fe2ab30567af71c
+  pub fn make_context_current(&self) {
+    unsafe { c::glfwMakeContextCurrent(self.0) }
+  }
+
   /// Queries whether this Window should be closed.
   #[inline]
   pub fn should_close(&self) -> bool {
