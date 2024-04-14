@@ -65,7 +65,7 @@ macro_rules! transparent {
         }
       }
 
-      impl foundation::Take<$Inner> for $Outter {
+      impl ::astd::convert::Take<$Inner> for $Outter {
         unsafe fn take(self) -> $Inner {
           self.$Ex
         }
