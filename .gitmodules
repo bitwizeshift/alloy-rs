@@ -10,3 +10,7 @@
 [submodule "3rd-party/cimgui"]
 	path = 3rd-party/cimgui
 	url = git@github.com:cimgui/cimgui
+[submodule "3rd-party/glew"]
+	path = 3rd-party/glew
+	url = git@github.com:nigels-com/glew
+

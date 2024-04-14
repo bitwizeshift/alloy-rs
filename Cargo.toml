@@ -7,6 +7,8 @@ members = [
   "frameworks/toast",
   "frameworks/glfw-sys",
   "frameworks/glfw",
+  "frameworks/glew-sys",
+  "frameworks/glew",
   "frameworks/vulkan-sys",
   "frameworks/vulkan",
   "frameworks/openal-sys",
