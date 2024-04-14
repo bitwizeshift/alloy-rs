@@ -160,6 +160,7 @@ impl ClearBits {
 /// * `bits` - the buffers to clear
 ///
 /// [`glClear`]: https://registry.khronos.org/OpenGL-Refpages/gl4/html/glClear.xhtml
+#[inline]
 pub fn clear(bits: ClearBits) {
   unsafe { glew_sys::glClear(bits.0) }
 }

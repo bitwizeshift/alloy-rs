@@ -52,6 +52,7 @@ pub struct Instance;
 impl Instance {
   /// Initializes the GLEW library.
   pub fn new() -> Result<Self, Error> {
+    unsafe { glew_sys::glewExperimental = glew_sys::GL_TRUE as _ };
     let result = unsafe { glew_sys::glewInit() };
     if result != glew_sys::GLEW_OK {
       panic!("Failed to initialize GLEW: {:?}", result);
