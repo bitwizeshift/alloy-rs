@@ -20,8 +20,6 @@ pub mod c {
   pub use glew_sys::*;
 }
 
-pub mod gl;
-
 ///
 #[derive(Debug)]
 pub struct Error(String);

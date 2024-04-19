@@ -1,10 +1,10 @@
 /// An enumeration of capabilities that can be tested against.
 #[allow(missing_docs)]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Capability {
   Blend = crate::c::GL_BLEND as isize,
   // TODO: this might be better as ClipDistance(n) where n is the index and adds
-  // on to GL_CLIP_DISTANCE0. This will require changing this enum to no longer
+  // on to CLIP_DISTANCE0. This will require changing this enum to no longer
   // be an integral representation, and would require an additional level of
   // mapping somewhere in a function.
   ClipDistance0 = crate::c::GL_CLIP_DISTANCE0 as isize,

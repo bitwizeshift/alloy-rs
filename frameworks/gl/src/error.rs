@@ -7,16 +7,18 @@
 /// [`Error::last_error`].
 ///
 /// [`glGetError`]: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGetError.xhtml
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[allow(missing_docs)]
 pub enum Error {
   InvalidEnum,
   InvalidValue,
   InvalidOperation,
+  Unavailable,
   StackOverflow,
   StackUnderflow,
   OutOfMemory,
   InvalidFramebufferOperation,
+  ShaderError(String),
 }
 
 impl Error {
@@ -38,7 +40,7 @@ impl Error {
   /// # Arguments
   ///
   /// * `code` - The error code to create the error from
-  pub fn from_gl_status(code: std::ffi::c_uint) -> Option<Self> {
+  pub fn from_gl_status(code: crate::c::GLuint) -> Option<Self> {
     match code {
       crate::c::GL_INVALID_ENUM => Some(Self::InvalidEnum),
       crate::c::GL_INVALID_VALUE => Some(Self::InvalidValue),
@@ -60,7 +62,7 @@ impl Error {
   /// # Safety
   ///
   /// The error code must be one of the valid error codes.
-  pub unsafe fn from_gl_status_unchecked(code: std::ffi::c_uint) -> Self {
+  pub unsafe fn from_gl_status_unchecked(code: crate::c::GLuint) -> Self {
     match code {
       crate::c::GL_INVALID_ENUM => Self::InvalidEnum,
       crate::c::GL_INVALID_VALUE => Self::InvalidValue,
@@ -80,10 +82,12 @@ impl std::fmt::Display for Error {
       Self::InvalidEnum => "Invalid Enum",
       Self::InvalidValue => "Invalid Value",
       Self::InvalidOperation => "Invalid Operation",
+      Self::Unavailable => "Function or method unavailable",
       Self::StackOverflow => "Stack Overflow",
       Self::StackUnderflow => "Stack Underflow",
       Self::OutOfMemory => "Out of Memory",
       Self::InvalidFramebufferOperation => "Invalid Framebuffer Operation",
+      Self::ShaderError(message) => message,
     }
     .fmt(f)
   }

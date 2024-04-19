@@ -1,4 +1,4 @@
-use crate::gl::error::Result;
+use crate::error::Result;
 
 use super::Capability;
 
@@ -6,11 +6,11 @@ use super::Capability;
 #[derive(Copy, Clone, Debug)]
 pub enum CullFace {
   /// Cull the front face
-  Front = crate::c::GL_FRONT as isize,
+  Front = crate::c::FRONT as isize,
   /// Cull the back face
-  Back = crate::c::GL_BACK as isize,
+  Back = crate::c::BACK as isize,
   /// Cull both the front and back face
-  FrontAndBack = crate::c::GL_FRONT_AND_BACK as isize,
+  FrontAndBack = crate::c::FRONT_AND_BACK as isize,
 }
 
 impl std::fmt::Display for CullFace {
@@ -30,11 +30,11 @@ impl CullFace {
   /// # Arguments
   ///
   /// * `e` - The enumeration to get the face from
-  pub const fn from_enum(e: crate::gl::Enum) -> Option<Self> {
+  pub const fn from_enum(e: crate::c::GLenum) -> Option<Self> {
     match e {
-      crate::c::GL_FRONT => Some(Self::Front),
-      crate::c::GL_BACK => Some(Self::Back),
-      crate::c::GL_FRONT_AND_BACK => Some(Self::FrontAndBack),
+      crate::c::FRONT => Some(Self::Front),
+      crate::c::BACK => Some(Self::Back),
+      crate::c::FRONT_AND_BACK => Some(Self::FrontAndBack),
       _ => None,
     }
   }
@@ -48,11 +48,11 @@ impl CullFace {
   /// # Safety
   ///
   /// The enumeration must be one of the valid faces
-  pub const unsafe fn from_enum_unchecked(e: crate::gl::Enum) -> Self {
+  pub const unsafe fn from_enum_unchecked(e: crate::c::GLenum) -> Self {
     match e {
-      crate::c::GL_FRONT => Self::Front,
-      crate::c::GL_BACK => Self::Back,
-      crate::c::GL_FRONT_AND_BACK => Self::FrontAndBack,
+      crate::c::FRONT => Self::Front,
+      crate::c::BACK => Self::Back,
+      crate::c::FRONT_AND_BACK => Self::FrontAndBack,
       _ => unreachable!(),
     }
   }
@@ -102,7 +102,7 @@ pub fn set_cull_face(face: CullFace) {
 /// * `face` - The face to cull
 #[inline]
 pub fn set_cull_face_checked(face: CullFace) -> Result<()> {
-  crate::gl::error::check(|| set_cull_face(face))
+  crate::error::check(|| set_cull_face(face))
 }
 
 /// Queries whether whether polygon culling is enabled.
@@ -131,7 +131,7 @@ pub fn cull_face() -> Option<CullFace> {
 pub unsafe fn cull_face_unchecked() -> CullFace {
   let mut value = 0;
   unsafe {
-    crate::c::glGetIntegerv(crate::c::GL_CULL_FACE_MODE, &mut value);
+    crate::c::glGetIntegerv(crate::c::CULL_FACE_MODE, &mut value);
   }
-  unsafe { CullFace::from_enum_unchecked(value as crate::gl::Enum) }
+  unsafe { CullFace::from_enum_unchecked(value as crate::c::GLenum) }
 }

@@ -1,4 +1,4 @@
-//! This module exposes OpenGL bindings that are wrangled by the Glew library.
+//! This crate exposes OpenGL bindings in a more idiomatic Rust format.
 //!
 //! OpenGL has an idiosynchratic way of testing for errors, often making use of
 //! utilities like [`glGetError`] to get if the last call has failed. To account
@@ -19,26 +19,27 @@
 //! [`glGet*`]: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGet.xhtml
 //! [`glGetError`]: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGetError.xhtml
 
-/// An alias of `GLint`.
-pub type Int = glew_sys::GLint;
-
-/// An alias of `GLuint`.
-pub type Uint = glew_sys::GLuint;
-
-/// An alias of `GLenum`.
-pub type Enum = glew_sys::GLenum;
-
-/// An alias of `GLuint`.
-pub type Sizei = glew_sys::GLsizei;
-
-// Note: GLBoolean, GLFloat, GLDouble are not added as aliased, as they are
-// normalized to `bool`, `f32`, and `f64` respectively in their calling APIs.
+/// This module provides all that raw definitions of the C OpenGL library.
+pub mod c {
+  #![allow(non_upper_case_globals)]
+  #![allow(non_camel_case_types)]
+  #![allow(non_snake_case)]
+  #![allow(unused)]
+  #![allow(missing_docs)]
+  #![allow(unused_results)]
+  #![allow(rust_2018_idioms)]
+  #![allow(clippy::all)]
+  #[doc(inline)]
+  pub use gl_sys::*;
+}
 
 mod capability;
 mod clear;
 mod cull;
 pub mod error;
 pub mod info;
+pub mod shader;
+pub mod vertex;
 
 #[doc(inline)]
 pub use capability::*;

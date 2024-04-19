@@ -1,4 +1,4 @@
-use crate::gl::Enum;
+use crate::c::GLenum;
 
 /// Specify clear values for the color buffers
 ///
@@ -13,7 +13,7 @@ use crate::gl::Enum;
 ///
 /// [`glClearColor`]: https://registry.khronos.org/OpenGL-Refpages/gl4/html/glClearColor.xhtml
 pub fn clear_color(red: f32, green: f32, blue: f32, alpha: f32) {
-  unsafe { glew_sys::glClearColor(red, green, blue, alpha) }
+  unsafe { crate::c::glClearColor(red, green, blue, alpha) }
 }
 
 /// Specify the clear value for the depth buffer
@@ -26,7 +26,7 @@ pub fn clear_color(red: f32, green: f32, blue: f32, alpha: f32) {
 ///
 /// [`glClearDepth`]: https://registry.khronos.org/OpenGL-Refpages/gl4/html/glClearDepth.xhtml
 pub fn clear_depth(depth: f64) {
-  unsafe { glew_sys::glClearDepth(depth) }
+  unsafe { crate::c::glClearDepth(depth) }
 }
 
 /// Specify the clear value for the stencil buffer
@@ -39,23 +39,23 @@ pub fn clear_depth(depth: f64) {
 ///
 /// [`glClearStencil`]: https://registry.khronos.org/OpenGL-Refpages/gl4/html/glClearStencil.xhtml
 pub fn clear_stencil(s: i32) {
-  unsafe { glew_sys::glClearStencil(s) }
+  unsafe { crate::c::glClearStencil(s) }
 }
 
 /// Specify the clear value for the color, depth, and stencil buffers
 /// used in [`clear`].
 #[derive(Copy, Clone)]
-pub struct ClearBits(Enum);
+pub struct ClearBits(GLenum);
 
 impl ClearBits {
   /// Clear the color buffer
-  pub const COLOR: Self = Self(glew_sys::GL_COLOR_BUFFER_BIT);
+  pub const COLOR: Self = Self(crate::c::GL_COLOR_BUFFER_BIT);
 
   /// Clear the depth buffer
-  pub const DEPTH: Self = Self(glew_sys::GL_DEPTH_BUFFER_BIT);
+  pub const DEPTH: Self = Self(crate::c::GL_DEPTH_BUFFER_BIT);
 
   /// Clear the stencil buffer
-  pub const STENCIL: Self = Self(glew_sys::GL_STENCIL_BUFFER_BIT);
+  pub const STENCIL: Self = Self(crate::c::GL_STENCIL_BUFFER_BIT);
 
   /// Constructs a new `ClearBits` from the given bits.
   ///
@@ -63,13 +63,13 @@ impl ClearBits {
   ///
   /// * `bits` - the bits to construct the `ClearBits` from
   #[inline]
-  pub const fn from_bits(bits: Enum) -> Self {
+  pub const fn from_bits(bits: GLenum) -> Self {
     Self(bits)
   }
 
   /// Returns the bits of the `ClearBits`.
   #[inline]
-  pub const fn bits(&self) -> Enum {
+  pub const fn bits(&self) -> GLenum {
     self.0
   }
 
@@ -93,9 +93,9 @@ impl ClearBits {
   #[inline]
   pub const fn all() -> Self {
     Self(
-      glew_sys::GL_COLOR_BUFFER_BIT
-        | glew_sys::GL_DEPTH_BUFFER_BIT
-        | glew_sys::GL_STENCIL_BUFFER_BIT,
+      crate::c::GL_COLOR_BUFFER_BIT
+        | crate::c::GL_DEPTH_BUFFER_BIT
+        | crate::c::GL_STENCIL_BUFFER_BIT,
     )
   }
 
@@ -162,5 +162,5 @@ impl ClearBits {
 /// [`glClear`]: https://registry.khronos.org/OpenGL-Refpages/gl4/html/glClear.xhtml
 #[inline]
 pub fn clear(bits: ClearBits) {
-  unsafe { glew_sys::glClear(bits.0) }
+  unsafe { crate::c::glClear(bits.0) }
 }
