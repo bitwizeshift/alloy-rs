@@ -16,11 +16,11 @@ fn compile_openal() {
 
   if cfg!(target_os = "windows") {
     cfg
-      .define("LSOFT_BUILD_ROUTER", "ON")
-      .define("LSOFT_REQUIRE_WINMM", "ON")
-      .define("LSOFT_REQUIRE_DSOUND", "ON")
-      .define("LSOFT_REQUIRE_WASAPI", "ON")
-      .define("LSOFT_EMBED_HRTF_DATA", "YES");
+      .define("ALSOFT_BUILD_ROUTER", "ON")
+      .define("ALSOFT_REQUIRE_WINMM", "ON")
+      .define("ALSOFT_REQUIRE_DSOUND", "ON")
+      .define("ALSOFT_REQUIRE_WASAPI", "ON")
+      .define("ALSOFT_EMBED_HRTF_DATA", "YES");
   } else if cfg!(target_os = "linux") {
     cfg
       .define("ALSOFT_REQUIRE_ALSA", "ON")
@@ -32,12 +32,12 @@ fn compile_openal() {
   } else if cfg!(target_os = "macos") {
     cfg
       .define("ALSOFT_REQUIRE_COREAUDIO", "ON")
-      .define("DALSOFT_EMBED_HRTF_DATA", "ON");
+      .define("ALSOFT_EMBED_HRTF_DATA", "ON");
   } else if cfg!(target_os = "ios") {
     cfg
       .define("CMAKE_OSX_ARCHITECTURES", "armv7;arm64")
       .define("ALSOFT_REQUIRE_COREAUDIO", "ON")
-      .define("DALSOFT_EMBED_HRTF_DATA", "ON");
+      .define("ALSOFT_EMBED_HRTF_DATA", "ON");
   }
 
   let dst = cfg.define("LIBTYPE", "STATIC").build();
