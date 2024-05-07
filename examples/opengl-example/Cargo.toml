@@ -23,7 +23,7 @@ glew = { path = "../../frameworks/glew" }
 gl = { path = "../../frameworks/gl" }
 
 [package.metadata.bundle]
-name = "AlloyExample"
+name = "AlloyOpenGLExample"
 identifier = "com.rodusek.alloy.example"
 icon = ["assets/icon/32x32.png", "assets/icon/128x128.png", "assets/icon/128x128@2x.png"]
 version = "1.0.0"
