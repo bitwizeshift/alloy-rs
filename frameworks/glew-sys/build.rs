@@ -1,20 +1,11 @@
 //! Build script to compile GLFW from source, and generate a valid bindgen-C API
 //! from GLFW.
 
-use std::{
-  env,
-  path::{Path, PathBuf},
-};
+use std::path::PathBuf;
 
 fn main() {
   compile_glew();
   generate_glew_bindings();
-
-  if cfg!(any(target_os = "macos", target_os = "ios")) {
-    build::rustc_link_lib!("framework=OpenGL");
-  } else {
-    build::rustc_link_lib!("native=opengl")
-  }
 }
 
 // Compiles GLFW by calling out to CMake.
