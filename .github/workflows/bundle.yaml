@@ -79,7 +79,7 @@ jobs:
         uses: ./.github/actions/cargo-bundle
         with:
           profile: ${{ steps.select.outputs.profile }}
-          path: ${{ matrix.renderer }}-example
+          path: examples/${{ matrix.renderer }}-example
 
       - name: Attest Provenance
         id: provenance
