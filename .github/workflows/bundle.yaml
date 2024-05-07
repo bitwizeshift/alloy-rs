@@ -36,6 +36,10 @@ on:
         description: "The url to the created macOS Example artifact"
         value: ${{ jobs.example-app-macos.outputs.artifact-url }}
 
+permissions:
+  id-token: write
+  attestations: write
+
 jobs:
   example-app-macos:
     strategy:
