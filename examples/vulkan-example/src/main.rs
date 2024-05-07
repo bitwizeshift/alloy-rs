@@ -1,7 +1,7 @@
 use astd::ffi::cstr;
 
 fn main() {
-  let context = glfw::Context::new().expect("GLFW should be initialized");
+  let context = glfw::Instance::new().expect("GLFW should be initialized");
 
   let raw_window = unsafe {
     glfw::c::glfwCreateWindow(

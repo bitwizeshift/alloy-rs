@@ -114,13 +114,13 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 /// An instance of the GLFW context, of which there should only ever be at most
 /// one of.
-pub struct Context;
+pub struct Instance;
 
-impl Context {
-  /// Constructs a new [`Context`] object and returns the instance.
+impl Instance {
+  /// Constructs a new [`Instance`] object and returns the instance.
   pub fn new() -> Result<Self> {
     if unsafe { c::glfwInit() } == (c::GLFW_TRUE as core::ffi::c_int) {
-      Ok(Context)
+      Ok(Instance)
     } else {
       Err(Error::from_glfw_status(unsafe {
         c::glfwGetError(std::ptr::null_mut())
@@ -128,7 +128,7 @@ impl Context {
     }
   }
 
-  /// Polls the [`Context`] for events.
+  /// Polls the [`Instance`] for events.
   ///
   /// This calls [`glfwPollEvents`] implicitly
   ///
@@ -137,13 +137,13 @@ impl Context {
     unsafe { c::glfwPollEvents() }
   }
 
-  /// Queries whether this context supports the Vulkan API.
+  /// Queries whether this [`Instance`] supports the Vulkan API.
   pub fn vulkan_supported(&self) -> bool {
     unsafe { c::glfwVulkanSupported() != 0 }
   }
 }
 
-impl Drop for Context {
+impl Drop for Instance {
   fn drop(&mut self) {
     unsafe { c::glfwTerminate() };
   }
