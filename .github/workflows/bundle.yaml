@@ -35,9 +35,15 @@ on:
       macos-example-artifact-url:
         description: "The url to the created macOS Example artifact"
         value: ${{ jobs.example-app-macos.outputs.artifact-url }}
+
 jobs:
   example-app-macos:
-    name: Bundle MacOS Binary
+    strategy:
+      matrix:
+        renderer:
+          - vulkan
+
+    name: Bundle MacOS ${{ matrix.renderer }} Binary
     runs-on: macos-latest
     outputs:
       artifact-name: ${{ steps.out.outputs.artifact-name }}
@@ -72,7 +78,7 @@ jobs:
         uses: ./.github/actions/cargo-bundle
         with:
           profile: ${{ steps.select.outputs.profile }}
-          path: example
+          path: ${{ matrix.renderer }}-example
 
       - name: Upload Bundle Artifact
         id: upload

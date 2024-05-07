@@ -1,6 +1,6 @@
 # Schema: https://doc.rust-lang.org/cargo/reference/manifest.html
 [package]
-name = "example"
+name = "vulkan-example"
 description = "A small demo using the alloy-rs engine"
 version = "0.1.0"
 authors = [
@@ -13,16 +13,13 @@ repository.workspace = true
 edition.workspace = true
 
 [dependencies]
-glfw = { path = "../frameworks/glfw" }
-vulkan = { path = "../frameworks/vulkan" }
-openal = { path = "../frameworks/openal" }
-imgui = { path = "../frameworks/imgui" }
-astd = { path = "../frameworks/astd" }
-toast = { path = "../frameworks/toast" }
-log = { path = "../frameworks/log" }
-
-[build-dependencies]
-build = { path = "../frameworks/build" }
+glfw = { path = "../../frameworks/glfw" }
+vulkan = { path = "../../frameworks/vulkan" }
+openal = { path = "../../frameworks/openal" }
+imgui = { path = "../../frameworks/imgui" }
+astd = { path = "../../frameworks/astd" }
+toast = { path = "../../frameworks/toast" }
+log = { path = "../../frameworks/log" }
 
 [package.metadata.bundle]
 name = "AlloyExample"
@@ -35,7 +32,7 @@ category = "Developer Tool"
 short_description = "An example alloy-rs application."
 long_description = """
 An example alloy-rs application illustrating some of the features of the
-engine.
+engine using Vulkan.
 """
 osx_frameworks = [
   "CoreAudio",

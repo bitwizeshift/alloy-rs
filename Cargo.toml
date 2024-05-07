@@ -9,6 +9,8 @@ members = [
   "frameworks/glfw",
   "frameworks/glew-sys",
   "frameworks/glew",
+  "frameworks/gl-sys",
+  "frameworks/gl",
   "frameworks/vulkan-sys",
   "frameworks/vulkan",
   "frameworks/openal-sys",
@@ -18,7 +20,7 @@ members = [
   "frameworks/ansi",
   "frameworks/log",
   "alloy",
-  "example",
+  "examples/vulkan-example",
 ]
 resolver = "2"
 
