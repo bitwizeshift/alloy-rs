@@ -39,7 +39,7 @@ fn compile_glew() {
   if cfg!(any(target_os = "macos", target_os = "ios")) {
     build::rustc_link_lib!("framework=OpenGL");
   } else {
-    build::rustc_link_lib!("dylib=opengl");
+    build::rustc_link_lib!("dylib=GL");
   }
 }
 

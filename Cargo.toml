@@ -21,6 +21,7 @@ members = [
   "frameworks/log",
   "alloy",
   "examples/vulkan-example",
+  "examples/opengl-example",
 ]
 resolver = "2"
 

@@ -42,6 +42,7 @@ jobs:
       matrix:
         renderer:
           - vulkan
+          - opengl
 
     name: Bundle MacOS ${{ matrix.renderer }} Binary
     runs-on: macos-latest

@@ -1,0 +1,46 @@
+# Schema: https://doc.rust-lang.org/cargo/reference/manifest.html
+[package]
+name = "opengl-example"
+description = "A small demo using the alloy-rs engine"
+version = "0.1.0"
+authors = [
+  "Matthew Rodusek <bitwizeshift@users.noreply.github.com>"
+]
+license = "MIT OR Apache-2.0"
+categories = []
+keywords = ["example", "demo"]
+repository.workspace = true
+edition.workspace = true
+
+[dependencies]
+glfw = { path = "../../frameworks/glfw" }
+openal = { path = "../../frameworks/openal" }
+imgui = { path = "../../frameworks/imgui" }
+astd = { path = "../../frameworks/astd" }
+toast = { path = "../../frameworks/toast" }
+log = { path = "../../frameworks/log" }
+glew = { path = "../../frameworks/glew" }
+gl = { path = "../../frameworks/gl" }
+
+[package.metadata.bundle]
+name = "AlloyExample"
+identifier = "com.rodusek.alloy.example"
+icon = ["assets/icon/32x32.png", "assets/icon/128x128.png", "assets/icon/128x128@2x.png"]
+version = "1.0.0"
+resources = ["assets", "images/**/*.png", "secrets/public_key.txt"]
+copyright = "Copyright (c) Matthew Rodusek 2023. All rights reserved."
+category = "Developer Tool"
+short_description = "An example alloy-rs application."
+long_description = """
+An example alloy-rs application illustrating some of the features of the
+engine using OpenGL.
+"""
+osx_frameworks = [
+  "CoreAudio",
+  "AudioToolbox",
+  "CoreFoundation",
+  "Cocoa",
+  "IOKit",
+  "OpenGL",
+]
+osx_url_schemes = ["com.rodusek.alloy.example"]
