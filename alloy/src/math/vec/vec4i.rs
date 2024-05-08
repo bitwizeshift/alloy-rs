@@ -87,7 +87,7 @@ impl Vec4i {
   /// ```
   #[must_use]
   #[inline(always)]
-  pub fn from_mut_array(array: &mut [i32; 4]) -> &Self {
+  pub fn from_mut_array(array: &mut [i32; 4]) -> &mut Self {
     // SAFETY: `array` is guaranteed to be 4-components
     unsafe { std::mem::transmute(array.as_mut_slice()) }
   }

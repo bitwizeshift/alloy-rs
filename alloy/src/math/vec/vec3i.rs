@@ -86,7 +86,7 @@ impl Vec3i {
   /// ```
   #[must_use]
   #[inline(always)]
-  pub fn from_mut_array(array: &mut [i32; 3]) -> &Self {
+  pub fn from_mut_array(array: &mut [i32; 3]) -> &mut Self {
     // SAFETY: `array` is guaranteed to be 3-components
     unsafe { std::mem::transmute(array.as_mut_slice()) }
   }

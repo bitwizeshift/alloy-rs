@@ -92,7 +92,7 @@ impl Vec2 {
   /// ```
   #[must_use]
   #[inline(always)]
-  pub fn from_mut_array(array: &mut [f32; 2]) -> &Self {
+  pub fn from_mut_array(array: &mut [f32; 2]) -> &mut Self {
     // SAFETY: `array` is guaranteed to be 2-components
     unsafe { std::mem::transmute(array.as_mut_slice()) }
   }
