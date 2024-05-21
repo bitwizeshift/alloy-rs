@@ -77,5 +77,19 @@ pub mod backend {
   pub mod vulkan {}
 
   #[cfg(feature = "opengl")]
-  pub mod opengl {}
+  pub mod opengl {
+    use crate::ImDrawData;
+    use core::ffi::{c_char, c_void};
+
+    extern "C" {
+      pub fn imgui_opengl3_init(glsl_version: *const c_char) -> bool;
+      pub fn imgui_opengl3_shutdown() -> c_void;
+      pub fn imgui_opengl3_new_frame() -> c_void;
+      pub fn imgui_opengl3_render_draw_data(draw_data: *mut ImDrawData) -> c_void;
+      pub fn imgui_opengl3_create_fonts_texture() -> bool;
+      pub fn imgui_opengl3_destroy_fonts_texture() -> c_void;
+      pub fn imgui_opengl3_create_device_objects() -> bool;
+      pub fn imgui_opengl3_destroy_device_objects() -> c_void;
+    }
+  }
 }

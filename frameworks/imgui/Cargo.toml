@@ -12,6 +12,7 @@ edition.workspace = true
 [features]
 default = ["vulkan"]
 vulkan = ["imgui-sys/vulkan"]
+opengl = ["imgui-sys/opengl"]
 
 [dependencies]
 imgui-sys = { path = "../imgui-sys", default-features = false }

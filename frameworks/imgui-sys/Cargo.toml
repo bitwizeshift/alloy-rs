@@ -12,11 +12,12 @@ edition.workspace = true
 [features]
 default = ["vulkan"]
 vulkan = ["dep:vulkan-sys", "glfw-sys/vulkan"]
-opengl = []
+opengl = ["dep:gl-sys"]
 dx12 = []
 
 [dependencies]
 glfw-sys = { path = "../glfw-sys", default-features = false}
+gl-sys = { path = "../gl-sys", optional = true}
 vulkan-sys = { path = "../vulkan-sys", optional = true }
 
 [build-dependencies]

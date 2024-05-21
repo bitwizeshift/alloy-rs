@@ -61,6 +61,11 @@ fn main() {
   } else {
     log::debug!(logger, "OpenAL does NOT have enumeration extension!")
   }
+  let context = imgui::Context::new();
+  unsafe {
+    imgui_sys::backend::opengl::imgui_opengl3_init(cstr!("#version 150").as_ptr());
+    imgui_sys::backend::glfw::imgui_glfw_init_for_opengl(window.ptr_mut(), true);
+  }
 
   // let vertices: [f32; 9] = [-0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.0, 0.5, 0.0];
   // let indices: [u32; 3] = [0, 1, 2];
@@ -86,8 +91,18 @@ fn main() {
   // }
 
   while !window.should_close() {
-    gl::clear_color(1.0, 0.0, 0.0, 1.0);
-    gl::clear(gl::ClearBits::COLOR);
+    unsafe {
+      imgui_sys::backend::opengl::imgui_opengl3_new_frame();
+      imgui_sys::backend::glfw::imgui_glfw_new_frame();
+      imgui_sys::igNewFrame();
+      imgui_sys::igShowDemoWindow(&mut true as *mut _);
+      imgui_sys::igBegin(cstr!("Hello, world!").as_ptr(), std::ptr::null_mut(), 0);
+      imgui_sys::igText(cstr!("This is some useful text.").as_ptr());
+      imgui_sys::igEnd();
+      imgui_sys::igRender();
+      gl::clear(gl::ClearBits::COLOR);
+      imgui_sys::backend::opengl::imgui_opengl3_render_draw_data(imgui_sys::igGetDrawData());
+    }
     window.swap_buffers();
     glfw.poll_events();
   }

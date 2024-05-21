@@ -15,7 +15,8 @@ edition.workspace = true
 [dependencies]
 glfw = { path = "../../frameworks/glfw" }
 openal = { path = "../../frameworks/openal" }
-imgui = { path = "../../frameworks/imgui" }
+imgui = { path = "../../frameworks/imgui", features = ["opengl"] }
+imgui-sys ={ path = "../../frameworks/imgui-sys", features = ["opengl"] }
 astd = { path = "../../frameworks/astd" }
 toast = { path = "../../frameworks/toast" }
 log = { path = "../../frameworks/log" }

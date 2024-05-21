@@ -3,8 +3,15 @@ use std::path::PathBuf;
 fn main() {
   build::rerun_if_env_changed!("CC");
   build::rerun_if_env_changed!("CXX");
+  build::rerun_if_env_changed!("CARGO_FEATURE_VULKAN");
+  build::rerun_if_env_changed!("CARGO_FEATURE_OPENGL");
+
   build::rerun_if_changed!("../../3rd-party/cimgui");
   build::rerun_if_changed!("../../.gitmodules");
+  build::rerun_if_changed!("imgui_glfw.cpp");
+  build::rerun_if_changed!("imgui_opengl3.cpp");
+  build::rerun_if_changed!("imgui_vulkan.cpp");
+  build::rerun_if_changed!("CMakeLists.txt");
 
   compile_imgui();
   generate_imgui_bindings();
@@ -13,6 +20,13 @@ fn main() {
 // Compiles imgui by calling out to CMake.
 fn compile_imgui() {
   let mut cfg = cmake::Config::new("src");
+
+  if cfg!(feature = "vulkan") {
+    cfg.define("VULKAN_BACKEND", "ON");
+  }
+  if cfg!(feature = "opengl") {
+    cfg.define("OPENGL_BACKEND", "ON");
+  }
 
   let dst = cfg.build();
 

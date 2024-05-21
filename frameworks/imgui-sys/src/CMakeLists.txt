@@ -31,10 +31,10 @@ if (VULKAN_BACKEND)
 endif ()
 
 if (OPENGL_BACKEND)
-  message(FATAL_ERROR "OpenGL does not yet have C bindings")
   list(APPEND source_files
     "${cimgui_root}/imgui/backends/imgui_impl_opengl3.cpp"
     "${cimgui_root}/imgui/backends/imgui_impl_opengl3.h"
+    "${CMAKE_CURRENT_LIST_DIR}/imgui_opengl3.cpp"
   )
 endif ()
 
