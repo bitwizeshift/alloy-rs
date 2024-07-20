@@ -104,6 +104,11 @@ jobs:
           find ./target -type d -exec chmod 0755 {} \;
           find ./target -type f -name '.lock' -delete
 
+
+      - name: Create CNAME record
+        run: |
+          echo "rodusek.com" > "./target/doc/CNAME"
+
       - name: Upload Pages Artifact
         if: inputs.skip-publish != true
         uses: actions/upload-pages-artifact@v3
