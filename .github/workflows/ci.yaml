@@ -82,13 +82,8 @@ jobs:
       - name: Install toolchain
         uses: ./.github/actions/rust-toolchain
 
-      - name: Install cargo-deny
-        uses: ./.github/actions/cargo-install
-        with:
-          target: cargo-deny
-
       - name: Check cargo-deny
-        run: cargo deny check
+        uses: bitwizeshift/rust-actions/cargo-deny@master
 
       - name: Generate license manifest
         id: license-manifest

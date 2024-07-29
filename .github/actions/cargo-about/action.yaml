@@ -9,16 +9,10 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Install cargo-about
-      uses: ./.github/actions/cargo-install
-      with:
-        target: cargo-about
-
     - name: Generate license manifest
       shell: bash
-      run: |
-        cargo about generate                                                   \
-          --all-features                                                       \
-          --output-file ${{ inputs.output-file }}                              \
-          --config .cargo-about/about.toml                                     \
-          .cargo-about/template.hbs
+      uses: bitwizeshift/rust-actions/cargo-about@master
+      with:
+        output-file: ${{ inputs.output-file }}
+        config: .cargo-about/about.toml
+        template: .cargo-about/template.hbs
