@@ -14,4 +14,4 @@ runs:
       with:
         output-file: ${{ inputs.output-file }}
         config: .cargo-about/about.toml
-        template: .cargo-about/template.hbs
+        template-file: .cargo-about/template.hbs
