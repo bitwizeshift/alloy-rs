@@ -19,6 +19,8 @@ jobs:
       actions: read
 
   verify-docs:
+    # Temporarily disabled due to doc build time
+    if: false
     name: Verify documentation
     uses: ./.github/workflows/deploy-github-pages.yaml
     permissions:
