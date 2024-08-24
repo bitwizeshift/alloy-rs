@@ -7,10 +7,9 @@ inputs:
     description: "The output file name"
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Generate license manifest
-      shell: bash
       uses: bitwizeshift/rust-actions/cargo-about@master
       with:
         output-file: ${{ inputs.output-file }}
