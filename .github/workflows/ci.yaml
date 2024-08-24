@@ -35,18 +35,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install toolchain
-        uses: ./.github/actions/rust-toolchain
-        with:
-          components: rustfmt
-
-      - name: Install cargo-audit
-        uses: ./.github/actions/cargo-install
-        with:
-          target: cargo-audit
-
       - name: Audit packages
-        run: cargo audit
+        uses: bitwizeshift/rust-actions/cargo-audit@master
 
   check:
     name: Check Manifest
@@ -78,9 +68,6 @@ jobs:
 
       - name: Prepare runner
         uses: ./.github/actions/prepare-runner
-
-      - name: Install toolchain
-        uses: ./.github/actions/rust-toolchain
 
       - name: Check cargo-deny
         uses: bitwizeshift/rust-actions/cargo-deny@master
