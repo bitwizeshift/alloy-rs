@@ -1,10 +1,6 @@
 # https://embarkstudios.github.io/cargo-deny/checks/advisories/cfg.html
 [advisories]
-vulnerability = "deny"
-unmaintained = "deny"
-unsound = "deny"
 yanked = "deny"
-notice = "deny"
 git-fetch-with-cli = true
 ignore = []
 
@@ -15,9 +11,6 @@ wildcards = "allow"
 
 # https://embarkstudios.github.io/cargo-deny/checks/licenses/cfg.html
 [licenses]
-default = "deny"
-unlicensed = "deny"
-copyleft = "deny"
 unused-allowed-license = "deny"
 private.ignore = true
 allow = [
