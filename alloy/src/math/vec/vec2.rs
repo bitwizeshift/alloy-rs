@@ -560,7 +560,7 @@ impl Near for Vec2 {
 impl AlmostEq for Vec2 {
   #[must_use]
   fn almost_eq(&self, other: &Self) -> bool {
-    const EPSILON: f32 = 10.0 * std::f32::EPSILON;
+    const EPSILON: f32 = 10.0 * f32::EPSILON;
     self.near(other, &EPSILON)
   }
 }
