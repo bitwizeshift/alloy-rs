@@ -16,6 +16,8 @@
 #![deny(unused_variables)]
 #![deny(unused_lifetimes)]
 #![deny(rust_2018_idioms)]
+// TODO: remove after diagnostics are addressed
+#![allow(clippy::missing_transmute_annotations)]
 
 pub mod cmp;
 pub mod math;
