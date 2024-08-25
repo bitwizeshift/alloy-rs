@@ -19,7 +19,9 @@
 // TODO: remove after diagnostics are addressed
 #![allow(clippy::missing_transmute_annotations)]
 
+// Core / base modules
 pub mod cmp;
 pub mod math;
+pub mod core;
 pub mod meta;
 pub mod ops;
