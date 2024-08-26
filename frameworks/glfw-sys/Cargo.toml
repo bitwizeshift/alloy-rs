@@ -17,9 +17,11 @@ edition.workspace = true
 default = ["vulkan"]
 wayland = []
 vulkan = ["dep:vulkan-sys"]
+opengl = ["dep:gl-sys"]
 
 [dependencies]
 vulkan-sys = { path = "../vulkan-sys", optional = true }
+gl-sys = { path = "../gl-sys", optional = true }
 
 [build-dependencies]
 cmake = { workspace = true }

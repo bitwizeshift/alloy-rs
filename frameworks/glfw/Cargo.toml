@@ -17,8 +17,10 @@ wayland = ["glfw-sys/wayland"]
 
 # Enables Vulkan support in GLFW
 vulkan = ["dep:vulkan", "glfw-sys/vulkan"]
+opengl = ["dep:gl", "glfw-sys/opengl"]
 
 [dependencies]
 glfw-sys = { path = "../glfw-sys", default-features = false }
 vulkan = { path = "../vulkan", optional = true }
+gl = { path = "../gl", optional = true }
 astd = { path = "../astd" }
