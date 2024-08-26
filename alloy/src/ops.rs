@@ -110,7 +110,7 @@ where
   }
 }
 
-///
+/// An error that may be returned from fallable [`TryDot`] operations.
 pub struct DotError;
 
 impl TryDot for [f32] {
@@ -161,10 +161,14 @@ impl TryDot for [f64] {
 ///
 /// [cross-product]: https://en.wikipedia.org/wiki/Cross_product
 pub trait Cross<Rhs: ?Sized = Self> {
-  ///
+  /// The output type of the Cross operation
   type Output;
 
+  /// Computes the cross-product of two values, and returns the result.
   ///
+  /// # Arguments
+  ///
+  /// * `other` - the other value to compute the cross-product with
   fn cross(&self, other: &Rhs) -> Self::Output;
 }
 

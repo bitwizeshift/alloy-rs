@@ -108,13 +108,13 @@ pub trait AlmostEq<Rhs: ?Sized = Self>: Near<Rhs> {
 
 impl AlmostEq for f32 {
   fn almost_eq(&self, other: &Self) -> bool {
-    self.near(other, &std::f32::EPSILON)
+    self.near(other, &f32::EPSILON)
   }
 }
 
 impl AlmostEq for f64 {
   fn almost_eq(&self, other: &Self) -> bool {
-    self.near(other, &std::f64::EPSILON)
+    self.near(other, &f64::EPSILON)
   }
 }
 
