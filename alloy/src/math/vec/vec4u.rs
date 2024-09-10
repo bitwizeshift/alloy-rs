@@ -509,6 +509,52 @@ impl Vec4u {
   pub fn set_yzw(&mut self, yzw: &Vec3u) {
     self.yzw_mut().set(yzw)
   }
+
+  /// Sets all the components of this vector the values from other.
+  ///
+  /// # Arguments
+  ///
+  /// * `other` - the other [`Vec3u`] to set.
+  pub fn set(&mut self, other: &Vec4u) {
+    let src_ptr = other.as_ptr();
+    let dest_ptr = self.0.as_mut_ptr();
+
+    unsafe {
+      for i in 0..4 {
+        *dest_ptr.add(i) = *src_ptr.add(i);
+      }
+    }
+  }
+
+  /// Computes the minimum of each vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - the left vector
+  /// * `rhs` - the right vector
+  pub fn min(&self, rhs: &Vec4u) -> Vector4u {
+    Vector4u {
+      x: self.x().min(rhs.x()),
+      y: self.y().min(rhs.y()),
+      z: self.z().min(rhs.z()),
+      w: self.w().min(rhs.w()),
+    }
+  }
+
+  /// Computes the maximum of each vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - the left vector
+  /// * `rhs` - the right vector
+  pub fn max(&self, rhs: &Vec4u) -> Vector4u {
+    Vector4u {
+      x: self.x().max(rhs.x()),
+      y: self.y().max(rhs.y()),
+      z: self.z().max(rhs.z()),
+      w: self.w().max(rhs.w()),
+    }
+  }
 }
 
 impl AsRef<[u32]> for Vec4u {

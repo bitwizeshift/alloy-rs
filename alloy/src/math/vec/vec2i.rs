@@ -362,6 +362,32 @@ impl Vec2i {
       y: self.y().abs(),
     }
   }
+
+  /// Computes the minimum of each vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - the left vector
+  /// * `rhs` - the right vector
+  pub fn min(&self, rhs: &Vec2i) -> Vector2i {
+    Vector2i {
+      x: self.x().min(rhs.x()),
+      y: self.y().min(rhs.y()),
+    }
+  }
+
+  /// Computes the maximum of each vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - the left vector
+  /// * `rhs` - the right vector
+  pub fn max(&self, rhs: &Vec2i) -> Vector2i {
+    Vector2i {
+      x: self.x().max(rhs.x()),
+      y: self.y().max(rhs.y()),
+    }
+  }
 }
 
 impl AsRef<[i32]> for Vec2i {

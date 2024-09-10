@@ -628,6 +628,36 @@ impl Vec4 {
       w: self.w().abs(),
     }
   }
+
+  /// Computes the minimum of each vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - the left vector
+  /// * `rhs` - the right vector
+  pub fn min(&self, rhs: &Vec4) -> Vector4 {
+    Vector4 {
+      x: self.x().min(rhs.x()),
+      y: self.y().min(rhs.y()),
+      z: self.z().min(rhs.z()),
+      w: self.w().min(rhs.w()),
+    }
+  }
+
+  /// Computes the maximum of each vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - the left vector
+  /// * `rhs` - the right vector
+  pub fn max(&self, rhs: &Vec4) -> Vector4 {
+    Vector4 {
+      x: self.x().max(rhs.x()),
+      y: self.y().max(rhs.y()),
+      z: self.z().max(rhs.z()),
+      w: self.w().max(rhs.w()),
+    }
+  }
 }
 
 impl AsRef<[f32]> for Vec4 {

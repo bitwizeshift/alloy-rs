@@ -507,6 +507,32 @@ impl Vec2 {
     }
   }
 
+  /// Computes the minimum of each vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - the left vector
+  /// * `rhs` - the right vector
+  pub fn min(&self, rhs: &Vec2) -> Vector2 {
+    Vector2 {
+      x: self.x().min(rhs.x()),
+      y: self.y().min(rhs.y()),
+    }
+  }
+
+  /// Computes the maximum of each vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - the left vector
+  /// * `rhs` - the right vector
+  pub fn max(&self, rhs: &Vec2) -> Vector2 {
+    Vector2 {
+      x: self.x().max(rhs.x()),
+      y: self.y().max(rhs.y()),
+    }
+  }
+
   fn add_impl(lhs: &Vec2, rhs: &Vec2) -> Vector2 {
     Vector2 {
       x: lhs.x() + rhs.x(),

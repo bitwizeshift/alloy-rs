@@ -570,6 +570,34 @@ impl Vec3 {
       z: self.z().abs(),
     }
   }
+
+  /// Computes the minimum of each vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - the left vector
+  /// * `rhs` - the right vector
+  pub fn min(&self, rhs: &Vec3) -> Vector3 {
+    Vector3 {
+      x: self.x().min(rhs.x()),
+      y: self.y().min(rhs.y()),
+      z: self.z().min(rhs.z()),
+    }
+  }
+
+  /// Computes the maximum of each vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - the left vector
+  /// * `rhs` - the right vector
+  pub fn max(&self, rhs: &Vec3) -> Vector3 {
+    Vector3 {
+      x: self.x().max(rhs.x()),
+      y: self.y().max(rhs.y()),
+      z: self.z().max(rhs.z()),
+    }
+  }
 }
 
 impl AsRef<[f32]> for Vec3 {

@@ -536,6 +536,36 @@ impl Vec4i {
       w: self.w().abs(),
     }
   }
+
+  /// Computes the minimum of each vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - the left vector
+  /// * `rhs` - the right vector
+  pub fn min(&self, rhs: &Vec4i) -> Vector4i {
+    Vector4i {
+      x: self.x().min(rhs.x()),
+      y: self.y().min(rhs.y()),
+      z: self.z().min(rhs.z()),
+      w: self.w().min(rhs.w()),
+    }
+  }
+
+  /// Computes the maximum of each vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - the left vector
+  /// * `rhs` - the right vector
+  pub fn max(&self, rhs: &Vec4i) -> Vector4i {
+    Vector4i {
+      x: self.x().max(rhs.x()),
+      y: self.y().max(rhs.y()),
+      z: self.z().max(rhs.z()),
+      w: self.w().max(rhs.w()),
+    }
+  }
 }
 
 impl AsRef<[i32]> for Vec4i {

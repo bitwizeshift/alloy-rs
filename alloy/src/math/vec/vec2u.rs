@@ -353,6 +353,32 @@ impl Vec2u {
       }
     }
   }
+
+  /// Computes the minimum of each vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - the left vector
+  /// * `rhs` - the right vector
+  pub fn min(&self, rhs: &Vec2u) -> Vector2u {
+    Vector2u {
+      x: self.x().min(rhs.x()),
+      y: self.y().min(rhs.y()),
+    }
+  }
+
+  /// Computes the maximum of each vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - the left vector
+  /// * `rhs` - the right vector
+  pub fn max(&self, rhs: &Vec2u) -> Vector2u {
+    Vector2u {
+      x: self.x().max(rhs.x()),
+      y: self.y().max(rhs.y()),
+    }
+  }
 }
 
 impl AsRef<[u32]> for Vec2u {
