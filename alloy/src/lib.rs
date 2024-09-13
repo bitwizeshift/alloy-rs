@@ -21,8 +21,11 @@
 
 // Core / base modules
 pub mod cmp;
-pub mod math;
 pub mod core;
-pub mod geometry;
 pub mod meta;
 pub mod ops;
+
+// Business logic modules
+pub mod geometry;
+pub mod math;
+pub mod model;
