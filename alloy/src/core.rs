@@ -2,6 +2,7 @@
 
 mod align;
 mod aligned_array;
+pub mod hash;
 
 #[doc(inline)]
 pub use align::*;
