@@ -3,8 +3,12 @@
 pub mod simd;
 
 mod angle;
+mod quaternion;
 
 pub use angle::*;
 
 pub mod mat;
 pub mod vec;
+
+#[doc(inline)]
+pub use quaternion::*;
