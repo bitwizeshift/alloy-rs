@@ -6,4 +6,5 @@ mod angle;
 
 pub use angle::*;
 
+pub mod mat;
 pub mod vec;
