@@ -12,3 +12,8 @@ pub mod vec;
 
 #[doc(inline)]
 pub use quaternion::*;
+
+mod euler;
+
+#[doc(inline)]
+pub use euler::*;
