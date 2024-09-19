@@ -18,5 +18,7 @@
 //! [`f32`]: https://doc.rust-lang.org/std/primitive.f32.html
 mod mat4;
 
+pub(crate) mod col4;
+
 #[doc(inline)]
 pub use mat4::*;

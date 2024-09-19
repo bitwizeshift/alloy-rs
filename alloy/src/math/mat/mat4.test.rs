@@ -395,3 +395,43 @@ fn mat4_trace() {
     assert_eq!(case.input.trace(), case.expected);
   }
 }
+
+#[test]
+fn mat4_col() {
+  let matrix = Matrix4::from_arrays([
+    [1.0, 2.0, 3.0, 4.0],
+    [7.0, 6.0, 5.0, 4.0],
+    [1.0, 2.0, 3.0, 4.0],
+    [7.0, 6.0, 5.0, 4.0],
+  ]);
+
+  struct TestCase {
+    index: usize,
+    expected: Vector4,
+  }
+
+  let cases = [
+    TestCase {
+      index: 0,
+      expected: Vector4::new(1.0, 7.0, 1.0, 7.0),
+    },
+    TestCase {
+      index: 1,
+      expected: Vector4::new(2.0, 6.0, 2.0, 6.0),
+    },
+    TestCase {
+      index: 2,
+      expected: Vector4::new(3.0, 5.0, 3.0, 5.0),
+    },
+    TestCase {
+      index: 3,
+      expected: Vector4::new(4.0, 4.0, 4.0, 4.0),
+    },
+  ];
+
+  for case in cases.iter() {
+    let col = matrix.col(case.index);
+
+    assert_eq!(col.to_vector4().as_vec4(), case.expected.as_vec4());
+  }
+}

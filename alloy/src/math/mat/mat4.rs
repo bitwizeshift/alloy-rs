@@ -8,6 +8,9 @@ use std::ops::{
 use crate::math::vec::{Vec4, Vector4};
 use crate::ops::Dot;
 
+#[doc(inline)]
+pub use crate::math::mat::col4::Col4;
+
 /// A 4x4 non-owning view of a [matrix].
 ///
 /// [matrix]: https://en.wikipedia.org/wiki/Matrix_(mathematics)
@@ -32,6 +35,12 @@ pub struct Mat4([f32]);
 // Constructors
 
 impl Mat4 {
+  /// The number of columns this matrix contains
+  pub const COLS: usize = 4;
+
+  /// The number of rows this matrix contains.
+  pub const ROWS: usize = 4;
+
   /// Creates a new 4x4 matrix view from a slice of 16 [`f32`] values.
   ///
   /// # Arguments
@@ -384,14 +393,11 @@ impl Mat4 {
   ///
   /// This function will panic if the given index is out of bounds.
   ///
-  /// **Note**: Unlike [`Mat4::row`], this function returns an owning [`Vector4`]
-  /// instead of a reference of [`Vec4`].
-  ///
   /// # Arguments
   ///
   /// * `index` - The index of the column to return.
   #[must_use]
-  pub const fn col(&self, index: usize) -> Vector4 {
+  pub const fn col(&self, index: usize) -> &Col4 {
     if index >= 4 {
       panic!("index out of bounds")
     } else {
@@ -414,9 +420,45 @@ impl Mat4 {
   ///
   /// * `index` - The index of the column to return.
   #[must_use]
-  pub const unsafe fn col_unchecked(&self, index: usize) -> Vector4 {
-    let mat = self.as_array_ref();
-    Vector4::new(mat[0][index], mat[1][index], mat[2][index], mat[3][index])
+  pub const unsafe fn col_unchecked(&self, index: usize) -> &Col4 {
+    let ptr = self.as_ptr().add(index);
+    let len = self.0.len() - index;
+    Col4::from_raw_parts(ptr, len)
+  }
+
+  /// Returns a mutable reference to the column at the given index.
+  ///
+  /// This function will panic if the given index is out of bounds.
+  ///
+  /// # Arguments
+  ///
+  /// * `index` - The index of the column to return.
+  #[must_use]
+  pub fn mut_col(&mut self, index: usize) -> &mut Col4 {
+    if index >= 4 {
+      panic!("index out of bounds")
+    } else {
+      // SAFETY: The above check ensures that the index is in bounds.
+      unsafe { self.mut_col_unchecked(index) }
+    }
+  }
+
+  /// Returns a mutable reference to the column at the given index without
+  /// performing bounds checking.
+  ///
+  /// # Safety
+  ///
+  /// This function is unsafe because it does not check that the given index is
+  /// less than 4. If this constraint is violated, memory safety errors can occur.
+  ///
+  /// # Arguments
+  ///
+  /// * `index` - The index of the column to return.
+  #[must_use]
+  pub unsafe fn mut_col_unchecked(&mut self, index: usize) -> &mut Col4 {
+    let ptr = self.as_mut_ptr().add(index);
+    let len = self.0.len() - index;
+    Col4::from_raw_parts_mut(ptr, len)
   }
 
   /// Returns the value at the given column and row.
@@ -769,7 +811,7 @@ impl Mat4 {
         // SAFETY: 0..4 is always within bounds.
         let col = unsafe { other.col_unchecked(c) };
 
-        result[r][c] = row.dot(col.as_vec4());
+        result[r][c] = row.dot(col.to_vector4().as_vec4());
       }
     }
     result
@@ -805,10 +847,10 @@ impl Mat4 {
   ///
   /// This implements vector-matrix multiplication of:
   /// ```raw
-  /// | x y z w |   | a b c d |   | xa + ye + zi + wm |
-  ///             * | e f g h | = | xb + yf + zj + wn |
-  ///               | i j k l |   | xc + yg + zk + wo |
-  ///               | m n o p |   | xd + yh + zl + wp |
+  /// | x y z w |   | a b c d |   | ax + ey + iz + mw |
+  ///             * | e f g h | = | bx + fy + jz + nw |
+  ///               | i j k l |   | cx + gy + kz + ow |
+  ///               | m n o p |   | dx + hy + lz + pw |
   /// ```
   pub fn mul_row_vec4(&self, vec: &Vec4) -> Vector4 {
     let mut result = Vector4::default();

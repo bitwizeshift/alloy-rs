@@ -2,6 +2,8 @@
 
 mod align;
 mod aligned_array;
+mod slice;
+
 pub mod hash;
 
 #[doc(inline)]
