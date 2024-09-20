@@ -5,9 +5,16 @@ mod aligned_array;
 mod slice;
 
 pub mod hash;
+pub mod hint;
 
 #[doc(inline)]
 pub use align::*;
 
 #[doc(inline)]
 pub use aligned_array::*;
+
+#[doc(inline)]
+pub use slice::*;
+
+#[doc(inline)]
+pub use astd::Uuid;
