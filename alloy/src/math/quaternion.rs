@@ -68,6 +68,42 @@ impl Quaternion {
     }
   }
 
+  /// Creates a quaternion from a yaw angle.
+  ///
+  /// # Arguments
+  ///
+  /// * `angle` - The yaw angle.
+  pub fn from_yaw<A: Angle>(angle: A) -> Self {
+    let half_angle = angle.to_angle::<Radian>() / 2.0;
+    let (sin_half_angle, cos_half_angle) = half_angle.sin_cos();
+
+    Quaternion::new(cos_half_angle, 0.0, 0.0, sin_half_angle)
+  }
+
+  /// Creates a quaternion from a pitch angle.
+  ///
+  /// # Arguments
+  ///
+  /// * `angle` - The pitch angle.
+  pub fn from_pitch<A: Angle>(angle: A) -> Self {
+    let half_angle = angle.to_angle::<Radian>() / 2.0;
+    let (sin_half_angle, cos_half_angle) = half_angle.sin_cos();
+
+    Quaternion::new(cos_half_angle, sin_half_angle, 0.0, 0.0)
+  }
+
+  /// Creates a quaternion from a roll angle.
+  ///
+  /// # Arguments
+  ///
+  /// * `angle` - The roll angle.
+  pub fn from_roll<A: Angle>(angle: A) -> Self {
+    let half_angle = angle.to_angle::<Radian>() / 2.0;
+    let (sin_half_angle, cos_half_angle) = half_angle.sin_cos();
+
+    Quaternion::new(cos_half_angle, 0.0, sin_half_angle, 0.0)
+  }
+
   /// Creates a new quaternion from a set of Euler angles.
   ///
   /// # Arguments
@@ -533,6 +569,39 @@ impl Quaternion {
   #[inline(always)]
   pub fn rotate_by_angle_axis<A: Angle>(&self, angle: A, axis: &Vec3) -> Self {
     let rotation = Self::from_angle_axis(angle, axis);
+    self.rotate(&rotation)
+  }
+
+  /// Rotates the quaternion by a yaw angle.
+  ///
+  /// # Arguments
+  ///
+  /// * `angle` - The yaw angle.
+  #[must_use]
+  pub fn rotate_by_yaw<A: Angle>(&self, angle: A) -> Self {
+    let rotation = Self::from_yaw(angle);
+    self.rotate(&rotation)
+  }
+
+  /// Rotates the quaternion by a pitch angle.
+  ///
+  /// # Arguments
+  ///
+  /// * `angle` - The pitch angle.
+  #[must_use]
+  pub fn rotate_by_pitch<A: Angle>(&self, angle: A) -> Self {
+    let rotation = Self::from_pitch(angle);
+    self.rotate(&rotation)
+  }
+
+  /// Rotates the quaternion by a roll angle.
+  ///
+  /// # Arguments
+  ///
+  /// * `angle` - The roll angle.
+  #[must_use]
+  pub fn rotate_by_roll<A: Angle>(&self, angle: A) -> Self {
+    let rotation = Self::from_roll(angle);
     self.rotate(&rotation)
   }
 
