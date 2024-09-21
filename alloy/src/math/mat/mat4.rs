@@ -5,6 +5,7 @@ use std::ops::{
   SubAssign,
 };
 
+use crate::core::hint;
 use crate::math::vec::{Vec4, Vector4};
 use crate::ops::Dot;
 
@@ -313,6 +314,11 @@ impl Mat4 {
     // SAFETY: The length of the slice is guaranteed to be 16.
     unsafe { std::mem::transmute(&mut *self.0.as_mut_ptr()) }
   }
+
+  /// Returns this [`Mat4`] as a [`Matrix4`].
+  pub const fn to_matrix4(&self) -> Matrix4 {
+    Matrix4::from_mat4(self)
+  }
 }
 
 // Accessors
@@ -328,7 +334,7 @@ impl Mat4 {
   #[must_use]
   #[inline(always)]
   pub const fn row(&self, index: usize) -> &Vec4 {
-    if index >= 4 {
+    if hint::unlikely(index >= 4) {
       panic!("index out of bounds")
     } else {
       // SAFETY: The above check ensures that the index is in bounds.
@@ -363,7 +369,7 @@ impl Mat4 {
   #[must_use]
   #[inline(always)]
   pub fn mut_row(&mut self, index: usize) -> &mut Vec4 {
-    if index >= 4 {
+    if hint::unlikely(index >= 4) {
       panic!("index out of bounds")
     } else {
       // SAFETY: The above check ensures that the index is in bounds.
@@ -398,7 +404,7 @@ impl Mat4 {
   /// * `index` - The index of the column to return.
   #[must_use]
   pub const fn col(&self, index: usize) -> &Col4 {
-    if index >= 4 {
+    if hint::unlikely(index >= 4) {
       panic!("index out of bounds")
     } else {
       // SAFETY: The above check ensures that the index is in bounds.
@@ -435,7 +441,7 @@ impl Mat4 {
   /// * `index` - The index of the column to return.
   #[must_use]
   pub fn mut_col(&mut self, index: usize) -> &mut Col4 {
-    if index >= 4 {
+    if hint::unlikely(index >= 4) {
       panic!("index out of bounds")
     } else {
       // SAFETY: The above check ensures that the index is in bounds.
@@ -471,7 +477,7 @@ impl Mat4 {
   /// * `col` - The index of the column to return.
   #[must_use]
   pub const fn get(&self, row: usize, col: usize) -> f32 {
-    if row >= 4 || col >= 4 {
+    if hint::unlikely(row >= 4 || col >= 4) {
       panic!("index out of bounds")
     } else {
       // SAFETY: bounds are checked above
@@ -507,7 +513,7 @@ impl Mat4 {
   /// * `col` - The index of the column to return.
   #[must_use]
   pub fn get_mut(&mut self, row: usize, col: usize) -> &mut f32 {
-    if row >= 4 || col >= 4 {
+    if hint::unlikely(row >= 4 || col >= 4) {
       panic!("index out of bounds")
     } else {
       // SAFETY: bounds are checked above
@@ -574,7 +580,7 @@ impl Mat4 {
     }
   }
 
-  /// Returns the inverse of the matrix.
+  /// Inverts this matrix.
   pub fn invert(&mut self) {
     let mut inv = Matrix4::default(); // The resultant matrix
 
@@ -715,20 +721,6 @@ impl Mat4 {
   }
 }
 
-// Conversions
-
-impl Matrix4 {
-  /// Returns the row at the given index.
-  pub const fn as_mat4(&self) -> &Mat4 {
-    Mat4::from_arrays(&self.0)
-  }
-
-  /// Returns the mutable [`Mat4`] reference.
-  pub fn as_mut_mat4(&mut self) -> &mut Mat4 {
-    Mat4::from_mut_array(&mut self.0)
-  }
-}
-
 // Properties
 
 impl Mat4 {
@@ -792,7 +784,33 @@ impl Mat4 {
   }
 }
 
-// Operations
+// Formatting
+
+impl fmt::Debug for Mat4 {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    f.debug_struct("Mat4")
+      .field("[0]", &self.row(0))
+      .field("[1]", &self.row(1))
+      .field("[2]", &self.row(2))
+      .field("[3]", &self.row(3))
+      .finish()
+  }
+}
+
+impl fmt::Display for Mat4 {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    write!(
+      f,
+      "[{}, {}, {}, {}]",
+      self.row(0),
+      self.row(1),
+      self.row(2),
+      self.row(3)
+    )
+  }
+}
+
+// Arithmetic Operations
 
 impl Mat4 {
   /// Combines this matrix with another matrix by performing matrix multiplication.
@@ -863,29 +881,52 @@ impl Mat4 {
     }
     result
   }
-}
 
-impl fmt::Debug for Mat4 {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    f.debug_struct("Mat4")
-      .field("[0]", &self.row(0))
-      .field("[1]", &self.row(1))
-      .field("[2]", &self.row(2))
-      .field("[3]", &self.row(3))
-      .finish()
+  /// A private helper function for the [`Add`] trait implementations.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - The left-hand side matrix.
+  /// * `rhs` - The right-hand side matrix.
+  fn add_impl(lhs: &Self, rhs: &Self) -> Matrix4 {
+    let mut result = Matrix4::ZERO;
+
+    for r in 0..4 {
+      for c in 0..4 {
+        result[r][c] = lhs[r][c] + rhs[r][c];
+      }
+    }
+
+    result
   }
-}
 
-impl fmt::Display for Mat4 {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    write!(
-      f,
-      "[{}, {}, {}, {}]",
-      self.row(0),
-      self.row(1),
-      self.row(2),
-      self.row(3)
-    )
+  /// A private helper function for the [`Sub`] trait implementations.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - The left-hand side matrix.
+  /// * `rhs` - The right-hand side matrix.
+  fn sub_impl(lhs: &Self, rhs: &Self) -> Matrix4 {
+    let mut result = Matrix4::ZERO;
+
+    for r in 0..4 {
+      for c in 0..4 {
+        result[r][c] = lhs[r][c] - rhs[r][c];
+      }
+    }
+
+    result
+  }
+
+  /// A private helper function for the [`Mul`] trait implementations.
+  ///
+  /// # Arguments
+  ///
+  /// * `lhs` - The left-hand side matrix.
+  /// * `rhs` - The right-hand side matrix.
+  #[inline]
+  fn mul_impl(lhs: &Self, rhs: &Self) -> Matrix4 {
+    lhs.mul_mat4(rhs)
   }
 }
 
@@ -1100,7 +1141,7 @@ impl ToOwned for Mat4 {
 /// [matrix]: https://en.wikipedia.org/wiki/Matrix_(mathematics)
 #[repr(C)]
 #[repr(align(64))]
-#[derive(Clone, Default, PartialEq, PartialOrd, Debug)]
+#[derive(Clone, Default, PartialEq, PartialOrd)]
 pub struct Matrix4([[f32; 4]; 4]);
 
 // Constructors
@@ -1122,6 +1163,28 @@ impl Matrix4 {
   #[inline(always)]
   pub const fn new() -> Self {
     Self::IDENTITY
+  }
+
+  /// Constructs a new 4x4 matrix as an identity matrix.
+  #[must_use]
+  #[inline(always)]
+  pub const fn identity() -> Self {
+    Self::IDENTITY
+  }
+
+  /// Constructs a new 4x4 matrix with the given value for the diagonal.
+  ///
+  /// # Arguments
+  ///
+  /// * `diagonal` - The value to set on the diagonal.
+  #[must_use]
+  pub const fn with_diagonal(diagonal: f32) -> Self {
+    Self([
+      [diagonal, 0.0, 0.0, 0.0],
+      [0.0, diagonal, 0.0, 0.0],
+      [0.0, 0.0, diagonal, 0.0],
+      [0.0, 0.0, 0.0, diagonal],
+    ])
   }
 
   /// Constructs a new 4x4 matrix from the 4x4 array of [`f32`].
@@ -1236,6 +1299,20 @@ impl Matrix4 {
   }
 }
 
+// Conversions
+
+impl Matrix4 {
+  /// Returns the row at the given index.
+  pub const fn as_mat4(&self) -> &Mat4 {
+    Mat4::from_arrays(&self.0)
+  }
+
+  /// Returns the mutable [`Mat4`] reference.
+  pub fn as_mut_mat4(&mut self) -> &mut Mat4 {
+    Mat4::from_mut_array(&mut self.0)
+  }
+}
+
 impl Deref for Matrix4 {
   type Target = Mat4;
 
@@ -1282,133 +1359,168 @@ impl AsMut<Mat4> for Matrix4 {
   }
 }
 
-impl Add for &Matrix4 {
-  type Output = Matrix4;
+// Formatting
 
-  #[must_use]
-  #[inline(always)]
-  fn add(self, rhs: Self) -> Self::Output {
-    self.as_mat4().add(rhs.as_mat4())
+impl fmt::Debug for Matrix4 {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    f.debug_struct("Matrix4")
+      .field("[0]", &self.row(0))
+      .field("[1]", &self.row(1))
+      .field("[2]", &self.row(2))
+      .field("[3]", &self.row(3))
+      .finish()
   }
 }
 
-impl Add<&Mat4> for &Matrix4 {
-  type Output = Matrix4;
-
-  #[must_use]
-  #[inline(always)]
-  fn add(self, rhs: &Mat4) -> Self::Output {
-    self.as_mat4().add(rhs)
+impl fmt::Display for Matrix4 {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    write!(
+      f,
+      "[{}, {}, {}, {}]",
+      self.row(0),
+      self.row(1),
+      self.row(2),
+      self.row(3)
+    )
   }
 }
 
-impl Add<&Matrix4> for &Mat4 {
-  type Output = Matrix4;
+// Arithmetic Operations
 
-  #[must_use]
-  #[inline(always)]
-  fn add(self, rhs: &Matrix4) -> Self::Output {
-    self.add(rhs.as_mat4())
-  }
+macro_rules! impl_op {
+  ($trait:ident, $func:ident, $op:tt, $logic:expr) => {
+    impl $trait for Matrix4 {
+      type Output = Matrix4;
+
+      #[must_use]
+      #[inline(always)]
+      fn $func(self, rhs: Self) -> Self::Output {
+        $logic(self.as_mat4(), rhs.as_mat4())
+      }
+    }
+
+    impl $trait for &Matrix4 {
+      type Output = Matrix4;
+
+      #[must_use]
+      #[inline(always)]
+      fn $func(self, rhs: Self) -> Self::Output {
+        $logic(self.as_mat4(), rhs.as_mat4())
+      }
+    }
+
+    impl $trait<Matrix4> for &Matrix4 {
+      type Output = Matrix4;
+
+      #[must_use]
+      #[inline(always)]
+      fn $func(self, rhs: Matrix4) -> Self::Output {
+        $logic(self.as_mat4(), rhs.as_mat4())
+      }
+    }
+
+    impl $trait<&Matrix4> for Matrix4 {
+      type Output = Matrix4;
+
+      #[must_use]
+      #[inline(always)]
+      fn $func(self, rhs: &Matrix4) -> Self::Output {
+        $logic(self.as_mat4(), rhs.as_mat4())
+      }
+    }
+
+    impl $trait<&Mat4> for Matrix4 {
+      type Output = Matrix4;
+
+      #[must_use]
+      #[inline(always)]
+      fn $func(self, rhs: &Mat4) -> Self::Output {
+        $logic(self.as_mat4(), rhs)
+      }
+    }
+
+    impl $trait<&Mat4> for &Matrix4 {
+      type Output = Matrix4;
+
+      #[must_use]
+      #[inline(always)]
+      fn $func(self, rhs: &Mat4) -> Self::Output {
+        $logic(self.as_mat4(), rhs)
+      }
+    }
+
+    impl $trait<Matrix4> for &Mat4 {
+      type Output = Matrix4;
+
+      #[must_use]
+      #[inline(always)]
+      fn $func(self, rhs: Matrix4) -> Self::Output {
+        $logic(self, rhs.as_mat4())
+      }
+    }
+
+    impl $trait<&Matrix4> for &Mat4 {
+      type Output = Matrix4;
+
+      #[must_use]
+      #[inline(always)]
+      fn $func(self, rhs: &Matrix4) -> Self::Output {
+        $logic(self, rhs.as_mat4())
+      }
+    }
+  };
 }
 
-impl Sub for &Matrix4 {
-  type Output = Matrix4;
+macro_rules! impl_op_assign {
+  ($trait:ident, $func:ident, $op:tt) => {
+    impl $trait for Matrix4 {
+      #[inline(always)]
+      fn $func(&mut self, rhs: Self) {
+        *self.as_mut_mat4() $op rhs.as_mat4();
+      }
+    }
 
-  #[must_use]
-  #[inline(always)]
-  fn sub(self, rhs: Self) -> Self::Output {
-    self.as_mat4().sub(rhs.as_mat4())
-  }
+    impl $trait<&Matrix4> for Matrix4 {
+      #[inline(always)]
+      fn $func(&mut self, rhs: &Self) {
+        *self.as_mut_mat4() $op rhs.as_mat4();
+      }
+    }
+
+    impl $trait<&Mat4> for Matrix4 {
+      #[inline(always)]
+      fn $func(&mut self, rhs: &Mat4) {
+        *self.as_mut_mat4() $op rhs;
+      }
+    }
+
+    impl $trait<&Matrix4> for Mat4 {
+      #[inline(always)]
+      fn $func(&mut self, rhs: &Matrix4) {
+        *self $op rhs.as_mat4();
+      }
+    }
+
+    impl $trait<Matrix4> for Mat4 {
+      #[inline(always)]
+      fn $func(&mut self, rhs: Matrix4) {
+        *self $op rhs.as_mat4();
+      }
+    }
+  };
 }
 
-impl Sub<&Mat4> for &Matrix4 {
-  type Output = Matrix4;
+impl_op!(Add, add, +, Mat4::add_impl);
+impl_op!(Sub, sub, -, Mat4::sub_impl);
+impl_op!(Mul, mul, *, Mat4::mul_impl);
 
-  #[must_use]
-  #[inline(always)]
-  fn sub(self, rhs: &Mat4) -> Self::Output {
-    self.as_mat4().sub(rhs)
-  }
-}
-
-impl Sub<&Matrix4> for &Mat4 {
-  type Output = Matrix4;
-
-  #[must_use]
-  #[inline(always)]
-  fn sub(self, rhs: &Matrix4) -> Self::Output {
-    self.sub(rhs.as_mat4())
-  }
-}
-
-impl Mul for &Matrix4 {
-  type Output = Matrix4;
-
-  #[must_use]
-  #[inline(always)]
-  fn mul(self, rhs: Self) -> Self::Output {
-    self.as_mat4().mul_mat4(rhs.as_mat4())
-  }
-}
-
-impl Mul<&Mat4> for &Matrix4 {
-  type Output = Matrix4;
-
-  #[must_use]
-  #[inline(always)]
-  fn mul(self, rhs: &Mat4) -> Self::Output {
-    self.mul_mat4(rhs)
-  }
-}
-
-impl Mul<&Matrix4> for &Mat4 {
-  type Output = Matrix4;
-
-  #[must_use]
-  #[inline(always)]
-  fn mul(self, rhs: &Matrix4) -> Self::Output {
-    self.mul_mat4(rhs.as_mat4())
-  }
-}
-
-impl Mul<&Vec4> for &Matrix4 {
-  type Output = Vector4;
-
-  #[must_use]
-  #[inline(always)]
-  fn mul(self, rhs: &Vec4) -> Self::Output {
-    self.mul_col_vec4(rhs)
-  }
-}
-
-impl Mul<&Matrix4> for &Vec4 {
-  type Output = Vector4;
-
-  #[must_use]
-  #[inline(always)]
-  fn mul(self, rhs: &Matrix4) -> Self::Output {
-    rhs.mul_row_vec4(self)
-  }
-}
-
-impl Mul<f32> for &Matrix4 {
+impl Mul<f32> for Matrix4 {
   type Output = Matrix4;
 
   #[must_use]
   #[inline(always)]
   fn mul(self, rhs: f32) -> Self::Output {
     self.as_mat4().mul(rhs)
-  }
-}
-
-impl Mul<&Matrix4> for f32 {
-  type Output = Matrix4;
-
-  #[must_use]
-  #[inline(always)]
-  fn mul(self, rhs: &Matrix4) -> Self::Output {
-    rhs.as_mat4().mul(self)
   }
 }
 
@@ -1429,6 +1541,22 @@ impl Div<&Matrix4> for f32 {
   #[inline(always)]
   fn div(self, rhs: &Matrix4) -> Self::Output {
     rhs.as_mat4().div(self)
+  }
+}
+
+impl_op_assign!(AddAssign, add_assign, +=);
+impl_op_assign!(SubAssign, sub_assign, -=);
+impl_op_assign!(MulAssign, mul_assign, *=);
+
+impl MulAssign<f32> for Matrix4 {
+  fn mul_assign(&mut self, rhs: f32) {
+    self.as_mut_mat4().mul_assign(rhs);
+  }
+}
+
+impl DivAssign<f32> for Matrix4 {
+  fn div_assign(&mut self, rhs: f32) {
+    self.as_mut_mat4().div_assign(rhs);
   }
 }
 

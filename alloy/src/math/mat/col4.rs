@@ -108,6 +108,22 @@ impl DerefMut for Col4 {
   }
 }
 
+// Modifiers
+
+impl Col4 {
+  /// Sets the column to the content of the other vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `vec` - The vector to set the column to.
+  pub fn set_vec4(&mut self, vec: &Vec4) {
+    self.0[0] = vec.x();
+    self.0[1] = vec.y();
+    self.0[2] = vec.z();
+    self.0[3] = vec.w();
+  }
+}
+
 // Indexing
 
 impl Col4 {
