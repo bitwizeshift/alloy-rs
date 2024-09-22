@@ -297,3 +297,52 @@ fn quaternion_rotate_vec4() {
     );
   }
 }
+
+#[test]
+fn quaternion_lerp() {
+  struct TestCase {
+    lhs: Quaternion,
+    rhs: Quaternion,
+    alpha: f32,
+    expected: Quaternion,
+  }
+
+  let test_cases = [
+    TestCase {
+      lhs: Quaternion::from_roll(Degree::new(0.0)),
+      rhs: Quaternion::from_roll(Degree::new(90.0)),
+      alpha: 0.5,
+      expected: Quaternion::from_roll(Degree::new(45.0)),
+    },
+    TestCase {
+      lhs: Quaternion::from_roll(Degree::new(0.0)),
+      rhs: Quaternion::from_roll(Degree::new(90.0)),
+      alpha: 0.0,
+      expected: Quaternion::from_roll(Degree::new(0.0)),
+    },
+    TestCase {
+      lhs: Quaternion::from_roll(Degree::new(0.0)),
+      rhs: Quaternion::from_roll(Degree::new(90.0)),
+      alpha: 1.0,
+      expected: Quaternion::from_roll(Degree::new(90.0)),
+    },
+    TestCase {
+      lhs: Quaternion::from_roll(Degree::new(0.0)),
+      rhs: Quaternion::from_roll(Degree::new(90.0)),
+      alpha: 0.25,
+      expected: Quaternion::from_roll(Degree::new(22.5)),
+    },
+    TestCase {
+      lhs: Quaternion::from_roll(Degree::new(0.0)),
+      rhs: Quaternion::from_roll(Degree::new(1.0)),
+      alpha: 0.5,
+      expected: Quaternion::from_roll(Degree::new(0.5)),
+    },
+  ];
+
+  for test in test_cases {
+    let result = test.lhs.lerp(&test.rhs, test.alpha);
+
+    assert!(result.almost_eq(&test.expected), "result = {}", result);
+  }
+}

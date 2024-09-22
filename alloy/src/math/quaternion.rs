@@ -4,6 +4,8 @@
 use std::fmt;
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
+use crate::cmp::{AlmostEq, Near};
+use crate::ops::Lerp;
 use crate::{math::vec::Vector4, ops::Dot};
 
 use super::{
@@ -40,6 +42,28 @@ impl Quaternion {
   #[inline(always)]
   pub const fn new(w: f32, i: f32, j: f32, k: f32) -> Self {
     Self(Vector4::new(w, i, j, k))
+  }
+
+  /// Creates a new quaternion from a 4D vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `vec` - The vector to create the quaternion from.
+  #[must_use]
+  #[inline(always)]
+  pub const fn from_vector4(vec: Vector4) -> Self {
+    Self(vec)
+  }
+
+  /// Creates a new quaternion from a 4D vector.
+  ///
+  /// # Arguments
+  ///
+  /// * `vec` - The vector to create the quaternion from.
+  #[must_use]
+  #[inline(always)]
+  pub const fn from_vec4(vec: &Vec4) -> Self {
+    Self(Vector4::from_vec4(vec))
   }
 
   /// Creates a quaternion from an angle (in radians) and an axis vector (x, y, z)
@@ -193,6 +217,20 @@ impl Default for Quaternion {
   }
 }
 
+impl From<Vector4> for Quaternion {
+  #[inline(always)]
+  fn from(vec: Vector4) -> Self {
+    Quaternion::from_vector4(vec)
+  }
+}
+
+impl From<&Vec4> for Quaternion {
+  #[inline(always)]
+  fn from(vec: &Vec4) -> Self {
+    Quaternion::from_vec4(vec)
+  }
+}
+
 // Conversion
 
 impl Quaternion {
@@ -305,6 +343,13 @@ impl Quaternion {
   #[inline(always)]
   pub fn norm(&self) -> f32 {
     self.dot(self).sqrt()
+  }
+
+  /// Returns the normalized quaternion.
+  #[must_use]
+  pub fn normalized(&self) -> Self {
+    let norm = self.norm();
+    self / norm
   }
 
   /// Returns the yaw angle of the quaternion.
@@ -506,6 +551,20 @@ impl Quaternion {
   #[inline(always)]
   pub fn ijk_mut(&mut self) -> &mut Vec3 {
     self.0.yzw_mut()
+  }
+}
+
+impl Near for Quaternion {
+  #[inline(always)]
+  fn near(&self, other: &Self, tolerance: &f32) -> bool {
+    self.0.near(&other.0, tolerance)
+  }
+}
+
+impl AlmostEq for Quaternion {
+  #[inline(always)]
+  fn almost_eq(&self, other: &Self) -> bool {
+    self.0.almost_eq(&other.0)
   }
 }
 
@@ -782,6 +841,33 @@ impl Div<f32> for &Quaternion {
   }
 }
 
+impl Lerp for Quaternion {
+  type Output = Quaternion;
+
+  #[must_use]
+  #[inline(always)]
+  fn lerp(&self, other: &Self, alpha: f32) -> Self::Output {
+    use crate::cmp::AlmostEq;
+    let lhs = self.normalized();
+    let rhs = other.normalized();
+    let dot = lhs.dot(&rhs);
+
+    // if the angles are very close, we can use linear interpolation for a good
+    // approximation
+    if dot.almost_eq(&1.0) {
+      return Quaternion::from_vector4(lhs.as_vec4().lerp(rhs.as_vec4(), alpha));
+    }
+    let angle = dot.acos();
+    let inv_sin_angle = 1.0 / angle.sin();
+    let lhs_weight = ((1.0 - alpha) * angle).sin();
+    let rhs_weight = (alpha * angle).sin();
+
+    Quaternion::from_vector4(
+      ((lhs.as_vec4() * lhs_weight) + (rhs.as_vec4() * rhs_weight)) * inv_sin_angle,
+    )
+  }
+}
+
 impl AddAssign<&Quaternion> for Quaternion {
   #[inline(always)]
   fn add_assign(&mut self, rhs: &Quaternion) {
@@ -807,6 +893,20 @@ impl MulAssign<f32> for Quaternion {
   #[inline(always)]
   fn mul_assign(&mut self, rhs: f32) {
     self.0 *= rhs;
+  }
+}
+
+impl MulAssign<&Quaternion> for Quaternion {
+  #[inline(always)]
+  fn mul_assign(&mut self, rhs: &Quaternion) {
+    *self = *self * rhs;
+  }
+}
+
+impl MulAssign<Quaternion> for Quaternion {
+  #[inline(always)]
+  fn mul_assign(&mut self, rhs: Quaternion) {
+    *self = *self * rhs;
   }
 }
 
@@ -840,6 +940,8 @@ impl Dot<Quaternion> for Vec4 {
     self.dot(other.as_vec4())
   }
 }
+
+// Formatting
 
 impl fmt::Display for Quaternion {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

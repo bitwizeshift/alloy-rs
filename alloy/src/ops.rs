@@ -184,3 +184,54 @@ pub trait Midpoint {
   /// * `other` - the other value
   fn midpoint(&self, other: &Self) -> Self::Output;
 }
+
+/// Trait for interpolating between two different states.
+///
+/// See [Linear Interpolation] for more information.
+///
+/// [Linear Interpolation]: https://en.wikipedia.org/wiki/Linear_interpolation
+pub trait Lerp<Rhs: ?Sized = Self> {
+  /// The output of this operation.
+  type Output;
+
+  /// Interpolates between two different states
+  ///
+  /// # Arguments
+  ///
+  /// * `a` - The first value.
+  /// * `b` - The second value.
+  /// * `alpha` - The interpolation factor.
+  fn lerp(&self, b: &Rhs, alpha: f32) -> Self::Output;
+}
+
+macro_rules! impl_lerp {
+  ($($t:ty),*) => {
+    $(
+      impl Lerp for $t {
+        type Output = $t;
+
+        fn lerp(&self, b: &Self, alpha: f32) -> Self {
+          ((*self as f32) + ((*b as f32) - (*self as f32)) * alpha) as $t
+        }
+      }
+    )*
+  };
+}
+
+impl_lerp!(u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize);
+
+impl Lerp for f32 {
+  type Output = f32;
+
+  fn lerp(&self, b: &Self, alpha: f32) -> Self {
+    self + (b - self) * alpha
+  }
+}
+
+impl Lerp for f64 {
+  type Output = f64;
+
+  fn lerp(&self, b: &Self, alpha: f32) -> Self {
+    self + (b - self) * f64::from(alpha)
+  }
+}
