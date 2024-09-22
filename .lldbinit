@@ -1,0 +1,5 @@
+command script import data/lldb/vec4.py
+command script import data/lldb/vec3.py
+command script import data/lldb/vec2.py
+
+command script import data/lldb/mat4.py
