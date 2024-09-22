@@ -5,3 +5,4 @@ mod color;
 #[doc(inline)]
 pub use color::*;
 pub mod obj;
+pub mod transform;
