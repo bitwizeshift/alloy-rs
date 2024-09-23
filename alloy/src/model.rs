@@ -4,5 +4,7 @@ mod color;
 
 #[doc(inline)]
 pub use color::*;
+pub mod clip;
 pub mod obj;
+pub mod projection;
 pub mod transform;
