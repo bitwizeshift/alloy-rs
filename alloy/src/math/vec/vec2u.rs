@@ -418,6 +418,9 @@ where
   #[must_use]
   #[inline(always)]
   fn index(&self, index: I) -> &Self::Output {
+    // SAFETY: All Vec4 objects are guaranteed to have 2 components
+    unsafe { crate::core::hint::fixed_size(&self.0, 2) };
+
     self.0.index(index)
   }
 }
@@ -429,6 +432,9 @@ where
   #[must_use]
   #[inline(always)]
   fn index_mut(&mut self, index: I) -> &mut Self::Output {
+    // SAFETY: All Vec4 objects are guaranteed to have 2 components
+    unsafe { crate::core::hint::fixed_size(&self.0, 2) };
+
     self.0.index_mut(index)
   }
 }

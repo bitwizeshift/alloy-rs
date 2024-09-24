@@ -282,42 +282,65 @@ impl Mat4 {
   }
 
   /// Returns this [`Mat4`] as a slice of 4-component arrays of [`f32`].
+  #[must_use]
+  #[inline(always)]
   pub const fn as_array_slice(&self) -> &[[f32; 4]] {
-    // SAFETY: The length of the slice is guaranteed to be 16.
-    unsafe {
-      std::mem::transmute(std::slice::from_raw_parts(
-        self.0.as_ptr().cast::<[f32; 4]>(),
-        4,
-      ))
-    }
+    self.as_array_ref().as_slice()
   }
 
   /// Returns this [`Mat4`] as a mutable slice of 4-component arrays of [`f32`].
+  #[must_use]
+  #[inline(always)]
   pub fn as_mut_array_slice(&mut self) -> &mut [[f32; 4]] {
-    // SAFETY: The length of the slice is guaranteed to be 16.
-    unsafe {
-      std::mem::transmute(std::slice::from_raw_parts_mut(
-        self.0.as_mut_ptr().cast::<[f32; 4]>(),
-        4,
-      ))
-    }
+    self.as_mut_array_ref().as_mut_slice()
   }
 
   /// Returns this [`Mat4`] as a reference to a 4x4 array of [`f32`].
+  #[must_use]
+  #[inline(always)]
   pub const fn as_array_ref(&self) -> &[[f32; 4]; 4] {
     // SAFETY: The length of the slice is guaranteed to be 16.
-    unsafe { std::mem::transmute(&*self.0.as_ptr()) }
+    unsafe { crate::core::hint::fixed_size(&self.0, 16) };
+
+    // Note: This was previously defined in terms of [`transmute`], but miri
+    // had issues with it. This does not flag miri and is equivalent.
+    let ptr = self.0.as_ptr() as *const [[f32; 4]; 4];
+
+    // SAFETY: The length of the slice is guaranteed to be 16.
+    unsafe { &*ptr }
   }
 
   /// Returns this [`Mat4`] as a mutable reference to a 4x4 array of [`f32`].
+  #[must_use]
+  #[inline(always)]
   pub fn as_mut_array_ref(&mut self) -> &mut [[f32; 4]; 4] {
     // SAFETY: The length of the slice is guaranteed to be 16.
-    unsafe { std::mem::transmute(&mut *self.0.as_mut_ptr()) }
+    unsafe { crate::core::hint::fixed_size(&self.0, 16) };
+
+    // Note: This was previously defined in terms of [`transmute`], but miri
+    // had issues with it. This does not flag miri and is equivalent.
+    let ptr = self.0.as_mut_ptr() as *mut [[f32; 4]; 4];
+
+    // SAFETY: The length of the slice is guaranteed to be 16.
+    unsafe { &mut *ptr }
   }
 
   /// Returns this [`Mat4`] as a [`Matrix4`].
+  ///
+  /// This function is `const`, unlike the equivalent [`From`] or [`ToOwned`]
+  /// implementations.
   pub const fn to_matrix4(&self) -> Matrix4 {
     Matrix4::from_mat4(self)
+  }
+}
+
+impl ToOwned for Mat4 {
+  type Owned = Matrix4;
+
+  #[must_use]
+  #[inline]
+  fn to_owned(&self) -> Self::Owned {
+    self.to_matrix4()
   }
 }
 
@@ -334,12 +357,8 @@ impl Mat4 {
   #[must_use]
   #[inline(always)]
   pub const fn row(&self, index: usize) -> &Vec4 {
-    if hint::unlikely(index >= 4) {
-      panic!("index out of bounds")
-    } else {
-      // SAFETY: The above check ensures that the index is in bounds.
-      unsafe { self.row_unchecked(index) }
-    }
+    // SAFETY: the length of the slice is always 4, or it panics.
+    unsafe { Vec4::from_slice_unchecked(&self.as_array_ref()[index]) }
   }
 
   /// Returns the row at the given index without performing bounds checking.
@@ -356,7 +375,7 @@ impl Mat4 {
   #[inline(always)]
   pub const unsafe fn row_unchecked(&self, index: usize) -> &Vec4 {
     // SAFETY: The caller must guarantee that the index is in bounds.
-    unsafe { Vec4::from_slice_unchecked(&self.as_array_ref()[index]) }
+    unsafe { Vec4::from_slice_unchecked(&*self.as_array_ref().as_ptr().add(index)) }
   }
 
   /// Returns a mutable reference to the row at the given index.
@@ -369,12 +388,8 @@ impl Mat4 {
   #[must_use]
   #[inline(always)]
   pub fn mut_row(&mut self, index: usize) -> &mut Vec4 {
-    if hint::unlikely(index >= 4) {
-      panic!("index out of bounds")
-    } else {
-      // SAFETY: The above check ensures that the index is in bounds.
-      unsafe { self.mut_row_unchecked(index) }
-    }
+    // SAFETY: the length of the slice is always 4, or it panics.
+    unsafe { Vec4::from_mut_slice_unchecked(&mut self.as_mut_array_ref()[index]) }
   }
 
   /// Returns a mutable reference to the row at the given index without
@@ -392,7 +407,7 @@ impl Mat4 {
   #[must_use]
   #[inline(always)]
   pub unsafe fn mut_row_unchecked(&mut self, index: usize) -> &mut Vec4 {
-    Vec4::from_mut_slice_unchecked(&mut self.as_mut_array_slice()[index])
+    Vec4::from_mut_slice_unchecked(&mut *self.as_mut_array_ref().as_mut_ptr().add(index))
   }
 
   /// Returns the column at the given index.
@@ -477,12 +492,7 @@ impl Mat4 {
   /// * `col` - The index of the column to return.
   #[must_use]
   pub const fn get(&self, row: usize, col: usize) -> f32 {
-    if hint::unlikely(row >= 4 || col >= 4) {
-      panic!("index out of bounds")
-    } else {
-      // SAFETY: bounds are checked above
-      unsafe { self.get_unchecked(row, col) }
-    }
+    self.as_array_ref()[row][col]
   }
 
   /// Returns the value at the given column and row without performing bounds
@@ -500,7 +510,11 @@ impl Mat4 {
   #[must_use]
   #[inline(always)]
   pub const unsafe fn get_unchecked(&self, row: usize, col: usize) -> f32 {
-    self.as_array_ref()[row][col]
+    // This awful word-salad of code helps to enable unchecked indexing
+    // for faster access-times without introducing branches.
+    let row = &*self.as_array_ref().as_ptr().add(row);
+
+    row.as_ptr().add(col).read()
   }
 
   /// Returns a mutable reference to the value at the given column and row.
@@ -513,12 +527,7 @@ impl Mat4 {
   /// * `col` - The index of the column to return.
   #[must_use]
   pub fn get_mut(&mut self, row: usize, col: usize) -> &mut f32 {
-    if hint::unlikely(row >= 4 || col >= 4) {
-      panic!("index out of bounds")
-    } else {
-      // SAFETY: bounds are checked above
-      unsafe { self.get_mut_unchecked(row, col) }
-    }
+    &mut self.as_mut_array_ref()[row][col]
   }
 
   /// Returns a mutable reference to the value at the given column and row
@@ -536,7 +545,37 @@ impl Mat4 {
   #[must_use]
   #[inline(always)]
   pub unsafe fn get_mut_unchecked(&mut self, row: usize, col: usize) -> &mut f32 {
-    &mut self.as_mut_array_slice()[row][col]
+    let row = &mut *self.as_mut_array_ref().as_mut_ptr().add(row);
+
+    &mut *row.as_mut_ptr().add(col)
+  }
+}
+
+impl Index<(usize, usize)> for Mat4 {
+  type Output = f32;
+
+  fn index(&self, (row, col): (usize, usize)) -> &f32 {
+    &self.0[row * 4 + col]
+  }
+}
+
+impl IndexMut<(usize, usize)> for Mat4 {
+  fn index_mut(&mut self, (row, col): (usize, usize)) -> &mut f32 {
+    &mut self.0[row * 4 + col]
+  }
+}
+
+impl Index<usize> for Mat4 {
+  type Output = Vec4;
+
+  fn index(&self, index: usize) -> &Vec4 {
+    self.row(index)
+  }
+}
+
+impl IndexMut<usize> for Mat4 {
+  fn index_mut(&mut self, index: usize) -> &mut Vec4 {
+    self.mut_row(index)
   }
 }
 
@@ -769,16 +808,43 @@ impl Mat4 {
 
   /// Returns the [`transpose`] of the matrix.
   ///
-  /// [`transpose`]: Matrix4::transpose
-  pub fn transposed(&self) -> Matrix4 {
-    let mut result = self.to_owned();
-    result.transpose();
-    result
+  /// [`transpose`]: Mat4::transpose
+  pub const fn transposed(&self) -> Matrix4 {
+    const fn at(arr: &Mat4, r: usize, c: usize) -> f32 {
+      unsafe { arr.get_unchecked(c, r) }
+    }
+
+    Matrix4::from_arrays([
+      [
+        at(self, 0, 0),
+        at(self, 1, 0),
+        at(self, 2, 0),
+        at(self, 3, 0),
+      ],
+      [
+        at(self, 0, 1),
+        at(self, 1, 1),
+        at(self, 2, 1),
+        at(self, 3, 1),
+      ],
+      [
+        at(self, 0, 2),
+        at(self, 1, 2),
+        at(self, 2, 2),
+        at(self, 3, 2),
+      ],
+      [
+        at(self, 0, 3),
+        at(self, 1, 3),
+        at(self, 2, 3),
+        at(self, 3, 3),
+      ],
+    ])
   }
 
   /// Returns the inverse of the matrix.
   pub fn inverted(&self) -> Matrix4 {
-    let mut result = self.to_owned();
+    let mut result = self.to_matrix4();
     result.invert();
     result
   }
@@ -1081,50 +1147,6 @@ impl DivAssign<f32> for Mat4 {
   fn div_assign(&mut self, rhs: f32) {
     let inverse = 1.0 / rhs;
     self.mul_assign(inverse);
-  }
-}
-
-impl Index<(usize, usize)> for Mat4 {
-  type Output = f32;
-
-  fn index(&self, (row, col): (usize, usize)) -> &f32 {
-    &self.0[row * 4 + col]
-  }
-}
-
-impl IndexMut<(usize, usize)> for Mat4 {
-  fn index_mut(&mut self, (row, col): (usize, usize)) -> &mut f32 {
-    &mut self.0[row * 4 + col]
-  }
-}
-
-impl Index<usize> for Mat4 {
-  type Output = Vec4;
-
-  fn index(&self, index: usize) -> &Vec4 {
-    self.row(index)
-  }
-}
-
-impl IndexMut<usize> for Mat4 {
-  fn index_mut(&mut self, index: usize) -> &mut Vec4 {
-    self.mut_row(index)
-  }
-}
-
-impl ToOwned for Mat4 {
-  type Owned = Matrix4;
-
-  fn to_owned(&self) -> Self::Owned {
-    let mut result = Matrix4::ZERO;
-
-    for i in 0..4 {
-      for j in 0..4 {
-        result[i][j] = self[i][j];
-      }
-    }
-
-    result
   }
 }
 
