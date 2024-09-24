@@ -2,6 +2,7 @@
 
 mod align;
 mod aligned_array;
+mod ieee754;
 mod slice;
 
 pub mod hash;
@@ -9,6 +10,9 @@ pub mod hint;
 
 #[doc(inline)]
 pub use align::*;
+
+#[doc(inline)]
+pub use ieee754::*;
 
 #[doc(inline)]
 pub use aligned_array::*;
