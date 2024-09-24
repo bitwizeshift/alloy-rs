@@ -759,7 +759,6 @@ impl Mul for &Quaternion {
   type Output = Quaternion;
 
   #[must_use]
-  #[inline(always)]
   fn mul(self, rhs: &Quaternion) -> Quaternion {
     let w0 = self.w();
     let i0 = self.i();
