@@ -34,7 +34,7 @@ impl<'a, T> Iterator for Iter<'a, T> {
 impl<'a, T> Iter<'a, T> {
   /// Constructs this [`PtrIter`] from a pointer and length.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to the start of the contiguous data
   /// * `len` - the length of the contiguous sequence
@@ -50,7 +50,7 @@ impl<'a, T> Iter<'a, T> {
 
   /// Constructs this [`PtrIter`] from a range of pointer entries.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `range` - the range of pointer entries
   ///
@@ -65,7 +65,7 @@ impl<'a, T> Iter<'a, T> {
 
   /// Constructs this [`PtrIter`] from a slice of objects.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice to construct from
   #[inline(always)]
@@ -102,7 +102,7 @@ impl<'a, T> Iterator for IterMut<'a, T> {
 impl<'a, T> IterMut<'a, T> {
   /// Constructs this [`PtrIter`] from a pointer and length.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to the start of the contiguous data
   /// * `len` - the length of the contiguous sequence
@@ -118,7 +118,7 @@ impl<'a, T> IterMut<'a, T> {
 
   /// Constructs this [`PtrIter`] from a range of pointer entries.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `range` - the range of pointer entries
   ///
@@ -133,7 +133,7 @@ impl<'a, T> IterMut<'a, T> {
 
   /// Constructs this [`PtrIter`] from a slice of objects.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice to construct from
   #[inline(always)]

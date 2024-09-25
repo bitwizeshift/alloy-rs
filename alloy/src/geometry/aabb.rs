@@ -177,7 +177,7 @@ impl AABB {
 
   /// Check if the bounding box intersects with another bounding box
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - The other bounding box to check against
   pub fn intersects(&self, other: &Self) -> bool {
@@ -191,7 +191,7 @@ impl AABB {
 
   /// Check if the bounding box encloses another bounding box
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - The other bounding box to check against
   pub fn encloses(&self, other: &Self) -> bool {
@@ -208,7 +208,7 @@ impl AABB {
 impl AABB {
   /// Get the nearest point on the bounding box to a point
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `point` - The point to find the nearest point to
   pub fn nearest_point(&self, point: &Point3) -> Point3 {
@@ -221,7 +221,7 @@ impl AABB {
 
   /// Get the distance to the nearest point on the bounding box to a point
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `point` - The point to find the nearest point to
   pub fn distance_to(&self, point: &Point3) -> f32 {
@@ -231,7 +231,7 @@ impl AABB {
   /// Get the square distance to the nearest point on the bounding box to a
   /// point
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `point` - The point to find the nearest point to
   pub fn square_distance_to(&self, point: &Point3) -> f32 {

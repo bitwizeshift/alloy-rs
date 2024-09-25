@@ -27,7 +27,7 @@ impl std::fmt::Display for CullFace {
 impl CullFace {
   /// Returns the face from the given enumeration
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `e` - The enumeration to get the face from
   pub const fn from_enum(e: crate::c::GLenum) -> Option<Self> {
@@ -41,7 +41,7 @@ impl CullFace {
 
   /// Returns the face from the given enumeration without checking
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `e` - The enumeration to get the face from
   ///
@@ -84,7 +84,7 @@ pub fn toggle_cull_face() {
 
 /// Specifies which face to cull (front, back, or both)
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `face` - The face to cull
 #[inline]
@@ -97,7 +97,7 @@ pub fn set_cull_face(face: CullFace) {
 /// This is a convenience-wrapper around [`set_cull_face`] and
 /// [`crate::gl::error::check`].
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `face` - The face to cull
 #[inline]

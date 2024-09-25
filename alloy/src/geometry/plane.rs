@@ -22,7 +22,7 @@ pub struct Plane {
 impl Plane {
   /// Creates a new plane with the given coefficients.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `a` - The first component of the plane
   /// * `b` - The second component of the plane
@@ -37,7 +37,7 @@ impl Plane {
 
   /// Create a new plane from a normal and distance
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `normal` - The normal of the plane
   /// * `distance` - The distance of the plane
@@ -50,7 +50,7 @@ impl Plane {
 
   /// Create a new plane from a point and normal
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `point` - The point on the plane
   /// * `normal` - The normal of the plane
@@ -63,7 +63,7 @@ impl Plane {
 
   /// Create a new plane from three points in counter-clockwise order.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `p0` - The first point
   /// * `p1` - The second point
@@ -77,7 +77,7 @@ impl Plane {
   /// Create a new plane from three points in counter-clockwise order.
   /// This is the same as `from_points_clockwise` but with the points in a different order.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `p0` - The first point
   /// * `p1` - The second point
@@ -231,7 +231,7 @@ impl Plane {
 
   /// Sets the 'a' component of the plane
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `a` - The new value of the 'a' component
   #[inline(always)]
@@ -241,7 +241,7 @@ impl Plane {
 
   /// Sets the 'b' component of the plane
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `b` - The new value of the 'b' component
   #[inline(always)]
@@ -251,7 +251,7 @@ impl Plane {
 
   /// Sets the 'c' component of the plane
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `c` - The new value of the 'c' component
   #[inline(always)]
@@ -261,7 +261,7 @@ impl Plane {
 
   /// Sets the 'd' component of the plane
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `d` - The new value of the 'd' component
   #[inline(always)]
@@ -271,7 +271,7 @@ impl Plane {
 
   /// Gets the 'a' and 'b' components of the plane
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ab` - The new value of the 'a' and 'b' components
   #[inline(always)]
@@ -281,7 +281,7 @@ impl Plane {
 
   /// Gets the 'b' and 'c' components of the plane
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `bc` - The new value of the 'b' and 'c' components
   #[inline(always)]
@@ -291,7 +291,7 @@ impl Plane {
 
   /// Gets the 'c' and 'd' components of the plane
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `cd` - The new value of the 'c' and 'd' components
   #[inline(always)]
@@ -301,7 +301,7 @@ impl Plane {
 
   /// Gets the 'a', 'b', and 'c' components of the plane
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `abc` - The new value of the 'a', 'b', and 'c' components
   #[inline(always)]
@@ -311,7 +311,7 @@ impl Plane {
 
   /// Gets the 'b', 'c', and 'd' components of the plane
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `bcd` - The new value of the 'b', 'c', and 'd' components
   #[inline(always)]
@@ -321,7 +321,7 @@ impl Plane {
 
   /// Gets the 'a', 'b', 'c', and 'd' components of the plane
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `abcd` - The new value of the 'a', 'b', 'c', and 'd' components
   #[inline(always)]
@@ -376,7 +376,7 @@ impl DerefMut for Plane {
 impl Plane {
   /// Gets the distance to the point from this plane
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `point` - The point to get the distance to
   pub fn distance_to_point(&self, point: &Point3) -> f32 {
@@ -388,7 +388,7 @@ impl Plane {
 
   /// Checks if the plane contains the point within the default epsilon.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `point` - The point to check
   pub fn contains(&self, point: &Point3) -> bool {
@@ -397,7 +397,7 @@ impl Plane {
 
   /// Checks if the point exists over the plane
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `point` - The point to check
   pub fn is_point_over_plane(&self, point: &Point3) -> bool {
@@ -406,7 +406,7 @@ impl Plane {
 
   /// Checks if the point exists under the plane
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `point` - The point to check
   pub fn is_point_under_plane(&self, point: &Point3) -> bool {
@@ -415,7 +415,7 @@ impl Plane {
 
   /// Gets the nearest point on the plane to the given point
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `point` - The point to get the nearest point to
   pub fn nearest_point(&self, point: &Point3) -> Point3 {

@@ -26,7 +26,7 @@ impl Point3 {
 
   /// Create a new point from a vector
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `v` - The vector to create the point from
   #[inline(always)]
@@ -58,7 +58,7 @@ impl From<Vector3> for Point3 {
 impl Vector3 {
   /// Create a new vector from two points
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `from` - The point to begin drawing the vector from
   /// * `to` - The point to end drawing the vector at`
@@ -92,7 +92,7 @@ impl Point3 {
 
   /// Get the minimum values between two points
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - The other point to compare against
   #[inline]
@@ -102,7 +102,7 @@ impl Point3 {
 
   /// Get the maximum values between two points
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - The other point to compare against
   #[inline]

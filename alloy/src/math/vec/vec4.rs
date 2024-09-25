@@ -44,7 +44,7 @@ impl Vec4 {
   ///
   /// [`from_slice_unchecked`]: Self::from_slice_unchecked
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `array` - an array containing 4 [`f32`] values.
   ///
@@ -78,7 +78,7 @@ impl Vec4 {
   ///
   /// [`from_mut_slice_unchecked`]: Self::from_mut_slice_unchecked
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `array` - an array containing 4 [`f32`] values.
   ///
@@ -105,7 +105,7 @@ impl Vec4 {
   ///
   /// This requires that `slice.len() == 4`, otherwise this returns [`None`].
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice of [`f32`]s.
   ///
@@ -152,7 +152,7 @@ impl Vec4 {
   ///
   /// This requires that `slice.len() == 4`, otherwise this returns [`None`].
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the mutable slice of [`f32`]s.
   ///
@@ -194,7 +194,7 @@ impl Vec4 {
   /// Forms a reference to a [`Vec4`] from a slice of [`f32`] that is assumed to
   /// contain two values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice of [`f32`]s.
   ///
@@ -211,7 +211,7 @@ impl Vec4 {
   /// Forms a mutable reference to a [`Vec4`] from a slice of [`f32`] that is
   /// assumed to contain two values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the mutable slice of [`f32`]s.
   ///
@@ -228,7 +228,7 @@ impl Vec4 {
   /// Forms a reference to a [`Vec2`] from a pointer to a contiguous sequence
   /// of at least two [`f32`]s.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to a sequence of [`f32`] values
   ///
@@ -249,7 +249,7 @@ impl Vec4 {
   /// Forms a mutable reference to a [`Vec3`] from a pointer to a contiguous
   /// sequence of at least two [`f32`]s.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to a sequence of [`f32`] values
   ///
@@ -564,7 +564,7 @@ impl Vec4 {
 
   /// Computes the minimum of each vector.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `lhs` - the left vector
   /// * `rhs` - the right vector
@@ -579,7 +579,7 @@ impl Vec4 {
 
   /// Computes the maximum of each vector.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `lhs` - the left vector
   /// * `rhs` - the right vector
@@ -630,7 +630,7 @@ impl AlmostEq for Vec4 {
 impl Vec4 {
   /// Sets the x-component
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `x` - the X-component
   #[inline(always)]
@@ -640,7 +640,7 @@ impl Vec4 {
 
   /// Sets the y-component
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `y` - the Y-component
   #[inline(always)]
@@ -650,7 +650,7 @@ impl Vec4 {
 
   /// Sets the z-component
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `z` - theZ-component
   #[inline(always)]
@@ -660,7 +660,7 @@ impl Vec4 {
 
   /// Sets the w-component
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `w` - the W-component
   #[inline(always)]
@@ -670,7 +670,7 @@ impl Vec4 {
 
   /// Sets the X and Y components of this vector
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `xy` - the X and Y components of the [`Vec4`]
   #[inline(always)]
@@ -680,7 +680,7 @@ impl Vec4 {
 
   /// Sets the Y and Z components of this vector
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `yz` - the Y and Z components of the [`Vec4`]
   #[inline(always)]
@@ -690,7 +690,7 @@ impl Vec4 {
 
   /// Sets the Z and W components of this vector
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `zw` - the Z and W components of the [`Vec4`]
   #[inline(always)]
@@ -700,7 +700,7 @@ impl Vec4 {
 
   /// Sets the X, Y, and Z components of this vector
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `xyz` - the X, Y, and Z components of the [`Vec4`]`
   #[inline(always)]
@@ -710,7 +710,7 @@ impl Vec4 {
 
   /// Sets the Y, Z and W components of this vector
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `yzw` - the Y, Z, and W components of the [`Vec4`]
   #[inline(always)]
@@ -720,7 +720,7 @@ impl Vec4 {
 
   /// Sets all the components of this vector the values from other.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the other [`Vec3`] to set.
   pub fn set(&mut self, other: &Vec4) {
@@ -1105,7 +1105,7 @@ impl Vector4 {
 
   /// Constructs this vector from an x, y, z, and w coordinate.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `x` - the x-component
   /// * `y` - the y-component
@@ -1119,7 +1119,7 @@ impl Vector4 {
 
   /// Constructs this vector with a uniform value `v`.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `v` - the value to uniformly apply
   #[must_use]
@@ -1130,7 +1130,7 @@ impl Vector4 {
 
   /// Constructs this vector from a 4-component [`f32`] array.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `array` - an array containing 4 [`f32`] values.
   #[must_use]
@@ -1143,7 +1143,7 @@ impl Vector4 {
   ///
   /// This will return [`None`] if `slice.len()` is not equal to 2.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice to read from
   #[must_use]
@@ -1162,7 +1162,7 @@ impl Vector4 {
 
   /// Constructs this vector from a slice of floats.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice to read from
   ///
@@ -1179,7 +1179,7 @@ impl Vector4 {
 
   /// Constructs this vector from a [`Vec4`]
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the other vector
   #[must_use]
@@ -1194,7 +1194,7 @@ impl Vector4 {
 
   /// Constructs this vector from a [`Vec4i`]
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the other vector
   #[must_use]
@@ -1209,7 +1209,7 @@ impl Vector4 {
 
   /// Constructs this vector from a [`Vec4u`]
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the other vector
   #[must_use]
@@ -1224,7 +1224,7 @@ impl Vector4 {
 
   /// Constructs this vector from a pointer to floating point values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to the start of a contiguous sequence of floats
   ///

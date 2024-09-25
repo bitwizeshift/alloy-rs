@@ -344,7 +344,7 @@ impl<MD> Logger<MD> {
   /// Messages that get logged to the [`Logger`] will delegate logging down to
   /// the specified [`Sink`] object(s).
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `sink` - the [`Sink`] to write to.
   pub fn sink<S: Sink<MD> + 'static>(&mut self, sink: S) {
@@ -354,7 +354,7 @@ impl<MD> Logger<MD> {
   /// Adds a [`Sink`] to this [`Logger`] that will only be written to if the
   /// `filter` allows it.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `sink` - the [`Sink`] to write to.
   /// * `filter` - the [`SeverityFilter`] to enable writing.
@@ -366,7 +366,7 @@ impl<MD> Logger<MD> {
 impl<MD> Logger<MD> {
   /// Logs a message of formatted `args` at the given `severity`.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `severity` - the log severity level
   /// * `args` - the formatting arguments
@@ -407,7 +407,7 @@ impl<MD> Logger<MD> {
   /// logger.debug(std::format_args!("hello {}", "world"), &log::metadata!())
   /// ```
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `args` - the formatting arguments
   /// * `meta` - additional meta data to optionally provide to the logger.
@@ -443,7 +443,7 @@ impl<MD> Logger<MD> {
   /// logger.info(std::format_args!("hello {}", "world"), &log::metadata!())
   /// ```
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `args` - the formatting arguments
   /// * `meta` - additional meta data to optionally provide to the logger.
@@ -479,7 +479,7 @@ impl<MD> Logger<MD> {
   /// logger.warning(std::format_args!("hello {}", "world"), &log::metadata!())
   /// ```
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `args` - the formatting arguments
   /// * `meta` - additional meta data to optionally provide to the logger.
@@ -515,7 +515,7 @@ impl<MD> Logger<MD> {
   /// logger.error(std::format_args!("hello {}", "world"), &log::metadata!())
   /// ```
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `args` - the formatting arguments
   /// * `meta` - additional meta data to optionally provide to the logger.
@@ -551,7 +551,7 @@ impl<MD> Logger<MD> {
   /// logger.critical(std::format_args!("hello {}", "world"), &log::metadata!())
   /// ```
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `args` - the formatting arguments
   /// * `meta` - additional meta data to optionally provide to the logger.
@@ -565,7 +565,7 @@ impl<MD> Logger<MD> {
 pub trait Sink<MD = NoMeta> {
   /// Sinks a log message
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `saverity` - the log severity
   /// * `args` - the formatted arguments

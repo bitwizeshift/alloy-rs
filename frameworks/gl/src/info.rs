@@ -780,7 +780,7 @@ pub fn num_extensions() -> usize {
 
 /// Returns the name of the extension at the given index.
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `i` - the index of the extension to get
 pub fn extension(i: usize) -> Option<&'static str> {

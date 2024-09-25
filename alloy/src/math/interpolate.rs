@@ -5,7 +5,7 @@ use std::ops::{Add, Mul};
 
 /// Linearly interpolates between two values.
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `start` - The starting state.
 /// * `end` - The ending state.
@@ -19,7 +19,7 @@ where
 
 /// Quadratically interpolates between three values.
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `start` - The starting state.
 /// * `intermediate` - The intermediate value.
@@ -39,7 +39,7 @@ where
 
 /// Interpolates between two values using a circular interpolation.
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `start` - The starting state.
 /// * `end` - The ending state.
@@ -53,7 +53,7 @@ where
 
 /// Interpolates between four values using a bilinear interpolation.
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `v00` - The value at the top-left corner.
 /// * `v10` - The value at the top-right corner.
@@ -72,7 +72,7 @@ where
 
 /// Interpolates between two values using a sine interpolation.
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `start` - The starting state.
 /// * `end` - The ending state.
@@ -87,7 +87,7 @@ where
 
 /// Interpolates between two values using a cosine interpolation.
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `start` - The starting state.
 /// * `end` - The ending state.
@@ -102,7 +102,7 @@ where
 
 /// Interpolates between two values using a smoothstep interpolation.
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `start` - The starting state.
 /// * `end` - The ending state.

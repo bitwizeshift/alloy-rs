@@ -173,7 +173,7 @@ where
 {
   /// Create a new aligned array with the given elements.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `elements` - the elements to store in the array
   pub const fn new(elements: [T; N]) -> Self {

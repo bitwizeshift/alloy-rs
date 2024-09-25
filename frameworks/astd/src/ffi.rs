@@ -46,7 +46,7 @@ pub mod cstr {
   /// Constructs a [`CStr`] reference from a [`c_char`] slice which contains a
   /// nul-terminator.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - a slice of [`c_char`] that ends with a nul-terminator.
   ///
@@ -70,7 +70,7 @@ pub mod cstring {
 
   /// Constructs a [`CString`] from a non null-terminated [`str`] reference.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `string` - a standar rust string.
   ///

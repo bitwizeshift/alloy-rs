@@ -42,7 +42,7 @@ pub mod u16 {
 /// This is an implementation-detail of [`c_str!`], which simply delegates the
 /// call to [`_null_terminated_length_b`].
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `s` - the string slice
 #[doc(hidden)]

@@ -10,7 +10,7 @@ pub struct Float32x4(float32x4_t);
 impl Float32x4 {
   /// Create a new vector with the given components.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `v0` - the first component of the vector
   /// * `v1` - the second component of the vector
@@ -24,7 +24,7 @@ impl Float32x4 {
 
   /// Create a new vector with the given value in all components.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `value` - the value to set all components to
   #[inline(always)]
@@ -39,7 +39,7 @@ impl Float32x4 {
   /// The pointer must be aligned to 16 bytes, and the pointer must be able to
   /// reach at least 4 [f32] values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to the slice of [f32] values
   #[inline(always)]
@@ -53,7 +53,7 @@ impl Float32x4 {
   ///
   /// The pointer must be able to reach at least 4 [f32] values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to the slice of [f32] values
   #[inline(always)]
@@ -63,7 +63,7 @@ impl Float32x4 {
 
   /// Store the vector into an aligned [f32] pointer.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to the [f32] values to store the vector into
   ///
@@ -78,7 +78,7 @@ impl Float32x4 {
 
   /// Calculates the minimum of two vectors component-wise.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the vector to compare
   #[inline(always)]
@@ -88,7 +88,7 @@ impl Float32x4 {
 
   /// Calculates the maximum of two vectors component-wise.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the vector to compare
   #[inline(always)]
@@ -98,7 +98,7 @@ impl Float32x4 {
 
   /// Calculates the square root of the vector component-wise.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the vector to compare
   #[inline(always)]

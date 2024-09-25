@@ -27,7 +27,7 @@ impl Projection {
 
   /// Computes an orthographic projection from the specified clip-space information.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `space` - The clip-space information.
   pub fn orthographic(space: ClipSpace) -> Self {
@@ -62,7 +62,7 @@ impl Projection {
 
   /// Computes a perspective projection from the specified angle, aspect ratio, and depth.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - The field of view angle.
   /// * `aspect_ratio` - The aspect ratio.

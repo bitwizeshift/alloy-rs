@@ -72,7 +72,7 @@ pub trait TryDot<Rhs: ?Sized = Self> {
   /// Attempts to perform a [dot-product] between two possibly different-sized
   /// sequences of values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `rhs` - the other sequence of values to perform the product with
   fn try_dot(&self, rhs: &Rhs) -> Result<Self::Output, Self::Error>;
@@ -80,7 +80,7 @@ pub trait TryDot<Rhs: ?Sized = Self> {
   /// Performs an unguarded [dot-product] between two possibly different-sized
   /// sequences of values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `rhs` - the other sequence of values to perform the product with
   ///
@@ -166,7 +166,7 @@ pub trait Cross<Rhs: ?Sized = Self> {
 
   /// Computes the cross-product of two values, and returns the result.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the other value to compute the cross-product with
   fn cross(&self, other: &Rhs) -> Self::Output;
@@ -179,7 +179,7 @@ pub trait Midpoint {
 
   /// Computes the midpoint of this type, returning the result
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the other value
   fn midpoint(&self, other: &Self) -> Self::Output;
@@ -196,7 +196,7 @@ pub trait Lerp<Rhs: ?Sized = Self> {
 
   /// Interpolates between two different states
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `a` - The first value.
   /// * `b` - The second value.

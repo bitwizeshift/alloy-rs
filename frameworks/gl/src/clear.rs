@@ -4,7 +4,7 @@ use crate::c::GLenum;
 ///
 /// **NOTE:** Calls the [`glClearColor`]` function.
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `red`   - the red color (clamped between 0.0 and 1.0)
 /// * `green` - the green color (clamped between 0.0 and 1.0)
@@ -20,7 +20,7 @@ pub fn clear_color(red: f32, green: f32, blue: f32, alpha: f32) {
 ///
 /// **Note:** Calls the [`glClearDepth`] function
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `depth` - the depth value (clamped between 0.0 and 1.0)
 ///
@@ -33,7 +33,7 @@ pub fn clear_depth(depth: f64) {
 ///
 /// **Note:** Calls the [`glClearStencil`] function
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `s` - the stencil value
 ///
@@ -59,7 +59,7 @@ impl ClearBits {
 
   /// Constructs a new `ClearBits` from the given bits.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `bits` - the bits to construct the `ClearBits` from
   #[inline]
@@ -75,7 +75,7 @@ impl ClearBits {
 
   /// Returns whether the `ClearBits` contains the given bits.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the bits to check for
   #[inline]
@@ -155,7 +155,7 @@ impl ClearBits {
 ///
 /// **Note:** Calls the [`glClear`] function
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `bits` - the buffers to clear
 ///

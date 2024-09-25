@@ -48,7 +48,7 @@ impl Model {
 
   /// Load a model from a stored .obj file.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `file_path` - The path to the .obj file to load.
   pub fn from_file(file_path: &str) -> Result<Self> {

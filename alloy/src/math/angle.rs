@@ -25,7 +25,7 @@ pub trait ToUnit: sealed::Sealed {
 pub trait FromUnit: sealed::Sealed {
   /// Converts the [`Unit`] angle into the new [`Angle`] type
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the [`Unit`] angle to convert
   fn from_unit(angle: Unit) -> Self;
@@ -50,21 +50,21 @@ pub trait Trig: sealed::Sealed {
 
   /// Computes the arc-sine of the input value, returning the [`Angle`]
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `value` - the value to compute the arc-sine of
   fn asin(value: f32) -> Self;
 
   /// Computes the arc-cosine of the input value, returning the [`Angle`]
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `value` - the value to compute the arc-cosine of
   fn acos(value: f32) -> Self;
 
   /// Computes the arc-tangent of the input value, returning the [`Angle`]
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `value` - the value to compute the arc-tangent of
   fn atan(value: f32) -> Self;
@@ -89,7 +89,7 @@ pub trait Angle: Copy + Trig + FromUnit + ToUnit {
   /// **Note:** This function will often be less-optimized than calling the
   /// specific `to_radians`, `to_degrees`, etc functions.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to construct from
   fn from_angle<A: Angle>(angle: A) -> Self {
@@ -169,7 +169,7 @@ impl Radian {
   /// This exists for symmetry with the other angle definitions. This is
   /// an identity function.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to construct from
   ///
@@ -189,7 +189,7 @@ impl Radian {
 
   /// Constructs a new [`Radian`] object from an existing `angle` in [`Degree`]s.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to construct from
   ///
@@ -209,7 +209,7 @@ impl Radian {
 
   /// Constructs a new [`Radian`] object from an existing `angle` in [`Gradian`]s.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to construct from
   ///
@@ -352,7 +352,7 @@ impl Degree {
 
   /// Constructs a new [`Degree`] object from an existing `angle`.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to construct from
   ///
@@ -375,7 +375,7 @@ impl Degree {
   /// This exists for symmetry with the other angle definitions. This is
   /// an identity function.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to construct from
   ///
@@ -394,7 +394,7 @@ impl Degree {
 
   /// Constructs a new [`Degree`] object from an existing `angle`.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to construct from
   ///
@@ -537,7 +537,7 @@ impl Gradian {
 
   /// Constructs a new [`Gradian`] object from an existing `angle`.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to construct from
   ///
@@ -557,7 +557,7 @@ impl Gradian {
 
   /// Constructs a new [`Gradian`] object from an existing `angle`.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to construct from
   ///
@@ -585,7 +585,7 @@ impl Gradian {
   /// This exists for symmetry with the other angle definitions. This is
   /// an identity function.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to construct from
   ///
@@ -710,7 +710,7 @@ impl Unit {
 
   /// Constructs a new [`Unit`] object from an existing `angle`.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to construct from
   ///
@@ -731,7 +731,7 @@ impl Unit {
 
   /// Constructs a new [`Unit`] object from an existing `angle`.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to construct from
   ///
@@ -752,7 +752,7 @@ impl Unit {
 
   /// Constructs a new [`Unit`] object from an existing `angle`.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to construct from
   ///
@@ -865,7 +865,7 @@ macro_rules! define_angle {
 
         /// Constructs a new instance of this angle type
         ///
-        /// # Arguments
+        /// # Parameters
         ///
         /// * `value` - the number of units
         pub const fn new(value: f32) -> Self {

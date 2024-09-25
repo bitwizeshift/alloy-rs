@@ -37,7 +37,7 @@ impl Error {
 
   /// Creates a new error from a GLEW error code.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `code` - The error code to create the error from
   pub fn from_gl_status(code: crate::c::GLuint) -> Option<Self> {
@@ -55,7 +55,7 @@ impl Error {
 
   /// Creates a new error from a GLEW error code without checking
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `code` - The error code to create the error from
   ///
@@ -103,7 +103,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// A utility function for calling an OpenGL function and checking for errors
 /// using [`glGetError`].
 ///
-/// # Arguments
+/// # Parameters
 ///
 /// * `f` - The function to call
 ///

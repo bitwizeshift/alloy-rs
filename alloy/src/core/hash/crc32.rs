@@ -46,7 +46,7 @@ impl Crc32 {
 
   /// Updates the hash with the given bytes.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `bytes` - The bytes to update the hash with.
   pub fn add_bytes(&mut self, bytes: &[u8]) {
@@ -58,7 +58,7 @@ impl Crc32 {
 
   /// Updates the hash with the given object.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `object` - The object to update the hash with.
   pub fn add_object<T>(&mut self, object: &T) {
@@ -77,7 +77,7 @@ impl Crc32 {
 
   /// Computes the CRC32 checksum of the given bytes.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `bytes` - The bytes to compute the checksum of.
   pub fn checksum(bytes: &[u8]) -> u32 {

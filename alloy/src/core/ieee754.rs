@@ -36,7 +36,7 @@ pub mod f32 {
   ///
   /// This returns the sign of the float, the exponent, and the mantissa.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `x` - The floating point number.
   #[inline(always)]
@@ -59,7 +59,7 @@ pub mod f32 {
   /// This means that the representation of the NaN may change by calling this,
   /// even though the value is still considered a NaN.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `x` - The floating point number.
   pub const fn abs(x: f32) -> f32 {
@@ -77,7 +77,7 @@ pub mod f32 {
   /// means that the representation of the NaN may change by calling this, even
   /// though the value is still a NaN.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `x` - The floating point number.
   ///
@@ -98,7 +98,7 @@ pub mod f32 {
   /// [`PartialOrd`] implementation. However it is useful for `const` contexts
   /// so that it can be used in [`assert`]-like situations.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `lhs` - The left-hand side of the comparison.
   /// * `rhs` - The right-hand side of the comparison.
@@ -136,7 +136,7 @@ pub mod f32 {
   /// [`PartialEq`] implementation. However it is useful for `const` contexts
   /// so that it can be used in [`assert`]-like situations.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `lhs` - The left-hand side of the comparison.
   /// * `rhs` - The right-hand side of the comparison.

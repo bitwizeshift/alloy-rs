@@ -32,7 +32,7 @@ impl Quaternion {
 
   /// Creates a new quaternion with the given components.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `w` - The real component of the quaternion.
   /// * `i` - The i imaginary component of the quaternion.
@@ -46,7 +46,7 @@ impl Quaternion {
 
   /// Creates a new quaternion from a 4D vector.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `vec` - The vector to create the quaternion from.
   #[must_use]
@@ -57,7 +57,7 @@ impl Quaternion {
 
   /// Creates a new quaternion from a 4D vector.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `vec` - The vector to create the quaternion from.
   #[must_use]
@@ -68,7 +68,7 @@ impl Quaternion {
 
   /// Creates a quaternion from an angle (in radians) and an axis vector (x, y, z)
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - The angle of rotation.
   /// * `axis` - The axis of rotation.
@@ -94,7 +94,7 @@ impl Quaternion {
 
   /// Creates a quaternion from a yaw angle.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - The yaw angle.
   pub fn from_yaw<A: Angle>(angle: A) -> Self {
@@ -106,7 +106,7 @@ impl Quaternion {
 
   /// Creates a quaternion from a pitch angle.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - The pitch angle.
   pub fn from_pitch<A: Angle>(angle: A) -> Self {
@@ -118,7 +118,7 @@ impl Quaternion {
 
   /// Creates a quaternion from a roll angle.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - The roll angle.
   pub fn from_roll<A: Angle>(angle: A) -> Self {
@@ -130,7 +130,7 @@ impl Quaternion {
 
   /// Creates a new quaternion from a set of Euler angles.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `yaw`   - The yaw angle.
   /// * `pitch` - The pitch angle.
@@ -160,7 +160,7 @@ impl Quaternion {
 
   /// Creates a new quaternion from a 4x4 matrix encoding a rotation.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `matrix` - The rotation matrix to convert.
   pub fn from_mat4(matrix: &Mat4) -> Self {
@@ -609,7 +609,7 @@ impl Quaternion {
 impl Quaternion {
   /// Rotates the quaternion by another quaternion.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - The quaternion to rotate by.
   #[must_use]
@@ -620,7 +620,7 @@ impl Quaternion {
 
   /// Rotates the quaternion by an angle (in radians) and an axis vector (x, y, z).
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - The angle of rotation.
   /// * `axis` - The axis of rotation.
@@ -633,7 +633,7 @@ impl Quaternion {
 
   /// Rotates the quaternion by a yaw angle.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - The yaw angle.
   #[must_use]
@@ -644,7 +644,7 @@ impl Quaternion {
 
   /// Rotates the quaternion by a pitch angle.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - The pitch angle.
   #[must_use]
@@ -655,7 +655,7 @@ impl Quaternion {
 
   /// Rotates the quaternion by a roll angle.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - The roll angle.
   #[must_use]
@@ -666,7 +666,7 @@ impl Quaternion {
 
   /// Rotates the quaternion by a set of Euler angles.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `yaw`   - The yaw angle.
   /// * `pitch` - The pitch angle.
@@ -680,7 +680,7 @@ impl Quaternion {
 
   /// Rotates the quaternion by a 4x4 matrix encoding a rotation.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `matrix` - The rotation matrix to rotate by.
   #[must_use]
@@ -699,7 +699,7 @@ impl Quaternion {
 
   /// Rotates a 3D vector by the angle represented by the quaternion.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `vec` - The vector to rotate.
   pub fn rotate_vec4(&self, vec: &Vec4) -> Vector4 {

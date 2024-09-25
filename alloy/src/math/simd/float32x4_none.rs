@@ -7,7 +7,7 @@ pub struct Float32x4(F32x4Array);
 impl Float32x4 {
   /// Create a new vector with the given components.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `v0` - the first component of the vector
   /// * `v1` - the second component of the vector
@@ -19,7 +19,7 @@ impl Float32x4 {
 
   /// Create a new vector with the given value in all components.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `value` - the value to set all components to
   pub const fn splat(value: f32) -> Self {
@@ -33,7 +33,7 @@ impl Float32x4 {
   /// The pointer must be aligned to 16 bytes, and the pointer must be able to
   /// reach at least 4 [f32] values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to the slice of [f32] values
   pub const unsafe fn from_aligned_ptr(ptr: *const f32) -> Self {
@@ -46,7 +46,7 @@ impl Float32x4 {
   ///
   /// The pointer must be able to reach at least 4 [f32] values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to the slice of [f32] values
   pub const unsafe fn from_unaligned_ptr(ptr: *const f32) -> Self {

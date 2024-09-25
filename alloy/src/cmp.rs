@@ -28,7 +28,7 @@ pub trait Near<Rhs: ?Sized = Self, Tolerance = f32> {
   /// Tests whether `self` is "near" `other` relative top the specified
   /// `tolerance`
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the other value to test against
   /// * `tolerance` - the tolerance being tested
@@ -100,7 +100,7 @@ impl Near<f64, f32> for f64 {
 pub trait AlmostEq<Rhs: ?Sized = Self>: Near<Rhs> {
   /// Tests whether `self` is almost equal to `other`
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the other value to compare against
   fn almost_eq(&self, other: &Rhs) -> bool;

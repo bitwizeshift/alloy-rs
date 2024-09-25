@@ -120,7 +120,7 @@ impl<'a, 'b> ToastBuilder<'a, 'b> {
 
   /// Sets the message string to display to the user.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `message` - the message [`CStr`]` to display.
   pub fn message_cstr(mut self, message: &'b CStr) -> Self {
@@ -130,7 +130,7 @@ impl<'a, 'b> ToastBuilder<'a, 'b> {
 
   /// Sets the title string to display to the user.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `title` - the title [`CStr`]` to use.
   pub fn title_cstr(mut self, title: &'a CStr) -> Self {
@@ -140,7 +140,7 @@ impl<'a, 'b> ToastBuilder<'a, 'b> {
 
   /// Sets the button style to display to the user.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `buttons` - the buttons to display to the user.
   pub fn buttons(mut self, buttons: Buttons) -> Self {
@@ -157,7 +157,7 @@ impl<'a, 'b> ToastBuilder<'a, 'b> {
 
   /// Creates a builder with sensible defaults in the given style.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `s` - the style to create a builder for
   fn from_style(s: Style) -> Self {

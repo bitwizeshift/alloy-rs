@@ -41,7 +41,7 @@ impl Shader {
   /// Adds the specified shader source to the shader.
   /// This is just a thin wrapper around [`glShaderSource`]
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `source` - The source code as a null-terminated [`CStr`]
   ///
@@ -55,7 +55,7 @@ impl Shader {
   /// Adds the specified shader source to the shader.
   /// This is just a thin wrapper around [`glShaderSource`]
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `source` - The source code of the shader
   ///
@@ -71,7 +71,7 @@ impl Shader {
   /// This function is optimized to handle up to 8 sources without requiring
   /// using dynamic memory allocation.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `sources` - a collection of sources
   pub fn shader_sources(&mut self, sources: &[&str]) {
@@ -229,7 +229,7 @@ impl Program {
   /// Attaches the specified shader to the program.
   /// This is a thin wrapper around [`glAttachShader`].
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `shader` - The shader to attach to the program
   ///

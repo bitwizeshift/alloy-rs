@@ -35,7 +35,7 @@ impl Vec4u {
   ///
   /// [`from_slice_unchecked`]: Self::from_slice_unchecked
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `array` - an array containing 4 [`u32`] values.
   ///
@@ -69,7 +69,7 @@ impl Vec4u {
   ///
   /// [`from_mut_slice_unchecked`]: Self::from_mut_slice_unchecked
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `array` - an array containing 4 [`u32`] values.
   ///
@@ -96,7 +96,7 @@ impl Vec4u {
   ///
   /// This requires that `slice.len() == 4`, otherwise this returns [`None`].
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice of [`u32`]s.
   ///
@@ -143,7 +143,7 @@ impl Vec4u {
   ///
   /// This requires that `slice.len() == 4`, otherwise this returns [`None`].
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the mutable slice of [`u32`]s.
   ///
@@ -185,7 +185,7 @@ impl Vec4u {
   /// Forms a reference to a [`Vec4u`] from a slice of [`u32`] that is assumed to
   /// contain two values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice of [`u32`]s.
   ///
@@ -202,7 +202,7 @@ impl Vec4u {
   /// Forms a mutable reference to a [`Vec4u`] from a slice of [`u32`] that is
   /// assumed to contain two values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the mutable slice of [`u32`]s.
   ///
@@ -219,7 +219,7 @@ impl Vec4u {
   /// Forms a reference to a [`Vec2u`] from a pointer to a contiguous sequence
   /// of at least two [`u32`]s.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to a sequence of [`u32`] values
   ///
@@ -236,7 +236,7 @@ impl Vec4u {
   /// Forms a mutable reference to a [`Vec3u`] from a pointer to a contiguous
   /// sequence of at least two [`u32`]s.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to a sequence of [`u32`] values
   ///
@@ -422,7 +422,7 @@ impl Vec4u {
 
   /// Sets the x-component
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `x` - the X-component
   #[inline(always)]
@@ -432,7 +432,7 @@ impl Vec4u {
 
   /// Sets the y-component
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `y` - the Y-component
   #[inline(always)]
@@ -442,7 +442,7 @@ impl Vec4u {
 
   /// Sets the z-component
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `z` - theZ-component
   #[inline(always)]
@@ -452,7 +452,7 @@ impl Vec4u {
 
   /// Sets the w-component
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `w` - the W-component
   #[inline(always)]
@@ -462,7 +462,7 @@ impl Vec4u {
 
   /// Sets the X and Y components of this vector
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `xy` - the X and Y components of the [`Vec4u`]
   #[inline(always)]
@@ -472,7 +472,7 @@ impl Vec4u {
 
   /// Sets the Y and Z components of this vector
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `yz` - the Y and Z components of the [`Vec4u`]
   #[inline(always)]
@@ -482,7 +482,7 @@ impl Vec4u {
 
   /// Sets the Z and W components of this vector
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `zw` - the Z and W components of the [`Vec4u`]
   #[inline(always)]
@@ -492,7 +492,7 @@ impl Vec4u {
 
   /// Sets the X, Y, and Z components of this vector
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `xyz` - the X, Y, and Z components of the [`Vec4u`]`
   #[inline(always)]
@@ -502,7 +502,7 @@ impl Vec4u {
 
   /// Sets the Y, Z and W components of this vector
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `yzw` - the Y, Z, and W components of the [`Vec4u`]
   #[inline(always)]
@@ -512,7 +512,7 @@ impl Vec4u {
 
   /// Sets all the components of this vector the values from other.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the other [`Vec3u`] to set.
   pub fn set(&mut self, other: &Vec4u) {
@@ -528,7 +528,7 @@ impl Vec4u {
 
   /// Computes the minimum of each vector.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `lhs` - the left vector
   /// * `rhs` - the right vector
@@ -543,7 +543,7 @@ impl Vec4u {
 
   /// Computes the maximum of each vector.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `lhs` - the left vector
   /// * `rhs` - the right vector
@@ -840,7 +840,7 @@ impl Vector4u {
 
   /// Constructs this vector from an x, y, z, and w coordinate.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `x` - the x-component
   /// * `y` - the y-component
@@ -854,7 +854,7 @@ impl Vector4u {
 
   /// Constructs this vector with a uniform value `v`.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `v` - the value to uniformly apply
   #[must_use]
@@ -864,7 +864,7 @@ impl Vector4u {
   }
   /// Constructs this vector from a 4-component [`u32`] array.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `array` - an array containing 4 [`u32`] values.
   #[must_use]
@@ -877,7 +877,7 @@ impl Vector4u {
   ///
   /// This will return [`None`] if `slice.len()` is not equal to 2.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice to read from
   #[must_use]
@@ -896,7 +896,7 @@ impl Vector4u {
 
   /// Constructs this vector from a slice of floats.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice to read from
   ///
@@ -913,7 +913,7 @@ impl Vector4u {
 
   /// Constructs this vector from a [`Vec4u`]
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the other vector
   #[must_use]
@@ -928,7 +928,7 @@ impl Vector4u {
 
   /// Constructs this vector from a pointer to floating point values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to the start of a contiguous sequence of floats
   ///

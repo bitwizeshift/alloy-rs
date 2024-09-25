@@ -15,7 +15,7 @@ pub struct StridedSlice<T, const N: usize>([T]);
 impl<T, const N: usize> StridedSlice<T, N> {
   /// Constructs this strided slice from the underlying slice
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice to construct from
   #[inline]
@@ -26,7 +26,7 @@ impl<T, const N: usize> StridedSlice<T, N> {
 
   /// Constructs this strided slice from the underlying slice
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice to construct from
   #[inline]
@@ -37,7 +37,7 @@ impl<T, const N: usize> StridedSlice<T, N> {
 
   /// Constructs this strided slice from a raw pointer and length
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to the slice
   /// * `len` - the length of the slice
@@ -52,7 +52,7 @@ impl<T, const N: usize> StridedSlice<T, N> {
 
   /// Constructs this mutable strided slice from a raw pointer and length
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to the slice
   /// * `len` - the length of the slice
@@ -179,7 +179,7 @@ impl<T, const N: usize> StridedSlice<T, N> {
   /// Retrieves the value at the given index without doing proper bounds
   /// checking.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `index` - the index to access
   ///
@@ -195,7 +195,7 @@ impl<T, const N: usize> StridedSlice<T, N> {
   /// Retrieves the a mutable reference to the given index without doing proper
   /// bounds checking.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `index` - the index to access
   ///

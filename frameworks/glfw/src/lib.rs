@@ -87,7 +87,7 @@ impl std::error::Error for Error {}
 impl Error {
   /// Constructs this Error from a GLFW status value.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `code` - the GLFW status code
   pub fn from_glfw_status(code: core::ffi::c_int) -> Self {

@@ -50,7 +50,7 @@ impl SeverityFilter {
 
   /// Creates a filter that only allows the specified [`Severity`] `s`
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `s` - the severit.
   pub const fn only(s: Severity) -> Self {
@@ -60,7 +60,7 @@ impl SeverityFilter {
   /// Constructs a filter that only allows [`Severity`] values at or above
   /// the specified severity `s`
   ///
-  /// # Arguments
+  /// # Parameters
   pub const fn above_or_eq(s: Severity) -> Self {
     Self::mask(!(Self::bit(s) - 1))
   }
@@ -115,7 +115,7 @@ impl SeverityFilter {
 
   /// Checks if this filter allows the specified [`Severity`] `s`.
   ///
-  /// # Arguments
+  /// # Parameters
   pub const fn allows(&self, s: Severity) -> bool {
     self.0 & Self::bit(s) != 0
   }

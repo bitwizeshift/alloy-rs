@@ -329,7 +329,7 @@ pub mod apple {
   /// This function will panic if `xcode-select` is not found, or if
   /// `xcode-select` fails to find a path.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `sdk` - the SDK to use
   pub fn xcode_sysroot(sdk: SDK) -> String {

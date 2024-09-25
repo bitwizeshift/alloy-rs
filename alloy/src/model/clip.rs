@@ -19,7 +19,7 @@ impl Depth {
   /// Panics if `near` is less than or equal to zero, or if `far` is less than
   /// `near`.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `near` - The near depth value.
   /// * `far` - The far depth value.
@@ -76,7 +76,7 @@ impl Horizontal {
   ///
   /// Panics if `left` is greater than or equal to `right`.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `left` - The left horizontal value.
   /// * `right` - The right horizontal value.
@@ -92,7 +92,7 @@ impl Horizontal {
   ///
   /// Panics if `value` is less than or equal to zero.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `value` - The uniform value.
   #[inline(always)]
@@ -146,7 +146,7 @@ impl Vertical {
   ///
   /// Panics if `bottom` is greater than or equal to `top`.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `bottom` - The bottom vertical value.
   /// * `top` - The top vertical value.
@@ -162,7 +162,7 @@ impl Vertical {
   ///
   /// Panics if `value` is less than or equal to zero.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `value` - The uniform value.
   #[inline(always)]
@@ -218,7 +218,7 @@ pub struct ClipSpace {
 impl ClipSpace {
   /// Creates a new clip-space information.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `depth` - The depth range.
   /// * `horizontal` - The horizontal range.
@@ -239,7 +239,7 @@ impl ClipSpace {
   /// Panics if `depth` is less than or equal to zero, or if `horizontal` or
   /// `vertical` are less than or equal to zero.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `depth` - The depth range.
   /// * `horizontal` - The horizontal range.

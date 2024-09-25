@@ -42,7 +42,7 @@ impl Vec2 {
   ///
   /// [`from_slice_unchecked`]: Self::from_slice_unchecked
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `array` - an array containing 2 [`f32`] values.
   ///
@@ -74,7 +74,7 @@ impl Vec2 {
   ///
   /// [`from_mut_slice_unchecked`]: Self::from_mut_slice_unchecked
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `array` - an array containing 2 [`f32`] values.
   ///
@@ -101,7 +101,7 @@ impl Vec2 {
   ///
   /// This requires that `slice.len() == 2`, otherwise this returns [`None`].
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice of [`f32`]s.
   ///
@@ -146,7 +146,7 @@ impl Vec2 {
   ///
   /// This requires that `slice.len() == 2`, otherwise this returns [`None`].
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the mutable slice of [`f32`]s.
   ///
@@ -188,7 +188,7 @@ impl Vec2 {
   /// Forms a reference to a [`Vec2`] from a slice of [`f32`] that is assumed to
   /// contain two values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice of [`f32`]s.
   ///
@@ -209,7 +209,7 @@ impl Vec2 {
   /// Forms a mutable reference to a [`Vec2`] from a slice of [`f32`] that is
   /// assumed to contain two values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the mutable slice of [`f32`]s.
   ///
@@ -227,7 +227,7 @@ impl Vec2 {
   /// Forms a reference to a [`Vec2`] from a pointer to a contiguous sequence
   /// of at least two [`f32`]s.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to a sequence of [`f32`] values
   ///
@@ -244,7 +244,7 @@ impl Vec2 {
   /// Forms a mutable reference to a [`Vec2`] from a pointer to a contiguous
   /// sequence of at least two [`f32`]s.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to a sequence of [`f32`] values
   ///
@@ -328,7 +328,7 @@ impl Vec2 {
 
   /// Sets the x-component
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `x` - the X-component
   #[inline(always)]
@@ -338,7 +338,7 @@ impl Vec2 {
 
   /// Sets the y-component
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `y` - the Y-component
   #[inline(always)]
@@ -348,7 +348,7 @@ impl Vec2 {
 
   /// Sets all the components of this vector the values from other.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the other [`Vec2`] to set.
   pub fn set(&mut self, other: &Vec2) {
@@ -397,7 +397,7 @@ impl Vec2 {
 
   /// Rotates this vector around the origin by angle A.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to rotate
   pub fn rotate<A: Angle>(&mut self, angle: A) {
@@ -411,7 +411,7 @@ impl Vec2 {
 
   /// Returns a vector rotated by the specified `angle`
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `angle` - the angle to rotate
   #[must_use]
@@ -509,7 +509,7 @@ impl Vec2 {
 
   /// Computes the minimum of each vector.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `lhs` - the left vector
   /// * `rhs` - the right vector
@@ -522,7 +522,7 @@ impl Vec2 {
 
   /// Computes the maximum of each vector.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `lhs` - the left vector
   /// * `rhs` - the right vector
@@ -849,7 +849,7 @@ impl Vector2 {
 
   /// Constructs this vector from an x and y coordinate.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `x` - the x-component
   /// * `y` - the y-component
@@ -861,7 +861,7 @@ impl Vector2 {
 
   /// Constructs this vector with a uniform value `v`.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `v` - the value to uniformly apply
   #[must_use]
@@ -872,7 +872,7 @@ impl Vector2 {
 
   /// Constructs this vector from a 2-component [`f32`] array.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `array` - an array containing 2 [`f32`] values.
   #[must_use]
@@ -885,7 +885,7 @@ impl Vector2 {
   ///
   /// This will return [`None`] if `slice.len()` is not equal to 2.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice to read from
   #[must_use]
@@ -902,7 +902,7 @@ impl Vector2 {
 
   /// Constructs this vector from a slice of floats.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice to read from
   ///
@@ -919,7 +919,7 @@ impl Vector2 {
 
   /// Constructs this vector from a pointer to floating point values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `ptr` - the pointer to the start of a contiguous sequence of floats
   ///
@@ -935,7 +935,7 @@ impl Vector2 {
 
   /// Constructs this vector from a [`Vec2`]
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the other vector
   #[must_use]
@@ -949,7 +949,7 @@ impl Vector2 {
 
   /// Constructs this vector from a [`Vec2i`]
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the other vector
   #[must_use]
@@ -962,7 +962,7 @@ impl Vector2 {
 
   /// Constructs this vector from a [`Vec2u`]
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `other` - the other vector
   #[must_use]

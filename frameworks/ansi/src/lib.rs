@@ -258,7 +258,7 @@ impl<'a> Format<'a> {
   /// will automatically toggle the ANSI formatting before displaying the
   /// element, and then follow it up with a [`fmt::RESET`].
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `display` - the element to display
   pub const fn wrap<'b>(&'a self, display: &'b dyn Display) -> FormatDisplay<'a, 'b> {
@@ -273,7 +273,7 @@ impl<'a> Format<'a> {
   /// This will disable formatting if the `writer` does not support ANSI
   /// formatting (determined by checking [`IsTerminal`])
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `writer` - the writer to write to
   ///
@@ -291,7 +291,7 @@ impl<'a> Format<'a> {
 
   /// Checks whether formatting is available for the given `writer`
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `writer` - the writer to check formatting availability.
   fn can_format<W>(&self, writer: &W) -> bool

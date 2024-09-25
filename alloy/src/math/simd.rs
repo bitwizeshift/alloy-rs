@@ -35,7 +35,7 @@ impl Float32x4 {
   /// to handle both aligned and unaligned slices -- as well as padding slices
   /// that contain less than 4 elements with zeros.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice of [f32] values to create the vector from
   pub fn from_slice(slice: &[f32]) -> Self {
@@ -56,7 +56,7 @@ impl Float32x4 {
 
   /// Create a new [Float32x4] from the elements within the aligned slice.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the aligned slice of [f32] values to create the vector from
   ///
@@ -75,7 +75,7 @@ impl Float32x4 {
 
   /// Create a new [Float32x4] from the elements within the aligned slice.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the aligned slice of [f32] values to create the vector from
   ///
@@ -90,7 +90,7 @@ impl Float32x4 {
 
   /// Create a new [Float32x4] from the elements within the aligned slice.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the aligned slice of [f32] values to create the vector from
   ///
@@ -103,7 +103,7 @@ impl Float32x4 {
 
   /// Create a new [Float32x4] from the elements within the unaligned slice.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the unaligned slice of [f32] values to create the vector from
   pub fn from_unaligned_slice(slice: &[f32]) -> Self {
@@ -121,7 +121,7 @@ impl Float32x4 {
   /// If the slice is not divisible by 4, the remaining elements will be padded
   /// with zeros.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice of [f32] values to create the vector from
   pub fn iter_slice(slice: &[f32]) -> impl Iterator<Item = Self> + '_ {
@@ -130,7 +130,7 @@ impl Float32x4 {
 
   /// Returns an iterator that yields [Float32x4] values from the given slice.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice of [f32] values to create the vector from
   ///
@@ -163,7 +163,7 @@ impl<'a> Iterator for Float32x4ExactIter<'a> {
 impl FromIterator<f32> for Float32x4 {
   /// Create a new [Float32x4] from the first 4 elements within the iterator.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `iter` - the iterator of [f32] values to create the vector from
   fn from_iter<I: IntoIterator<Item = f32>>(iter: I) -> Self {
@@ -186,7 +186,7 @@ impl Default for Float32x4 {
 impl From<[f32; 4]> for Float32x4 {
   /// Create a new [Float32x4] from the given array of [f32] values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `arr` - the array of [f32] values to create the vector from
   #[inline(always)]
@@ -198,7 +198,7 @@ impl From<[f32; 4]> for Float32x4 {
 impl From<&[f32]> for Float32x4 {
   /// Create a new [Float32x4] from the given slice of [f32] values.
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `slice` - the slice of [f32] values to create the vector from
   #[inline(always)]
@@ -210,7 +210,7 @@ impl From<&[f32]> for Float32x4 {
 impl From<Float32x4> for [f32; 4] {
   /// Create a new array of [f32] values from the given [Float32x4].
   ///
-  /// # Arguments
+  /// # Parameters
   ///
   /// * `vec` - the [Float32x4] to create the array from
   fn from(vec: Float32x4) -> Self {
