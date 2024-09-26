@@ -8,5 +8,5 @@ readonly repo_dir
 (
   cd "${repo_dir}"
 
-  cargo run --bin vulkan-example
+  cargo run --bin vulkan-example "$@"
 )

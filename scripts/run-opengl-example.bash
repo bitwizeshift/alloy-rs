@@ -8,5 +8,5 @@ readonly repo_dir
 (
   cd "${repo_dir}"
 
-  cargo run --bin opengl-example
+  cargo run --bin opengl-example "$@"
 )
