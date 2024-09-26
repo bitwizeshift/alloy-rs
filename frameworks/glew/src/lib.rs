@@ -20,7 +20,7 @@ pub mod c {
   pub use glew_sys::*;
 }
 
-///
+/// An error that may occur when interacting with GLEW.
 #[derive(Debug)]
 pub struct Error(String);
 
