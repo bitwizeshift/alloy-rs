@@ -79,7 +79,7 @@ jobs:
           output-file: ${{env.OUTPUT_FILE}}
 
       - name: Upload License Manifest Artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         if: steps.license-manifest.outcome == 'success'
         continue-on-error: true
         with:
