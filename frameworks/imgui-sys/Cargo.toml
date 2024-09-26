@@ -10,9 +10,9 @@ keywords = ["gui", "bindgen"]
 edition.workspace = true
 
 [features]
-default = ["vulkan"]
+default = []
 vulkan = ["dep:vulkan-sys", "glfw-sys/vulkan"]
-opengl = ["dep:gl-sys"]
+opengl = ["dep:gl-sys", "glfw-sys/opengl"]
 dx12 = []
 
 [dependencies]

@@ -14,7 +14,7 @@ keywords = ["vulkan", "glfw", "bindgen"]
 edition.workspace = true
 
 [features]
-default = ["vulkan"]
+default = []
 wayland = []
 vulkan = ["dep:vulkan-sys"]
 opengl = ["dep:gl-sys"]

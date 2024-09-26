@@ -59,12 +59,18 @@ fn generate_glfw_bindings() {
     .blocklist_item(r"Vk.*")
     .allowlist_item(r"glfw.*")
     .allowlist_item(r"GLFW_.*")
-    .blocklist_item(r"GL_.*")
+    .blocklist_item(r"GL_.*");
+
+  if cfg!(feature = "vulkan") {
+    builder = builder
+      .clang_arg("-DGLFW_INCLUDE_VULKAN=1")
+      .raw_line("#[cfg(feature = \"vulkan\")]")
+      .raw_line("use vulkan_sys::*;")
+  }
+  if cfg!(feature = "opengl") {
     // TODO(bitwizeshift): Eventually need to block OpenGL symbol generation from
     // this while also retaining glfw symbols.
-    .raw_line("#[cfg(feature = \"vulkan\")]")
-    .raw_line("use vulkan_sys::*;")
-    .clang_arg("-DGLFW_INCLUDE_VULKAN=1");
+  }
 
   builder = target_bindgen_args(builder);
 

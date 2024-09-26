@@ -11,9 +11,9 @@ repository.workspace = true
 edition.workspace = true
 
 [features]
-default = ["vulkan", "openal", "debug"]
+default = ["debug"]
 vulkan = ["dep:vulkan", "glfw/vulkan"]
-opengl = []
+opengl = ["dep:gl", "glfw/opengl"]
 openal = ["dep:openal"]
 
 # The "debug" feature enables debugging and validation logic
@@ -23,6 +23,7 @@ debug = []
 glfw = { path = "../frameworks/glfw", default-features = false}
 vulkan = { path = "../frameworks/vulkan", optional = true }
 openal = { path = "../frameworks/openal", optional = true }
+gl = { path = "../frameworks/gl", optional = true }
 astd = { path = "../frameworks/astd" }
 
 [build-dependencies]

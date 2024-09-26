@@ -10,7 +10,7 @@ keywords = ["gui"]
 edition.workspace = true
 
 [features]
-default = ["vulkan"]
+default = []
 vulkan = ["imgui-sys/vulkan"]
 opengl = ["imgui-sys/opengl"]
 

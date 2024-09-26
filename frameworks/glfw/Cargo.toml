@@ -10,7 +10,7 @@ keywords = ["vulkan", "glfw"]
 edition.workspace = true
 
 [features]
-default = ["vulkan"]
+default = []
 
 # Enables Wayland front-end support in GLFW
 wayland = ["glfw-sys/wayland"]

@@ -13,10 +13,11 @@ repository.workspace = true
 edition.workspace = true
 
 [dependencies]
-glfw = { path = "../../frameworks/glfw" }
+alloy = { path = "../../alloy", default-features=false, features=["opengl", "debug", "openal"] }
+glfw = { path = "../../frameworks/glfw", default-features=false, features=["opengl"] }
 openal = { path = "../../frameworks/openal" }
-imgui = { path = "../../frameworks/imgui", features = ["opengl"] }
-imgui-sys ={ path = "../../frameworks/imgui-sys", features = ["opengl"] }
+imgui = { path = "../../frameworks/imgui", features = ["opengl"], default-features=false}
+imgui-sys ={ path = "../../frameworks/imgui-sys", features = ["opengl"], default-features=false }
 astd = { path = "../../frameworks/astd" }
 toast = { path = "../../frameworks/toast" }
 log = { path = "../../frameworks/log" }
