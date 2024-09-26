@@ -1,4 +1,5 @@
-//!
+//! The vertex crate provides an abstraction over buffer objects so that they
+//! follow a more conventional "OO" approach.
 
 use crate::c::GLuint;
 
@@ -39,7 +40,7 @@ pub enum Access {
   ReadWrite = crate::c::GL_READ_WRITE as _,
 }
 
-///
+/// A buffer object.
 #[derive(PartialEq, Eq, PartialOrd, Ord, Debug)]
 pub struct BufferObject {
   id: GLuint,
@@ -52,11 +53,14 @@ impl BufferObject {
   /// Generate a new buffer object.
   pub fn new<T>(target: Target, usage: Usage, buffer: &[T]) -> Self {
     let mut out = 0;
+    // SAFETY: This is a C function call, but it's not actually unsafe to perform.
     unsafe { crate::c::glGenBuffers(1, &mut out) };
     debug_assert_ne!(out, 0);
 
     let size = std::mem::size_of_val(buffer);
     let ptr = buffer.as_ptr() as *const std::ffi::c_void;
+
+    // SAFETY:
     unsafe { crate::c::glBufferData(target as _, size as isize, ptr, usage as _) }
 
     Self {
@@ -92,6 +96,10 @@ impl BufferObject {
   }
 
   /// Map the buffer object.
+  ///
+  /// # Parameters
+  ///
+  /// * `access` - the access type for the mapped buffer
   pub fn map(&mut self, access: Access) -> *mut std::ffi::c_void {
     unsafe { crate::c::glMapBuffer(self.target as _, access as _) }
   }
@@ -108,7 +116,7 @@ impl BufferObject {
 //   }
 // }
 
-///
+/// A vertex array object.
 #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[repr(transparent)]
 pub struct VertexArray(GLuint);

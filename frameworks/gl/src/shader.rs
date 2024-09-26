@@ -1,4 +1,4 @@
-//!
+//! A module for handling shaders and programs.
 use std::ffi::CStr;
 
 use crate::error::Result;
@@ -198,6 +198,12 @@ impl Drop for Shader {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct UniformLocation(crate::c::GLint);
 
+impl std::fmt::Display for UniformLocation {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    self.0.fmt(f)
+  }
+}
+
 /// A handle to an attribute location.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct AttribLocation(crate::c::GLint);
@@ -240,7 +246,7 @@ impl Program {
   }
 
   /// Links the program, returning whether the link was successful.
-  pub fn link_program(&mut self) -> Result<()> {
+  pub fn link(&mut self) -> Result<()> {
     unsafe { crate::c::glLinkProgram(self.0) };
     if self.link_status() {
       Ok(())
@@ -340,6 +346,50 @@ impl Program {
   pub fn attribute_location_cstr(&self, name: &CStr) -> AttribLocation {
     let attrib = unsafe { crate::c::glGetAttribLocation(self.0, name.as_ptr()) };
     AttribLocation(attrib)
+  }
+
+  /// Provides the contents of a single `f32` to the specified uniform location.
+  ///
+  /// # Safety
+  ///
+  /// The uniform location must be valid and the value must be a valid pointer
+  /// to a 4-element array of [`f32`].
+  ///
+  /// # Parameters
+  ///
+  /// * `location` - The location of the uniform
+  /// * `count` - The number of values to provide
+  /// * `vec` - A pointer to a 4-element array of [`f32`]
+  pub unsafe fn set_uniform_vector4_unchecked(
+    &self,
+    location: UniformLocation,
+    count: usize,
+    vec: *const f32,
+  ) {
+    crate::c::glUniform4fv(location.0, count as _, vec);
+  }
+
+  /// Provides the contents of a 4x4 matrix to the specified uniform location.
+  ///
+  /// # Safety
+  ///
+  /// The uniform location must be valid and the matrix must be a valid pointer
+  /// to a 16-element array of `f32`.
+  ///
+  /// # Parameters
+  ///
+  /// * `location` - The location of the uniform
+  /// * `count` - The number of matrices to provide
+  /// * `mat` - A pointer to a 16-element array of `f32`
+  pub unsafe fn set_uniform_matrix4_unchecked(
+    &self,
+    location: UniformLocation,
+    count: usize,
+    mat: *const f32,
+  ) {
+    unsafe {
+      crate::c::glUniformMatrix4fv(location.0, count as _, false, mat);
+    }
   }
 }
 

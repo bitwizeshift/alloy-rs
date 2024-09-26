@@ -9,6 +9,7 @@ pub use glew_sys::glTexParameterf as tex_parameter_f;
 pub use glew_sys::glTexParameteri as tex_parameter_i;
 pub use glew_sys::glTexSubImage2D as tex_sub_image_2d;
 
+#[inline(always)]
 pub unsafe fn glActiveTexture(texture: GLenum) {
   call_glew_fn!(__glewActiveTexture(texture));
 }
