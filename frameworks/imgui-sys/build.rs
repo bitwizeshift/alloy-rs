@@ -3,15 +3,13 @@ use std::path::PathBuf;
 fn main() {
   build::rerun_if_env_changed!("CC");
   build::rerun_if_env_changed!("CXX");
-  build::rerun_if_env_changed!("CARGO_FEATURE_VULKAN");
-  build::rerun_if_env_changed!("CARGO_FEATURE_OPENGL");
 
   build::rerun_if_changed!("../../3rd-party/cimgui");
   build::rerun_if_changed!("../../.gitmodules");
-  build::rerun_if_changed!("imgui_glfw.cpp");
-  build::rerun_if_changed!("imgui_opengl3.cpp");
-  build::rerun_if_changed!("imgui_vulkan.cpp");
-  build::rerun_if_changed!("CMakeLists.txt");
+  build::rerun_if_changed!("src/imgui_glfw.cpp");
+  build::rerun_if_changed!("src/imgui_opengl3.cpp");
+  build::rerun_if_changed!("src/imgui_vulkan.cpp");
+  build::rerun_if_changed!("src/CMakeLists.txt");
 
   compile_imgui();
   generate_imgui_bindings();
