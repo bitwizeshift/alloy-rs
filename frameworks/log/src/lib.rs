@@ -233,7 +233,13 @@ pub struct Meta<MD = NoMeta> {
 }
 
 impl<MD> Meta<MD> {
+  /// Constructs a new [`Meta`] object with the optionally specified
+  /// source location and meta data.
   ///
+  /// # Parameters
+  ///
+  /// * `source_location` - the source location of the log message.
+  /// * `meta` - the meta data to associate with the log message.
   pub fn new(source_location: Option<SourceLocation>, meta: Option<MD>) -> Self {
     Self {
       source_location,
@@ -298,10 +304,10 @@ struct SinkEntry<MD> {
 
 impl<MD> SinkEntry<MD> {
   pub fn new<S: Sink<MD> + 'static>(sink: S) -> Self {
-    Self::new_with_filter(sink, SeverityFilter::all())
+    Self::with_filter(sink, SeverityFilter::all())
   }
 
-  pub fn new_with_filter<S: Sink<MD> + 'static>(sink: S, filter: SeverityFilter) -> Self {
+  pub fn with_filter<S: Sink<MD> + 'static>(sink: S, filter: SeverityFilter) -> Self {
     Self {
       sink: Box::new(sink),
       filter,
@@ -359,7 +365,7 @@ impl<MD> Logger<MD> {
   /// * `sink` - the [`Sink`] to write to.
   /// * `filter` - the [`SeverityFilter`] to enable writing.
   pub fn sink_with_filter<S: Sink<MD> + 'static>(&mut self, sink: S, filter: SeverityFilter) {
-    self.sinks.push(SinkEntry::new_with_filter(sink, filter))
+    self.sinks.push(SinkEntry::with_filter(sink, filter))
   }
 }
 
