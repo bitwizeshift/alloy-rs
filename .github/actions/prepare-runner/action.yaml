@@ -18,8 +18,8 @@ runs:
       shell: bash
       if: runner.os == 'Linux'
       run: |
-        echo "CC=clang-15" >> "${GITHUB_ENV}"
-        echo "CXX=clang++-15" >> "${GITHUB_ENV}"
+        echo "CC=clang-18" >> "${GITHUB_ENV}"
+        echo "CXX=clang++-18" >> "${GITHUB_ENV}"
 
     - name: Prepare compiler
       shell: bash
