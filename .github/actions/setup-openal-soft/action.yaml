@@ -1,0 +1,26 @@
+name: Setup GLEW
+description: |
+  Installs prerequisites to be able to build GLEW
+
+runs:
+  using: composite
+  steps:
+    - name: Update Apt
+      if: runner.os == 'Linux'
+      uses: ./.github/actions/update-apt
+
+    # macOS and Windows both use builtin audio-requirements, so only the linux
+    # runners need to install the audio dependencies in order to work.
+    - name: Install OpenAL requirements
+      shell: bash
+      if: runner.os == 'Linux'
+      run: |
+        # Install pulseaudio, portaudio, ALSA, JACK dependencies for
+        # corresponding backends.
+        # Install Qt5 dependency for alsoft-config.
+        sudo apt-get install -y -qq                                            \
+          libpulse-dev                                                         \
+          portaudio19-dev                                                      \
+          libasound2-dev                                                       \
+          libjack-dev                                                          \
+          qtbase5-dev

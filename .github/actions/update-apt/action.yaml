@@ -1,0 +1,14 @@
+name: Update Apt
+description: |
+  Updates the apt cache for the runner, caching whether the cache was already
+  updated. If run on a non-Linux runner, this action will do nothing.
+
+runs:
+  using: composite
+  steps:
+    - name: Install Boxer requirements
+      shell: bash
+      if: runner.os == 'Linux' && env.APT_UPDATED != 'true'
+      run: |
+        sudo apt-get update -y -qq
+        echo "APT_UPDATED=true" >> "${GITHUB_ENV}"

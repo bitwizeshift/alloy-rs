@@ -1,0 +1,19 @@
+name: Setup Boxer
+description: |
+  Installs prerequisites to be able to build and run Boxer.
+
+runs:
+  using: composite
+  steps:
+    - name: Update Apt
+      if: runner.os == 'Linux'
+      uses: ./.github/actions/update-apt
+
+    # macOS and Windows both use builtin requirements for Boxer, so only the linux
+    # runners need to install dependencies.
+    - name: Install Boxer requirements
+      shell: bash
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get install -y -qq                                            \
+          libgtk-3-dev

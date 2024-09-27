@@ -1,0 +1,28 @@
+name: Setup Clang
+description: |
+  Prepares the runner image for compiling with `clang`.
+
+runs:
+  using: composite
+  steps:
+    # ubuntu-latest, windows-latest, and macos-latest all come with cmake and
+    # clang, so we don't need any of these base dependencies.
+    #
+    # See:
+    #   - https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md
+    #   - https://github.com/actions/runner-images/blob/main/images/macos/macos-12-Readme.md
+    #   - https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md
+
+    - name: Prepare compiler
+      shell: bash
+      if: runner.os == 'Linux'
+      run: |
+        echo "CC=clang-18" >> "${GITHUB_ENV}"
+        echo "CXX=clang++-18" >> "${GITHUB_ENV}"
+
+    - name: Prepare compiler
+      shell: bash
+      if: runner.os == 'macOS'
+      run: |
+        echo "CC=$(brew --prefix llvm@18)/bin/clang" >> "${GITHUB_ENV}"
+        echo "CXX=$(brew --prefix llvm@18)/bin/clang++" >> "${GITHUB_ENV}"

@@ -1,0 +1,83 @@
+name: Setup Vulkan
+description: |
+  Installs prerequisites to be able to build Vulkan.
+
+runs:
+  using: composite
+  steps:
+    - name: Create Temp Directory
+      shell: bash
+      id: dir
+      run: |
+        path="${{ runner.temp }}/vulkan-sdk"
+        mkdir -p "${path}"
+        echo path="${path}" >> "${GITHUB_OUTPUT}"
+
+    - name: Prepare download path
+      shell: bash
+      id: prepare
+      run: |
+        if [[ "${{ runner.os }}" == "Linux" ]]; then
+          path="${{ steps.dir.outputs.path }}/vulkan-sdk.tar.xz"
+        else
+          path="${{ steps.dir.outputs.path }}/vulkan-sdk.dmg"
+        fi
+        echo "sdk-binary=${path}" >> "${GITHUB_OUTPUT}"
+
+    - name: Cache vulkan-sdk
+      uses: actions/cache@v4
+      id: cache-vulkan
+      with:
+        path: ${{ steps.prepare.outputs.sdk-binary }}
+        key: vulkan-sdk-${{ runner.os }}
+
+    - name: Download vulkan-sdk
+      shell: bash
+      if: steps.cache-vulkan.outputs.cache-hit != 'true'
+      working-directory: "${{ steps.dir.outputs.path }}"
+      id: download
+      run: |
+        if [[ "${{ runner.os }}" == "Linux" ]]; then
+          wget https://sdk.lunarg.com/sdk/download/latest/linux/vulkan-sdk.tar.xz
+        else
+          wget https://sdk.lunarg.com/sdk/download/latest/mac/vulkan-sdk.dmg
+        fi
+
+    - name: Install Vulkan SDK (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      working-directory: "${{ steps.dir.outputs.path }}"
+      run: |
+        tar -xf "${{ steps.prepare.outputs.sdk-binary }}"
+        lib_dir="$(find "$(pwd)" -type d -name "lib" -print -quit)"
+
+        export VULKAN_SDK=$(dirname "${lib_dir}")
+        echo VULKAN_SDK="${VULKAN_SDK}" >> "${GITHUB_ENV}"
+        echo LD_LIBRARY_PATH="${VULKAN_SDK}/lib:$LD_LIBRARY_PATH" >> "${GITHUB_ENV}"
+        echo VK_ADD_LAYER_PATH="${VULKAN_SDK}/share/vulkan/explicit_layer.d${VK_ADD_LAYER_PATH:+:$VK_ADD_LAYER_PATH}" >> "${GITHUB_ENV}"
+        echo "${VULKAN_SDK}/bin" >> "${GITHUB_PATH}"
+
+    - name: Install Vulkan SDK (macOS)
+      shell: bash
+      if: runner.os == 'macOS'
+      run: |
+        hdiutil attach "${{ steps.prepare.outputs.sdk-binary }}" -mountpoint vulkan-sdk
+        vulkan_root="${HOME}/VulkanSDK"
+        ./vulkan-sdk/InstallVulkan.app/Contents/MacOS/InstallVulkan            \
+          --root "${vulkan_root}"                                              \
+          --accept-licenses                                                    \
+          --default-answer                                                     \
+          --confirm-command install
+
+        export VULKAN_SDK="${vulkan_root}/macOS"
+        echo VULKAN_SDK="${VULKAN_SDK}" >> "${GITHUB_ENV}"
+        echo DYLD_LIBRARY_PATH="$VULKAN_SDK/lib:$DYLD_LIBRARY_PATH"  >> "${GITHUB_ENV}"
+        echo LD_LIBRARY_PATH="$VULKAN_SDK/lib:$LD_LIBRARY_PATH" >> "${GITHUB_ENV}"
+        echo VK_ICD_FILENAMES="$VULKAN_SDK/etc/vulkan/icd.d/MoltenVK_icd.json"  >> "${GITHUB_ENV}"
+        echo VK_LAYER_PATH="$VULKAN_SDK/share/vulkan/explicit_layer.d"  >> "${GITHUB_ENV}"
+        echo "$VULKAN_SDK/bin"  >> "${GITHUB_PATH}"
+
+    - name: Print SDK Contents
+      shell: bash
+      run: |
+        find "${VULKAN_SDK}" -type f

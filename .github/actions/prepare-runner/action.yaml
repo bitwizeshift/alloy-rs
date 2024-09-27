@@ -4,133 +4,23 @@ description: "Prepares the underlying runner for building this project"
 runs:
   using: "composite"
   steps:
-    # Install base dependencies
+    - name: Setup Clang
+      uses: ./.github/actions/setup-clang
 
-    # ubuntu-latest, windows-latest, and macos-latest all come with cmake and
-    # clang, so we don't need any of these base dependencies.
-    #
-    # See:
-    #   - https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md
-    #   - https://github.com/actions/runner-images/blob/main/images/macos/macos-12-Readme.md
-    #   - https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md
+    - name: Update package cache
+      uses: ./.github/actions/update-apt
 
-    - name: Prepare compiler
-      shell: bash
-      if: runner.os == 'Linux'
-      run: |
-        echo "CC=clang-18" >> "${GITHUB_ENV}"
-        echo "CXX=clang++-18" >> "${GITHUB_ENV}"
+    - name: Setup OpenAL Soft
+      uses: ./.github/actions/setup-openal-soft
 
-    - name: Prepare compiler
-      shell: bash
-      if: runner.os == 'macOS'
-      run: |
-        echo "CC=$(brew --prefix llvm@15)/bin/clang" >> "${GITHUB_ENV}"
-        echo "CXX=$(brew --prefix llvm@15)/bin/clang++" >> "${GITHUB_ENV}"
+    - name: Setup GLFW
+      uses: ./.github/actions/setup-glfw
 
-    # OpenAL
+    - name: Setup Boxer
+      uses: ./.github/actions/setup-boxer
 
-    # macOS and Windows both use builtin audio-requirements, so only the linux
-    # runners need to install the audio dependencies in order to work.
-
-    - name: Install OpenAL requirements
-      shell: bash
-      if: runner.os == 'Linux'
-      run: |
-        # Install pulseaudio, portaudio, ALSA, JACK dependencies for
-        # corresponding backends.
-        # Install Qt5 dependency for alsoft-config.
-        sudo apt-get update -y
-        sudo apt-get install -y -qq                                            \
-          libpulse-dev                                                         \
-          portaudio19-dev                                                      \
-          libasound2-dev                                                       \
-          libjack-dev                                                          \
-          qtbase5-dev
-
-    # GLFW
-
-    # macOS and Windows both use builtin requirements for GLFW, so only the linux
-    # runners need to install dependencies.
-
-    - name: Install GLFW requirements
-      shell: bash
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get update -y
-        sudo apt-get install -y -qq                                            \
-          libxrandr-dev                                                        \
-          libxinerama-dev                                                      \
-          libxcursor-dev                                                       \
-          libxi-dev                                                            \
-          libx11-dev
-
-    # Boxer
-
-    - name: Install Boxer requirements
-      shell: bash
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get install -y -qq                                            \
-          libgtk-3-dev
-
-    # Vulkan
-
-    - name: Cache vulkan-sdk.dmg
-      uses: actions/cache@v4
-      if: runner.os == 'macOS'
-      id: download-vulkan
-      with:
-        path: vulkan-sdk.dmg
-        key: vulkan-sdk-${{ runner.os }}
-
-    - name: Create Temp Directory
-      shell: bash
-      id: dir
-      run: |
-        path="${{ runner.temp }}/vulkan-sdk"
-        mkdir -p "${path}"
-        echo path="${path}" >> "${GITHUB_OUTPUT}"
-
-    - name: Install Vulkan SDK
-      if: runner.os == 'Linux'
-      shell: bash
-      working-directory: "${{ steps.dir.outputs.path }}"
-      run: |
-        wget https://sdk.lunarg.com/sdk/download/latest/linux/vulkan-sdk.tar.xz
-        tar -xf vulkan-sdk.tar.xz
-        root=$(dirname "$(find . -type d -name "bin")")
-        echo VULKAN_SDK="${root}" >> "${GITHUB_ENV}"
-        echo LD_LIBRARY_PATH="${root}/lib:$LD_LIBRARY_PATH" >> "${GITHUB_ENV}"
-        echo VK_ADD_LAYER_PATH="${root}/share/vulkan/explicit_layer.d${VK_ADD_LAYER_PATH:+:$VK_ADD_LAYER_PATH}" >> "${GITHUB_ENV}"
-        echo "${root}/bin" >> "${GITHUB_PATH}"
-
-    - name: Download vulkan-sdk.dmg
-      shell: bash
-      if: runner.os == 'macOS' && steps.download-vulkan.outputs.cache-hit != 'true'
-      run: |
-        wget https://sdk.lunarg.com/sdk/download/latest/mac/vulkan-sdk.dmg
-
-    - name: Install Vulkan SDK
-      shell: bash
-      if: runner.os == 'macOS'
-      run: |
-        hdiutil attach vulkan-sdk.dmg -mountpoint vulkan-sdk
-        vulkan_root="${HOME}/VulkanSDK"
-        ./vulkan-sdk/InstallVulkan.app/Contents/MacOS/InstallVulkan            \
-          --root "${vulkan_root}"                                              \
-          --accept-licenses                                                    \
-          --default-answer                                                     \
-          --confirm-command install
-
-        export VULKAN_SDK="${vulkan_root}/macOS"
-        echo VULKAN_SDK="${VULKAN_SDK}" >> "${GITHUB_ENV}"
-        echo DYLD_LIBRARY_PATH="$VULKAN_SDK/lib:$DYLD_LIBRARY_PATH"  >> "${GITHUB_ENV}"
-        echo LD_LIBRARY_PATH="$VULKAN_SDK/lib:$LD_LIBRARY_PATH" >> "${GITHUB_ENV}"
-        echo VK_ICD_FILENAMES="$VULKAN_SDK/etc/vulkan/icd.d/MoltenVK_icd.json"  >> "${GITHUB_ENV}"
-        echo VK_LAYER_PATH="$VULKAN_SDK/share/vulkan/explicit_layer.d"  >> "${GITHUB_ENV}"
-        echo "$VULKAN_SDK/bin"  >> "${GITHUB_PATH}"
-        ls -la $VULKAN_SDK/lib
+    - name: Setup Vulkan
+      uses: ./.github/actions/setup-vulkan
 
     - name: Checkout 3rd-party
       uses: ./.github/actions/checkout

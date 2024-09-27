@@ -1,0 +1,23 @@
+name: Setup GLFW
+description: |
+  Installs prerequisites to be able to build and run GLFW.
+
+runs:
+  using: composite
+  steps:
+    - name: Update Apt
+      if: runner.os == 'Linux'
+      uses: ./.github/actions/update-apt
+
+    # macOS and Windows both use builtin requirements for GLFW, so only the linux
+    # runners need to install dependencies.
+    - name: Install GLFW requirements
+      shell: bash
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get install -y -qq                                            \
+          libxrandr-dev                                                        \
+          libxinerama-dev                                                      \
+          libxcursor-dev                                                       \
+          libxi-dev                                                            \
+          libx11-dev
