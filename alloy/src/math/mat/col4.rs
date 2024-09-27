@@ -22,23 +22,9 @@ impl Col4 {
   ///
   /// This function will panic if the slice is not at least 4 elements long.
   #[inline(always)]
+  #[allow(unused)] // This is used in tests
   pub(crate) unsafe fn from_slice(slice: &[f32]) -> &Self {
     std::mem::transmute(StridedSlice::<f32, 4>::from_slice(slice))
-  }
-
-  /// Creates a new column from a mutable slice.
-  ///
-  /// # Safety
-  ///
-  /// This function is unsafe because the caller must ensure that the slice is
-  /// at least 16 elements long.
-  ///
-  /// # Panics
-  ///
-  /// This function will panic if the slice is not at least 4 elements long.
-  #[inline(always)]
-  pub(crate) unsafe fn from_mut_slice(slice: &mut [f32]) -> &Self {
-    std::mem::transmute(StridedSlice::<f32, 4>::from_mut_slice(slice))
   }
 
   /// Creates a new column from a raw pointer and a length.
