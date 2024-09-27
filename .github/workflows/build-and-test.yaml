@@ -20,11 +20,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Clang
-        uses: ./.github/actions/setup-clang
-
       - name: Update package cache
         uses: ./.github/actions/update-apt
+
+      - name: Setup Clang
+        uses: ./.github/actions/setup-clang
 
       - name: Setup OpenAL Soft
         uses: ./.github/actions/setup-openal-soft

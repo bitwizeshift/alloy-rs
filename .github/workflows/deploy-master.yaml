@@ -34,7 +34,7 @@ jobs:
     name: Promote to Master
     runs-on: ubuntu-latest
     if: success()
-    needs: [verify-build, verify-docs]
+    needs: [verify-build]
 
     environment:
       name: master
