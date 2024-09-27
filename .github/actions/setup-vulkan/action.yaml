@@ -38,9 +38,9 @@ runs:
       id: download
       run: |
         if [[ "${{ runner.os }}" == "Linux" ]]; then
-          wget https://sdk.lunarg.com/sdk/download/latest/linux/vulkan-sdk.tar.xz
+          wget -q https://sdk.lunarg.com/sdk/download/latest/linux/vulkan-sdk.tar.xz
         else
-          wget https://sdk.lunarg.com/sdk/download/latest/mac/vulkan-sdk.dmg
+          wget -q https://sdk.lunarg.com/sdk/download/latest/mac/vulkan-sdk.dmg
         fi
 
     - name: Install Vulkan SDK (Linux)
