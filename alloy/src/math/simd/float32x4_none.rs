@@ -1,7 +1,6 @@
 use crate::math::simd::common::F32x4Array;
 
-use std::arch::aarch64::float32x4_t;
-
+/// A 128-bit SIMD vector with 4 [f32] components.
 pub struct Float32x4(F32x4Array);
 
 impl Float32x4 {
@@ -26,29 +25,29 @@ impl Float32x4 {
     Self(F32x4Array::new([value, value, value, value]))
   }
 
-  /// Load a vector from a pointer to an aligned series of [f32] values.
+  /// Load a vector from a pointer to an aligned series of [`f32`] values.
   ///
   /// # Safety
   ///
   /// The pointer must be aligned to 16 bytes, and the pointer must be able to
-  /// reach at least 4 [f32] values.
+  /// reach at least 4 [`f32`] values.
   ///
   /// # Parameters
   ///
-  /// * `ptr` - the pointer to the slice of [f32] values
+  /// * `ptr` - the pointer to the slice of [`f32`] values
   pub const unsafe fn from_aligned_ptr(ptr: *const f32) -> Self {
     Self::from_unaligned_ptr(ptr)
   }
 
-  /// Load a vector from a slice of [f32] values.
+  /// Load a vector from a slice of [`f32`] values.
   ///
   /// # Safety
   ///
-  /// The pointer must be able to reach at least 4 [f32] values.
+  /// The pointer must be able to reach at least 4 [`f32`] values.
   ///
   /// # Parameters
   ///
-  /// * `ptr` - the pointer to the slice of [f32] values
+  /// * `ptr` - the pointer to the slice of [`f32`] values
   pub const unsafe fn from_unaligned_ptr(ptr: *const f32) -> Self {
     Self(F32x4Array::new([
       *ptr,
@@ -58,13 +57,12 @@ impl Float32x4 {
     ]))
   }
 
-  /// Store the vector into a slice of [f32] values.
+  /// Store the vector into a slice of [`f32`] values.
   ///
   /// # Safety
   ///
-  /// The pointer must be aligned to 16 bytes, and the pointer must be able to
-  /// reach at least 4 [f32] values.
+  /// The the pointer must be able to reach at least 4 [`f32`] values.
   pub unsafe fn store_aligned(&self, ptr: *mut f32) {
-    std::arch::aarch64::vst1q_f32(ptr, self.as_ptr())
+    ptr.copy_from_nonoverlapping(self.0.as_ptr(), 4);
   }
 }
