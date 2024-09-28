@@ -1301,27 +1301,5 @@ impl fmt::Display for Vector3i {
 }
 
 #[cfg(test)]
-mod test {
-  use super::*;
-
-  #[test]
-  fn test_identity() {
-    let vec = Vector3i::new(4, 2, 0);
-
-    assert_eq!(vec.as_ptr(), &vec[0]);
-    assert_eq!(vec.as_ptr(), &vec.x);
-  }
-
-  #[test]
-  fn test_iter() {
-    let mut vec = Vector3i::new(4, 2, 1);
-
-    for v in vec.iter_mut() {
-      *v = *v * 2
-    }
-
-    assert_eq!(vec.x, 8);
-    assert_eq!(vec.y, 4);
-    assert_eq!(vec.z, 2);
-  }
-}
+#[path = "vec3i.test.rs"]
+mod test;
