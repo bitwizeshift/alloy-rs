@@ -173,7 +173,6 @@ dependencies = [
 name = "glfw"
 version = "0.1.0"
 dependencies = [
- "astd",
  "gl",
  "glfw-sys",
  "vulkan",
@@ -209,8 +208,6 @@ dependencies = [
 name = "imgui"
 version = "0.1.0"
 dependencies = [
- "astd",
- "glfw",
  "imgui-sys",
 ]
 
@@ -460,7 +457,6 @@ checksum = "5e395fcf16a7a3d8127ec99782007af141946b4795001f876d54fb0d55978560"
 name = "vulkan"
 version = "0.1.0"
 dependencies = [
- "astd",
  "vulkan-sys",
 ]
 
