@@ -52,7 +52,7 @@ jobs:
 
       - name: Test
         id: test
-        run: cargo test --verbose
+        run: cargo test --lib --bins --tests --verbose
 
       - name: Doctest
         run: cargo test --doc --verbose
