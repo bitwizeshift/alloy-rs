@@ -217,7 +217,7 @@ pub fn max_cube_map_texture_size() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum depth texture samples.
 pub fn max_depth_texture_samples() -> usize {
   let mut size = 0;
   unsafe {
@@ -226,7 +226,7 @@ pub fn max_depth_texture_samples() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum draw buffers.
 pub fn max_draw_buffers() -> usize {
   let mut size = 0;
   unsafe {
@@ -235,7 +235,7 @@ pub fn max_draw_buffers() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum dual-source draw buffers.
 pub fn max_dual_source_draw_buffers() -> usize {
   let mut size = 0;
   unsafe {
@@ -247,7 +247,7 @@ pub fn max_dual_source_draw_buffers() -> usize {
   size as usize
 }
 
-///
+/// Gets the max elements indices that can be used in a draw call.
 pub fn max_elements_indices() -> usize {
   let mut size = 0;
   unsafe {
@@ -256,7 +256,7 @@ pub fn max_elements_indices() -> usize {
   size as usize
 }
 
-///
+/// Gets the max elements vertices that can be used in a draw call.
 pub fn max_elements_vertices() -> usize {
   let mut size = 0;
   unsafe {
@@ -265,7 +265,7 @@ pub fn max_elements_vertices() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum fragment shader storage block.
 pub fn max_fragment_shader_storage_blocks() -> usize {
   let mut size = 0;
   unsafe {
@@ -277,7 +277,7 @@ pub fn max_fragment_shader_storage_blocks() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum fragment input components.
 pub fn max_fragment_input_components() -> usize {
   let mut size = 0;
   unsafe {
@@ -289,7 +289,7 @@ pub fn max_fragment_input_components() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum fragment uniform components.
 pub fn max_fragment_uniform_components() -> usize {
   let mut size = 0;
   unsafe {
@@ -301,7 +301,7 @@ pub fn max_fragment_uniform_components() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum fragment uniform vectors.
 pub fn max_fragment_uniform_vectors() -> usize {
   let mut size = 0;
   unsafe {
@@ -313,7 +313,7 @@ pub fn max_fragment_uniform_vectors() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum fragment output components.
 pub fn max_fragment_uniform_blocks() -> usize {
   let mut size = 0;
   unsafe {
@@ -325,7 +325,7 @@ pub fn max_fragment_uniform_blocks() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum frame-buffer width.
 pub fn max_framebuffer_width() -> usize {
   let mut size = 0;
   unsafe {
@@ -334,7 +334,7 @@ pub fn max_framebuffer_width() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum frame-buffer height.
 pub fn max_framebuffer_height() -> usize {
   let mut size = 0;
   unsafe {
@@ -343,7 +343,7 @@ pub fn max_framebuffer_height() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum frame-buffer layers.
 pub fn max_framebuffer_layers() -> usize {
   let mut size = 0;
   unsafe {
@@ -352,7 +352,7 @@ pub fn max_framebuffer_layers() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum frame-buffer samples.
 pub fn max_framebuffer_samples() -> usize {
   let mut size = 0;
   unsafe {
@@ -361,7 +361,7 @@ pub fn max_framebuffer_samples() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum atomic counters for geometry shaders.
 pub fn max_geometry_atomic_counters() -> usize {
   let mut size = 0;
   unsafe {
@@ -373,7 +373,7 @@ pub fn max_geometry_atomic_counters() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum geometry shader storage blocks.
 pub fn max_geometry_shader_storage_blocks() -> usize {
   let mut size = 0;
   unsafe {
@@ -385,7 +385,7 @@ pub fn max_geometry_shader_storage_blocks() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum geometry input components.
 pub fn max_geometry_input_components() -> usize {
   let mut size = 0;
   unsafe {
@@ -397,7 +397,7 @@ pub fn max_geometry_input_components() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum geometry-shader output components.
 pub fn max_geometry_output_components() -> usize {
   let mut size = 0;
   unsafe {
@@ -409,7 +409,7 @@ pub fn max_geometry_output_components() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum geometry-shader output vertices.
 pub fn max_geometry_output_vertices() -> usize {
   let mut size = 0;
   unsafe {
@@ -421,7 +421,7 @@ pub fn max_geometry_output_vertices() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum geometry shader texture image units.
 pub fn max_geometry_texture_image_units() -> usize {
   let mut size = 0;
   unsafe {
@@ -433,7 +433,7 @@ pub fn max_geometry_texture_image_units() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum geometry shader uniform blocks.
 pub fn max_geometry_uniform_blocks() -> usize {
   let mut size = 0;
   unsafe {
@@ -445,7 +445,7 @@ pub fn max_geometry_uniform_blocks() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum geometry shader uniform components.
 pub fn max_geometry_uniform_components() -> usize {
   let mut size = 0;
   unsafe {
@@ -457,7 +457,7 @@ pub fn max_geometry_uniform_components() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum integer samples.
 pub fn max_integer_samples() -> usize {
   let mut size = 0;
   unsafe {
@@ -466,7 +466,7 @@ pub fn max_integer_samples() -> usize {
   size as usize
 }
 
-///
+/// Gets the min-map buffer alignment.
 pub fn min_map_buffer_alignment() -> usize {
   let mut size = 0;
   unsafe {
@@ -475,7 +475,7 @@ pub fn min_map_buffer_alignment() -> usize {
   size as usize
 }
 
-///
+/// Gets the max label length.
 pub fn max_label_length() -> usize {
   let mut size = 0;
   unsafe {
@@ -484,7 +484,7 @@ pub fn max_label_length() -> usize {
   size as usize
 }
 
-///
+/// Gets the max progarm texel offset.
 pub fn max_program_texel_offset() -> usize {
   let mut size = 0;
   unsafe {
@@ -493,7 +493,7 @@ pub fn max_program_texel_offset() -> usize {
   size as usize
 }
 
-///
+/// Gets the max rectangular texture size.
 pub fn max_rectangle_texture_size() -> usize {
   let mut size = 0;
   unsafe {
@@ -502,7 +502,7 @@ pub fn max_rectangle_texture_size() -> usize {
   size as usize
 }
 
-///
+/// Gets the max render-buffer size.
 pub fn max_renderbuffer_size() -> usize {
   let mut size = 0;
   unsafe {
@@ -511,7 +511,7 @@ pub fn max_renderbuffer_size() -> usize {
   size as usize
 }
 
-///
+/// Gets the max sample mask words.
 pub fn max_sample_mask_words() -> usize {
   let mut size = 0;
   unsafe {
@@ -520,7 +520,7 @@ pub fn max_sample_mask_words() -> usize {
   size as usize
 }
 
-///
+/// Gets the max server-wait timeout
 pub fn max_server_wait_timeout() -> usize {
   let mut size = 0;
   unsafe {
@@ -529,7 +529,7 @@ pub fn max_server_wait_timeout() -> usize {
   size as usize
 }
 
-///
+/// Gets the max shader storage buffer bindings.
 pub fn max_shader_storage_buffer_bindings() -> usize {
   let mut size = 0;
   unsafe {
@@ -541,7 +541,7 @@ pub fn max_shader_storage_buffer_bindings() -> usize {
   size as usize
 }
 
-///
+/// Gets the max tesselation control atomic counters.
 pub fn max_tess_control_atomic_counters() -> usize {
   let mut size = 0;
   unsafe {
@@ -553,7 +553,7 @@ pub fn max_tess_control_atomic_counters() -> usize {
   size as usize
 }
 
-///
+/// Gets the max tesselation evaluation atomic counters.
 pub fn max_tess_evaluation_atomic_counters() -> usize {
   let mut size = 0;
   unsafe {
@@ -565,7 +565,7 @@ pub fn max_tess_evaluation_atomic_counters() -> usize {
   size as usize
 }
 
-///
+/// Gets the max tesselation control shader storage blocks.
 pub fn max_tess_control_shader_storage_blocks() -> usize {
   let mut size = 0;
   unsafe {
@@ -577,7 +577,7 @@ pub fn max_tess_control_shader_storage_blocks() -> usize {
   size as usize
 }
 
-///
+/// Gets the max tesselation evaluation shader storage blocks.
 pub fn max_tess_evaluation_shader_storage_blocks() -> usize {
   let mut size = 0;
   unsafe {
@@ -589,7 +589,7 @@ pub fn max_tess_evaluation_shader_storage_blocks() -> usize {
   size as usize
 }
 
-///
+/// Gets the max texture buffer size.
 pub fn max_texture_buffer_size() -> usize {
   let mut size = 0;
   unsafe {
@@ -598,7 +598,7 @@ pub fn max_texture_buffer_size() -> usize {
   size as usize
 }
 
-///
+/// Gets the max texture image units.
 pub fn max_texture_image_units() -> usize {
   let mut size = 0;
   unsafe {
@@ -607,7 +607,7 @@ pub fn max_texture_image_units() -> usize {
   size as usize
 }
 
-///
+/// Gets the max texture LOD bias.
 pub fn max_texture_lod_bias() -> usize {
   let mut size = 0;
   unsafe {
@@ -616,7 +616,8 @@ pub fn max_texture_lod_bias() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum number of uniform buffer bindings that can be used in a
+/// vertex shader.
 pub fn max_uniform_buffer_bindings() -> usize {
   let mut size = 0;
   unsafe {
@@ -628,7 +629,7 @@ pub fn max_uniform_buffer_bindings() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum size in basic machine units of a uniform block.
 pub fn max_uniform_block_size() -> usize {
   let mut size = 0;
   unsafe {
@@ -637,7 +638,8 @@ pub fn max_uniform_block_size() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum number of uniform locations that can be used in a vertex
+/// shader.
 pub fn max_uniform_locations() -> usize {
   let mut size = 0;
   unsafe {
@@ -646,7 +648,8 @@ pub fn max_uniform_locations() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum number of vertex shader storage blocks that can be used in
+/// a vertex shader.
 pub fn max_varying_components() -> usize {
   let mut size = 0;
   unsafe {
@@ -655,7 +658,8 @@ pub fn max_varying_components() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum number of varying vectors that can be used in a vertex
+/// shader.
 pub fn max_varying_vectors() -> usize {
   let mut size = 0;
   unsafe {
@@ -664,7 +668,7 @@ pub fn max_varying_vectors() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum number of varying floats that can be used.
 pub fn max_varying_floats() -> usize {
   let mut size = 0;
   unsafe {
@@ -673,7 +677,7 @@ pub fn max_varying_floats() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum number of vertex attributes that can be used.
 pub fn max_vertex_attribs() -> usize {
   let mut size = 0;
   unsafe {
@@ -682,7 +686,7 @@ pub fn max_vertex_attribs() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum number of vertex shader storage blocks.
 pub fn max_vertex_shader_storage_blocks() -> usize {
   let mut size = 0;
   unsafe {
@@ -694,7 +698,7 @@ pub fn max_vertex_shader_storage_blocks() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum number of vertex texture image units.
 pub fn max_vertex_texture_image_units() -> usize {
   let mut size = 0;
   unsafe {
@@ -706,7 +710,7 @@ pub fn max_vertex_texture_image_units() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum number of vertex uniform components.
 pub fn max_vertex_uniform_components() -> usize {
   let mut size = 0;
   unsafe {
@@ -718,7 +722,7 @@ pub fn max_vertex_uniform_components() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum number of vertex uniform vectors.
 pub fn max_vertex_uniform_vectors() -> usize {
   let mut size = 0;
   unsafe {
@@ -727,7 +731,7 @@ pub fn max_vertex_uniform_vectors() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum number of vertex output components.
 pub fn max_vertex_output_components() -> usize {
   let mut size = 0;
   unsafe {
@@ -739,7 +743,7 @@ pub fn max_vertex_output_components() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum number of vertex shader uniform blocks.
 pub fn max_vertex_uniform_blocks() -> usize {
   let mut size = 0;
   unsafe {
@@ -748,7 +752,7 @@ pub fn max_vertex_uniform_blocks() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum number of dimensions the viewport can have.
 pub fn max_viewport_dimensions() -> usize {
   let mut size = 0;
   unsafe {
@@ -757,7 +761,7 @@ pub fn max_viewport_dimensions() -> usize {
   size as usize
 }
 
-///
+/// Gets the maximum number of viewports that can be used.
 pub fn max_viewports() -> usize {
   let mut size = 0;
   unsafe {

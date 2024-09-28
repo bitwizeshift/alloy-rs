@@ -6,7 +6,15 @@ use std::ops::{
   Index, IndexMut, Range, RangeFrom, RangeFull, RangeInclusive, RangeTo, RangeToInclusive,
 };
 
+/// A strided slice is a slice that skips over a fixed number of elements
+/// between each element.
 ///
+/// This enables a "vertical" view of a contiguous slice, where the stride
+/// is the number of elements to skip between each element.
+///
+/// This is a referential type, only intended to be used as `&StridedSlice<T, N>`,
+/// or in larger compositions -- since it enables projecting a 2D-array view on
+/// a 1D slice.
 #[repr(transparent)]
 pub struct StridedSlice<T, const N: usize>([T]);
 
