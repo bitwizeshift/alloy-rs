@@ -15,4 +15,3 @@ debug = []
 
 [dependencies]
 vulkan-sys = { path = "../vulkan-sys" }
-astd = { path = "../astd" }

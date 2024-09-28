@@ -23,4 +23,3 @@ opengl = ["dep:gl", "glfw-sys/opengl"]
 glfw-sys = { path = "../glfw-sys", default-features = false }
 vulkan = { path = "../vulkan", optional = true }
 gl = { path = "../gl", optional = true }
-astd = { path = "../astd" }

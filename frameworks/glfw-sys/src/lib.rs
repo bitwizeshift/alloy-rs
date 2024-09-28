@@ -13,3 +13,8 @@
 #![allow(rustdoc::broken_intra_doc_links)]
 #![allow(clippy::all)]
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+
+// GLFW carries a synthetic dependency to OpenGL. It's not technically required
+// for the library to function, but it's a logical requirement for the library.
+#[cfg(feature = "opengl")]
+use gl_sys as _;

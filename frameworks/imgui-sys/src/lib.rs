@@ -14,6 +14,11 @@
 #![allow(clippy::all)]
 include!(concat!(env!("OUT_DIR"), "/imgui.rs"));
 
+// Imgui carries a synthetic dependency to the OpenGL crate. It's not
+// technically necessary for the library to function, since the bindings are
+// done through C++ -- but it's a logical requirement for the library.
+use gl_sys as _;
+
 pub mod backend {
 
   pub mod glfw {

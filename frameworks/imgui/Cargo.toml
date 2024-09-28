@@ -16,5 +16,3 @@ opengl = ["imgui-sys/opengl"]
 
 [dependencies]
 imgui-sys = { path = "../imgui-sys", default-features = false }
-glfw = { path = "../glfw" }
-astd = { path = "../astd" }

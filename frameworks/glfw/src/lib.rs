@@ -6,6 +6,11 @@
 #![deny(unused_results)]
 #![deny(rust_2018_idioms)]
 
+// GLFW carries a synthetic dependency to OpenGL. It's not technically required
+// for the library to function, but it's a logical requirement for the library.
+#[cfg(feature = "opengl")]
+use gl as _;
+
 pub mod c {
   #![allow(non_upper_case_globals)]
   #![allow(non_camel_case_types)]

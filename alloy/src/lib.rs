@@ -19,6 +19,13 @@
 // TODO: remove after diagnostics are addressed
 #![allow(clippy::missing_transmute_annotations)]
 
+// These dependencies will be used, but are not yet implemented.
+#[cfg(feature = "opengl")]
+use gl as _;
+use glfw as _;
+#[cfg(feature = "openal")]
+use openal as _;
+
 // Core / base modules
 pub mod cmp;
 pub mod core;
