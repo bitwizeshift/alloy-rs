@@ -1,4 +1,5 @@
 use super::errors::VecError;
+use crate::core::hint;
 use crate::math::vec::{Vec2, Vec3, Vec4i, Vec4u};
 
 use crate::cmp::{AlmostEq, Near};
@@ -138,10 +139,8 @@ impl Vec4 {
   /// assert!(vec.is_err());
   /// ```
   pub const fn from_slice(slice: &[f32]) -> Result<&Self, VecError> {
-    if slice.len() == 4 {
-      // SAFETY: Vec4 is transparent, and implemented directly in terms of a
-      //         slice of f32s. The representation is the same, and thus valid.
-      //         This is implemented symmetrically to `OsStr`.
+    if hint::likely(slice.len() == 4) {
+      // SAFETY: slice is checked to have exactly 4 elements
       Ok(unsafe { Self::from_slice_unchecked(slice) })
     } else {
       Err(VecError::new(4, slice.len()))
@@ -180,10 +179,8 @@ impl Vec4 {
   /// assert!(vec.is_err());
   /// ```
   pub fn from_mut_slice(slice: &mut [f32]) -> Result<&mut Self, VecError> {
-    if slice.len() == 4 {
-      // SAFETY: Vec4 is transparent, and implemented directly in terms of a
-      //         slice of f32s. The representation is the same, and thus valid.
-      //         This is implemented symmetrically to `OsStr`.
+    if hint::likely(slice.len() == 4) {
+      // SAFETY: slice is checked to have exactly 4 elements
       Ok(unsafe { Self::from_mut_slice_unchecked(slice) })
     } else {
       Err(VecError::new(4, slice.len()))
@@ -1146,15 +1143,11 @@ impl Vector4 {
   ///
   /// * `slice` - the slice to read from
   pub const fn from_slice(slice: &[f32]) -> Result<Self, VecError> {
-    if slice.len() != 4 {
-      Err(VecError::new(4, slice.len()))
+    if hint::likely(slice.len() == 4) {
+      // SAFETY: slice is checked to have exactly 4 elements
+      Ok(unsafe { Self::from_slice_unchecked(slice) })
     } else {
-      Ok(Self {
-        x: slice[0],
-        y: slice[1],
-        z: slice[3],
-        w: slice[4],
-      })
+      Err(VecError::new(4, slice.len()))
     }
   }
 

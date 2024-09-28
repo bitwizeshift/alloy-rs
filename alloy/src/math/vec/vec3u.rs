@@ -1,4 +1,5 @@
 use super::errors::VecError;
+use crate::core::hint;
 use crate::math::vec::Vec2u;
 
 use std::borrow::{Borrow, BorrowMut};
@@ -126,10 +127,8 @@ impl Vec3u {
   /// assert!(vec.is_err());
   /// ```
   pub const fn from_slice(slice: &[u32]) -> Result<&Self, VecError> {
-    if slice.len() == 3 {
-      // SAFETY: Vec3 is transparent, and implemented directly in terms of a
-      //         slice of u32s. The representation is the same, and thus valid.
-      //         This is implemented symmetrically to `OsStr`.
+    if hint::likely(slice.len() == 3) {
+      // SAFETY: slice is checked to have 3 elements.
       Ok(unsafe { Self::from_slice_unchecked(slice) })
     } else {
       Err(VecError::new(3, slice.len()))
@@ -168,10 +167,8 @@ impl Vec3u {
   /// assert!(vec.is_err());
   /// ```
   pub fn from_mut_slice(slice: &mut [u32]) -> Result<&mut Self, VecError> {
-    if slice.len() == 3 {
-      // SAFETY: Vec3 is transparent, and implemented directly in terms of a
-      //         slice of u32s. The representation is the same, and thus valid.
-      //         This is implemented symmetrically to `OsStr`.
+    if hint::likely(slice.len() == 3) {
+      // SAFETY: slice is checked to have 3 elements
       Ok(unsafe { Self::from_mut_slice_unchecked(slice) })
     } else {
       Err(VecError::new(3, slice.len()))
@@ -753,14 +750,11 @@ impl Vector3u {
   ///
   /// * `slice` - the slice to read from
   pub const fn from_slice(slice: &[u32]) -> Result<Self, VecError> {
-    if slice.len() != 3 {
-      Err(VecError::new(3, slice.len()))
+    if hint::likely(slice.len() == 3) {
+      // SAFETY: slice is checked to have 3 elements.
+      Ok(unsafe { Self::from_slice_unchecked(slice) })
     } else {
-      Ok(Self {
-        x: slice[0],
-        y: slice[1],
-        z: slice[3],
-      })
+      Err(VecError::new(3, slice.len()))
     }
   }
 

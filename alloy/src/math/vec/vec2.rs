@@ -1,4 +1,5 @@
 use super::errors::VecError;
+use crate::core::hint;
 use crate::math::vec::{Vec2i, Vec2u};
 
 use crate::cmp::{AlmostEq, Near};
@@ -132,10 +133,8 @@ impl Vec2 {
   /// assert!(vec.is_err());
   /// ```
   pub const fn from_slice(slice: &[f32]) -> Result<&Self, VecError> {
-    if slice.len() == 2 {
-      // SAFETY: Vec2 is transparent, and implemented directly in terms of a
-      //         slice of f32s. The representation is the same, and thus valid.
-      //         This is implemented symmetrically to `OsStr`.
+    if hint::likely(slice.len() == 2) {
+      // SAFETY: slice is checked to have exactly 2 elements
       Ok(unsafe { Self::from_slice_unchecked(slice) })
     } else {
       Err(VecError::new(2, slice.len()))
@@ -174,10 +173,8 @@ impl Vec2 {
   /// assert!(vec.is_err());
   /// ```
   pub fn from_mut_slice(slice: &mut [f32]) -> Result<&mut Self, VecError> {
-    if slice.len() == 2 {
-      // SAFETY: Vec2 is transparent, and implemented directly in terms of a
-      //         slice of f32s. The representation is the same, and thus valid.
-      //         This is implemented symmetrically to `OsStr`.
+    if hint::likely(slice.len() == 2) {
+      // SAFETY: slice is checked to have exactly 2 elements
       Ok(unsafe { Self::from_mut_slice_unchecked(slice) })
     } else {
       Err(VecError::new(2, slice.len()))
@@ -888,13 +885,11 @@ impl Vector2 {
   ///
   /// * `slice` - the slice to read from
   pub const fn from_slice(slice: &[f32]) -> Result<Self, VecError> {
-    if slice.len() != 2 {
-      Err(VecError::new(2, slice.len()))
+    if hint::likely(slice.len() == 2) {
+      // SAFETY: slice is checked to have exactly 2 elements.
+      Ok(unsafe { Self::from_slice_unchecked(slice) })
     } else {
-      Ok(Self {
-        x: slice[0],
-        y: slice[1],
-      })
+      Err(VecError::new(2, slice.len()))
     }
   }
 
