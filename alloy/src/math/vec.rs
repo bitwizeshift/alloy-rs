@@ -47,6 +47,11 @@ mod vec2;
 mod vec2i;
 mod vec2u;
 
+pub(crate) mod errors;
+
+#[doc(inline)]
+pub use errors::VecError;
+
 #[doc(inline)]
 pub use vec2::*;
 #[doc(inline)]

@@ -1,3 +1,4 @@
+use super::errors::VecError;
 use crate::math::vec::{Vec2, Vec3i, Vec3u};
 
 use crate::cmp::{AlmostEq, Near};
@@ -100,7 +101,7 @@ impl Vec3 {
 
   /// Forms a reference to a [`Vec3`] from a slice of [`f32`].
   ///
-  /// This requires that `slice.len() == 3`, otherwise this returns [`None`].
+  /// This requires that `slice.len() == 3`, otherwise this returns [`VecError`].
   ///
   /// # Parameters
   ///
@@ -130,23 +131,22 @@ impl Vec3 {
   ///
   /// let vec = Vec3::from_slice(slice);
   ///
-  /// assert_eq!(vec, None);
+  /// assert!(vec.is_err());
   /// ```
-  #[must_use]
-  pub const fn from_slice(slice: &[f32]) -> Option<&Self> {
+  pub const fn from_slice(slice: &[f32]) -> Result<&Self, VecError> {
     if slice.len() == 3 {
       // SAFETY: Vec3 is transparent, and implemented directly in terms of a
       //         slice of f32s. The representation is the same, and thus valid.
       //         This is implemented symmetrically to `OsStr`.
-      Some(unsafe { Self::from_slice_unchecked(slice) })
+      Ok(unsafe { Self::from_slice_unchecked(slice) })
     } else {
-      None
+      Err(VecError::new(3, slice.len()))
     }
   }
 
   /// Forms a mutable reference to a [`Vec3`] from a mutable slice of [`f32`].
   ///
-  /// This requires that `slice.len() == 3`, otherwise this returns [`None`].
+  /// This requires that `slice.len() == 3`, otherwise this returns [`VecError`].
   ///
   /// # Parameters
   ///
@@ -173,17 +173,16 @@ impl Vec3 {
   ///
   /// let vec = Vec3::from_mut_slice(slice);
   ///
-  /// assert_eq!(vec, None);
+  /// assert!(vec.is_err());
   /// ```
-  #[must_use]
-  pub fn from_mut_slice(slice: &mut [f32]) -> Option<&mut Self> {
+  pub fn from_mut_slice(slice: &mut [f32]) -> Result<&mut Self, VecError> {
     if slice.len() == 3 {
       // SAFETY: Vec3 is transparent, and implemented directly in terms of a
       //         slice of f32s. The representation is the same, and thus valid.
       //         This is implemented symmetrically to `OsStr`.
-      Some(unsafe { Self::from_mut_slice_unchecked(slice) })
+      Ok(unsafe { Self::from_mut_slice_unchecked(slice) })
     } else {
-      None
+      Err(VecError::new(3, slice.len()))
     }
   }
 
@@ -974,17 +973,16 @@ impl Vector3 {
 
   /// Constructs this vector from a slice of floats.
   ///
-  /// This will return [`None`] if `slice.len()` is not equal to 2.
+  /// This will return [`VecError`] if `slice.len()` is not equal to 2.
   ///
   /// # Parameters
   ///
   /// * `slice` - the slice to read from
-  #[must_use]
-  pub const fn from_slice(slice: &[f32]) -> Option<Self> {
+  pub const fn from_slice(slice: &[f32]) -> Result<Self, VecError> {
     if slice.len() != 3 {
-      None
+      Err(VecError::new(3, slice.len()))
     } else {
-      Some(Self {
+      Ok(Self {
         x: slice[0],
         y: slice[1],
         z: slice[3],

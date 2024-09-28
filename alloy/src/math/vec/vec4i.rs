@@ -1,3 +1,4 @@
+use super::errors::VecError;
 use crate::math::vec::{Vec2i, Vec3i};
 
 use std::borrow::{Borrow, BorrowMut};
@@ -94,7 +95,7 @@ impl Vec4i {
 
   /// Forms a reference to a [`Vec4i`] from a slice of [`i32`].
   ///
-  /// This requires that `slice.len() == 4`, otherwise this returns [`None`].
+  /// This requires that `slice.len() == 4`, otherwise this returns [`VecError`].
   ///
   /// # Parameters
   ///
@@ -125,23 +126,22 @@ impl Vec4i {
   ///
   /// let vec = Vec4i::from_slice(slice);
   ///
-  /// assert_eq!(vec, None);
+  /// assert!(vec.is_err());
   /// ```
-  #[must_use]
-  pub const fn from_slice(slice: &[i32]) -> Option<&Self> {
+  pub const fn from_slice(slice: &[i32]) -> Result<&Self, VecError> {
     if slice.len() == 4 {
       // SAFETY: Vec4 is transparent, and implemented directly in terms of a
       //         slice of i32s. The representation is the same, and thus valid.
       //         This is implemented symmetrically to `OsStr`.
-      Some(unsafe { Self::from_slice_unchecked(slice) })
+      Ok(unsafe { Self::from_slice_unchecked(slice) })
     } else {
-      None
+      Err(VecError::new(4, slice.len()))
     }
   }
 
   /// Forms a mutable reference to a [`Vec4i`] from a mutable slice of [`i32`].
   ///
-  /// This requires that `slice.len() == 4`, otherwise this returns [`None`].
+  /// This requires that `slice.len() == 4`, otherwise this returns [`VecError`].
   ///
   /// # Parameters
   ///
@@ -168,17 +168,16 @@ impl Vec4i {
   ///
   /// let vec = Vec4i::from_mut_slice(slice);
   ///
-  /// assert_eq!(vec, None);
+  /// assert!(vec.is_err());
   /// ```
-  #[must_use]
-  pub fn from_mut_slice(slice: &mut [i32]) -> Option<&mut Self> {
+  pub fn from_mut_slice(slice: &mut [i32]) -> Result<&mut Self, VecError> {
     if slice.len() == 4 {
       // SAFETY: Vec4 is transparent, and implemented directly in terms of a
       //         slice of i32s. The representation is the same, and thus valid.
       //         This is implemented symmetrically to `OsStr`.
-      Some(unsafe { Self::from_mut_slice_unchecked(slice) })
+      Ok(unsafe { Self::from_mut_slice_unchecked(slice) })
     } else {
-      None
+      Err(VecError::new(4, slice.len()))
     }
   }
 
@@ -921,17 +920,16 @@ impl Vector4i {
 
   /// Constructs this vector from a slice of floats.
   ///
-  /// This will return [`None`] if `slice.len()` is not equal to 2.
+  /// This will return [`VecError`] if `slice.len()` is not equal to 2.
   ///
   /// # Parameters
   ///
   /// * `slice` - the slice to read from
-  #[must_use]
-  pub const fn from_slice(slice: &[i32]) -> Option<Self> {
+  pub const fn from_slice(slice: &[i32]) -> Result<Self, VecError> {
     if slice.len() != 4 {
-      None
+      Err(VecError::new(4, slice.len()))
     } else {
-      Some(Self {
+      Ok(Self {
         x: slice[0],
         y: slice[1],
         z: slice[3],
