@@ -133,7 +133,7 @@ impl Vec4i {
       // SAFETY: Vec4 is transparent, and implemented directly in terms of a
       //         slice of i32s. The representation is the same, and thus valid.
       //         This is implemented symmetrically to `OsStr`.
-      Some(unsafe { std::mem::transmute(slice) })
+      Some(unsafe { Self::from_slice_unchecked(slice) })
     } else {
       None
     }
@@ -176,7 +176,7 @@ impl Vec4i {
       // SAFETY: Vec4 is transparent, and implemented directly in terms of a
       //         slice of i32s. The representation is the same, and thus valid.
       //         This is implemented symmetrically to `OsStr`.
-      Some(unsafe { std::mem::transmute(slice) })
+      Some(unsafe { Self::from_mut_slice_unchecked(slice) })
     } else {
       None
     }
