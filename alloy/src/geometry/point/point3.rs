@@ -1,4 +1,4 @@
-use crate::math::vec::{Vec3, Vector3};
+use crate::math::vec::{Vec3, Vec4, Vector3};
 use std::fmt;
 use std::ops::{Add, Deref, DerefMut, Div, Mul, Sub};
 
@@ -32,6 +32,18 @@ impl Point3 {
   #[inline(always)]
   pub const fn from_vec3(v: &Vec3) -> Self {
     Self::new(v.x(), v.y(), v.z())
+  }
+
+  /// Create a new point from a 4-component vector
+  ///
+  /// This discards the w coordinate.
+  ///
+  /// # Parameters
+  ///
+  /// * `v` - The vector to create the point from
+  #[inline(always)]
+  pub const fn from_vec4(v: &Vec4) -> Self {
+    Self::from_vec3(v.xyz())
   }
 
   /// Convert the point to a vector
@@ -76,7 +88,7 @@ impl From<Point3> for Vector3 {
   }
 }
 
-// Getters / Setters
+// Conversion
 impl Point3 {
   /// Get the x-coordinate of the point
   #[inline(always)]
@@ -88,26 +100,6 @@ impl Point3 {
   #[inline(always)]
   pub fn as_mut_vec3(&mut self) -> &mut Vec3 {
     self.0.as_mut_vec3()
-  }
-
-  /// Get the minimum values between two points
-  ///
-  /// # Parameters
-  ///
-  /// * `other` - The other point to compare against
-  #[inline]
-  pub fn min(&self, other: &Point3) -> Point3 {
-    Self(self.0.min(&other.0))
-  }
-
-  /// Get the maximum values between two points
-  ///
-  /// # Parameters
-  ///
-  /// * `other` - The other point to compare against
-  #[inline]
-  pub fn max(&self, other: &Point3) -> Point3 {
-    Self(self.0.max(&other.0))
   }
 }
 
@@ -138,6 +130,47 @@ impl DerefMut for Point3 {
   #[inline(always)]
   fn deref_mut(&mut self) -> &mut Self::Target {
     self.as_mut_vec3()
+  }
+}
+
+// Properties
+impl Point3 {
+  /// Get the minimum values between two points
+  ///
+  /// # Parameters
+  ///
+  /// * `other` - The other point to compare against
+  #[inline]
+  pub fn min(&self, other: &Point3) -> Point3 {
+    Self(self.0.min(&other.0))
+  }
+
+  /// Get the maximum values between two points
+  ///
+  /// # Parameters
+  ///
+  /// * `other` - The other point to compare against
+  #[inline]
+  pub fn max(&self, other: &Point3) -> Point3 {
+    Self(self.0.max(&other.0))
+  }
+
+  /// Get the distance between two points
+  ///
+  /// # Parameters
+  ///
+  /// * `other` - The other point to get the distance to
+  pub fn distance_to(&self, other: &Point3) -> f32 {
+    (other.0 - self.0).magnitude()
+  }
+
+  /// Get the square distance between two points
+  ///
+  /// # Parameters
+  ///
+  /// * `other` - The other point to get the square distance to
+  pub fn square_distance_to(&self, other: &Point3) -> f32 {
+    (other.0 - self.0).square_magnitude()
   }
 }
 
