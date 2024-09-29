@@ -2,6 +2,10 @@
 mod aabb;
 mod plane;
 mod point;
+mod traits;
+
+#[doc(inline)]
+pub use traits::*;
 
 #[doc(inline)]
 pub use aabb::*;

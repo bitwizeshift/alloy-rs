@@ -1,10 +1,11 @@
+use std::fmt;
 use std::ops::{Deref, DerefMut};
 
 use crate::cmp::AlmostEq;
-use crate::math::vec::{Vec2, Vec3, Vec4, Vector4};
+use crate::math::vec::{Vec2, Vec3, Vec4, Vector3, Vector4};
 use crate::ops::{Cross, Dot};
 
-use super::Point3;
+use super::{Encloses, Intersects, Point3};
 
 /// A value type that represents a plane in 3D space with the equation:
 /// `a*x + b*y + c*z + d = 0`.
@@ -12,13 +13,23 @@ use super::Point3;
 /// Points can implicitly deref into [`Vec4`] to allow for easily using points
 /// in places where vectors are expected.
 #[repr(C)]
-#[derive(Clone, Copy, Default, PartialEq, PartialOrd, Debug)]
+#[derive(Clone, Copy, Default, PartialEq, PartialOrd)]
 pub struct Plane {
   data: Vector4,
 }
 
-// Construction
+impl fmt::Debug for Plane {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    f.debug_struct("Plane")
+      .field("a", &self.a())
+      .field("b", &self.b())
+      .field("c", &self.c())
+      .field("d", &self.d())
+      .finish()
+  }
+}
 
+// Construction
 impl Plane {
   /// Creates a new plane with the given coefficients.
   ///
@@ -54,7 +65,7 @@ impl Plane {
   ///
   /// * `point` - The point on the plane
   /// * `normal` - The normal of the plane
-  pub fn from_point_and_normal(point: &Vec3, normal: &Vec3) -> Self {
+  pub fn from_point_and_normal(point: &Point3, normal: &Vec3) -> Self {
     let d = -point.dot(normal);
     Self {
       data: Vector4::new(normal.x(), normal.y(), normal.z(), d),
@@ -68,7 +79,7 @@ impl Plane {
   /// * `p0` - The first point
   /// * `p1` - The second point
   /// * `p2` - The third point
-  pub fn from_points_clockwise(p0: &Vec3, p1: &Vec3, p2: &Vec3) -> Self {
+  pub fn from_points_clockwise(p0: &Point3, p1: &Point3, p2: &Point3) -> Self {
     let normal = (p2 - p0).cross(&(p1 - p0)).normalized();
 
     Self::from_point_and_normal(p0, &normal)
@@ -82,7 +93,7 @@ impl Plane {
   /// * `p0` - The first point
   /// * `p1` - The second point
   /// * `p2` - The third point
-  pub fn from_points_counter_clockwise(p0: &Vec3, p1: &Vec3, p2: &Vec3) -> Self {
+  pub fn from_points_counter_clockwise(p0: &Point3, p1: &Point3, p2: &Point3) -> Self {
     let normal = (p1 - p0).cross(&(p2 - p0)).normalized();
 
     Self::from_point_and_normal(p0, &normal)
@@ -328,7 +339,10 @@ impl Plane {
   pub fn set(&mut self, abcd: &Vec4) {
     self.data.set(abcd)
   }
+}
 
+// Conversion
+impl Plane {
   /// Gets the normal of this plane
   #[inline(always)]
   pub const fn as_vec4(&self) -> &Vec4 {
@@ -383,7 +397,7 @@ impl Plane {
     use crate::ops::Dot;
     let abc = self.data.as_vec4().xyz();
 
-    abc.dot(point) + self.d()
+    abc.dot(point.as_vec3()) + self.d()
   }
 
   /// Checks if the plane contains the point within the default epsilon.
@@ -401,7 +415,7 @@ impl Plane {
   ///
   /// * `point` - The point to check
   pub fn is_point_over_plane(&self, point: &Point3) -> bool {
-    self.data.as_vec4().xyz().dot(point) > self.d()
+    self.data.as_vec4().xyz().dot(point.as_vec3()) > self.d()
   }
 
   /// Checks if the point exists under the plane
@@ -410,7 +424,7 @@ impl Plane {
   ///
   /// * `point` - The point to check
   pub fn is_point_under_plane(&self, point: &Point3) -> bool {
-    self.data.as_vec4().xyz().dot(point) < self.d()
+    self.data.as_vec4().xyz().dot(point.as_vec3()) < self.d()
   }
 
   /// Gets the nearest point on the plane to the given point
@@ -421,10 +435,23 @@ impl Plane {
   pub fn nearest_point(&self, point: &Point3) -> Point3 {
     let abc = self.data.as_vec4().xyz();
 
-    let t = -(abc.dot(point) + self.d());
+    let t = -(abc.dot(point.as_vec3()) + self.d());
     let scaled_normal = abc * t;
 
     *point + scaled_normal.as_vec3()
+  }
+}
+
+impl Intersects for Plane {
+  fn intersects(&self, other: &Self) -> bool {
+    let normal = self.normal().cross(other.normal());
+    !normal.almost_eq(&Vector3::ZERO)
+  }
+}
+
+impl Encloses<Point3> for Plane {
+  fn encloses(&self, point: &Point3) -> bool {
+    self.contains(point)
   }
 }
 

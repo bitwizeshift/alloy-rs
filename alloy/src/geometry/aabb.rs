@@ -1,6 +1,6 @@
 use crate::math::vec::Vector3;
 
-use crate::geometry::{Plane, Point3};
+use crate::geometry::{Encloses, Intersects, Plane, Point3};
 
 /// Axis-aligned bounding box
 pub struct AABB {
@@ -201,6 +201,24 @@ impl AABB {
       && self.max.x() >= other.max.x()
       && self.max.y() >= other.max.y()
       && self.max.z() >= other.max.z()
+  }
+}
+
+impl Intersects for AABB {
+  fn intersects(&self, other: &Self) -> bool {
+    self.intersects(other)
+  }
+}
+
+impl Encloses for AABB {
+  fn encloses(&self, other: &Self) -> bool {
+    self.encloses(other)
+  }
+}
+
+impl Encloses<Point3> for AABB {
+  fn encloses(&self, point: &Point3) -> bool {
+    self.contains_point(point)
   }
 }
 
