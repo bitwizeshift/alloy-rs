@@ -174,13 +174,10 @@ impl AABB {
       && self.max.y() >= point.y()
       && self.max.z() >= point.z()
   }
+}
 
-  /// Check if the bounding box intersects with another bounding box
-  ///
-  /// # Parameters
-  ///
-  /// * `other` - The other bounding box to check against
-  pub fn intersects(&self, other: &Self) -> bool {
+impl Intersects for AABB {
+  fn intersects(&self, other: &Self) -> bool {
     self.min.x() <= other.max.x()
       && self.min.y() <= other.max.y()
       && self.min.z() <= other.max.z()
@@ -188,31 +185,16 @@ impl AABB {
       && self.max.y() >= other.min.y()
       && self.max.z() >= other.min.z()
   }
+}
 
-  /// Check if the bounding box encloses another bounding box
-  ///
-  /// # Parameters
-  ///
-  /// * `other` - The other bounding box to check against
-  pub fn encloses(&self, other: &Self) -> bool {
+impl Encloses for AABB {
+  fn encloses(&self, other: &Self) -> bool {
     self.min.x() <= other.min.x()
       && self.min.y() <= other.min.y()
       && self.min.z() <= other.min.z()
       && self.max.x() >= other.max.x()
       && self.max.y() >= other.max.y()
       && self.max.z() >= other.max.z()
-  }
-}
-
-impl Intersects for AABB {
-  fn intersects(&self, other: &Self) -> bool {
-    self.intersects(other)
-  }
-}
-
-impl Encloses for AABB {
-  fn encloses(&self, other: &Self) -> bool {
-    self.encloses(other)
   }
 }
 

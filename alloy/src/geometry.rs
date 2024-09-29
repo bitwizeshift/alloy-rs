@@ -1,5 +1,6 @@
 //! This module contains the model data structures and functions.
 mod aabb;
+mod intersection;
 mod plane;
 mod point;
 mod sphere;
