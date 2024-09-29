@@ -15,17 +15,17 @@ fn plane_distance_to_point() {
 }
 
 #[test]
-fn plane_contains() {
+fn plane_contains_point() {
   let sut = Plane::new(0.0, 1.0, 0.0, 0.0);
 
   // On the plane
-  assert!(sut.contains(&Point3::new(0.0, 0.0, 0.0)));
+  assert!(sut.contains_point(&Point3::new(0.0, 0.0, 0.0)));
 
   // Above the plane
-  assert!(!sut.contains(&Point3::new(0.0, 1.0, 0.0)));
+  assert!(!sut.contains_point(&Point3::new(0.0, 1.0, 0.0)));
 
   // Below the plane
-  assert!(!sut.contains(&Point3::new(0.0, -1.0, 0.0)));
+  assert!(!sut.contains_point(&Point3::new(0.0, -1.0, 0.0)));
 }
 
 #[test]

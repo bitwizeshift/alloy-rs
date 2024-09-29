@@ -405,7 +405,7 @@ impl Plane {
   /// # Parameters
   ///
   /// * `point` - The point to check
-  pub fn contains(&self, point: &Point3) -> bool {
+  pub fn contains_point(&self, point: &Point3) -> bool {
     self.distance_to_point(point).almost_eq(&0.0)
   }
 
@@ -451,7 +451,7 @@ impl Intersects for Plane {
 
 impl Encloses<Point3> for Plane {
   fn encloses(&self, point: &Point3) -> bool {
-    self.contains(point)
+    self.contains_point(point)
   }
 }
 
