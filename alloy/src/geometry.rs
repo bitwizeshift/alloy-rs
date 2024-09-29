@@ -1,10 +1,14 @@
 //! This module contains the model data structures and functions.
 mod aabb;
 mod intersection;
+mod line;
 mod plane;
 mod point;
 mod sphere;
 mod traits;
+
+#[doc(inline)]
+pub use line::*;
 
 #[doc(inline)]
 pub use traits::*;

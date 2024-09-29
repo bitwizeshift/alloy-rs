@@ -113,6 +113,16 @@ impl AABB {
     Vector3::new(self.max.as_vec3().x(), 0.0, 0.0)
   }
 
+  /// Get the minimum point of the bounding box
+  pub const fn min(&self) -> &Point3 {
+    &self.min
+  }
+
+  /// Get the maximum point of the bounding box
+  pub const fn max(&self) -> &Point3 {
+    &self.max
+  }
+
   /// Get the center of the bounding box
   pub fn center(&self) -> Point3 {
     const HALF: f32 = 0.5;
