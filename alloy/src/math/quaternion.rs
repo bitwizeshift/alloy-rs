@@ -44,6 +44,13 @@ impl Quaternion {
     Self(Vector4::new(w, i, j, k))
   }
 
+  /// Returns the unit/identity quaternion.
+  #[must_use]
+  #[inline(always)]
+  pub const fn identity() -> Self {
+    Self::UNIT
+  }
+
   /// Creates a new quaternion from a 4D vector.
   ///
   /// # Parameters
@@ -113,7 +120,7 @@ impl Quaternion {
     let half_angle = angle.to_angle::<Radian>() / 2.0;
     let (sin_half_angle, cos_half_angle) = half_angle.sin_cos();
 
-    Quaternion::new(cos_half_angle, sin_half_angle, 0.0, 0.0)
+    Quaternion::new(cos_half_angle, 0.0, sin_half_angle, 0.0)
   }
 
   /// Creates a quaternion from a roll angle.
@@ -125,7 +132,7 @@ impl Quaternion {
     let half_angle = angle.to_angle::<Radian>() / 2.0;
     let (sin_half_angle, cos_half_angle) = half_angle.sin_cos();
 
-    Quaternion::new(cos_half_angle, 0.0, sin_half_angle, 0.0)
+    Quaternion::new(cos_half_angle, sin_half_angle, 0.0, 0.0)
   }
 
   /// Creates a new quaternion from a set of Euler angles.
@@ -718,6 +725,16 @@ impl Add for &Quaternion {
   #[inline(always)]
   fn add(self, rhs: &Quaternion) -> Quaternion {
     Quaternion(self.as_vec4() + rhs.as_vec4())
+  }
+}
+
+impl Add for Quaternion {
+  type Output = Quaternion;
+
+  #[must_use]
+  #[inline(always)]
+  fn add(self, rhs: Quaternion) -> Quaternion {
+    (&self).add(&rhs)
   }
 }
 
