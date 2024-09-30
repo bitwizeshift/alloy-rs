@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+repo_dir="$(git rev-parse --show-toplevel)"
+readonly repo_dir
+
+# If there are any unstaged changed or untracked files, stash them temporarily
+# so that we can run tests only on the current state of the code.
+if [[ "$(git status --porcelain | grep -E '^\?\?|^ [MADRC]')" != "" ]]; then
+  echo "Stashing modified changes"
+  git stash --keep-index --include-untracked --quiet
+
+  function cleanup() {
+    git stash pop --quiet
+    echo "Restored modified changes"
+  }
+
+  # Restore the changes after running the tests, even if the tests fail
+  trap cleanup EXIT
+fi
+
+(
+  cd "${repo_dir}"
+  echo "Running tests"
+  cargo test --lib --bins --tests --quiet --no-fail-fast
+)
