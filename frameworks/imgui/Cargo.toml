@@ -11,8 +11,10 @@ edition.workspace = true
 
 [features]
 default = []
-vulkan = ["imgui-sys/vulkan"]
-opengl = ["imgui-sys/opengl"]
+vulkan = ["glfw/vulkan", "imgui-sys/vulkan"]
+opengl = ["glfw/opengl", "imgui-sys/opengl"]
 
 [dependencies]
 imgui-sys = { path = "../imgui-sys", default-features = false }
+glfw = { path = "../glfw" }
+astd = { path = "../astd" }
