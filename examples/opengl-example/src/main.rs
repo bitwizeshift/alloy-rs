@@ -1,6 +1,8 @@
 use alloy::math::mat::Matrix4;
 use astd::ffi::cstr;
 
+use toast as _;
+
 extern "C" fn error_callback(error: i32, description: *const i8) {
   println!("GLFW error: {}: {}", error, unsafe {
     std::ffi::CStr::from_ptr(description).to_str().unwrap()
@@ -103,8 +105,14 @@ fn main() {
     0, 1, 2, // first Triangle
   ];
 
+  // These are output variables from the OpenGL C-API -- and they need to be
+  // initialized so that Rust doesn't complain about their use before they are
+  // initialized.
+  #[allow(unused_assignments)]
   let mut m_vao: gl::c::GLuint = 0;
+  #[allow(unused_assignments)]
   let mut m_vbo: gl::c::GLuint = 0;
+  #[allow(unused_assignments)]
   let mut m_ebo: gl::c::GLuint = 0;
 
   let mut vertex_shader = gl::shader::Shader::new(gl::shader::ShaderKind::Vertex);
@@ -128,7 +136,6 @@ fn main() {
     gl::c::glGenBuffers(2, buffers.as_mut_ptr());
     m_vbo = buffers[0];
     m_ebo = buffers[1];
-    (_, _) = (m_vbo, m_ebo);
 
     gl::c::glBindVertexArray(m_vao);
     gl::c::glBindBuffer(gl::c::GL_ARRAY_BUFFER, m_vbo);
