@@ -174,6 +174,15 @@ impl DualQuaternion {
       dual: &self.dual / norm,
     }
   }
+
+  /// Returns the conjugate of the dual quaternion.
+  #[must_use]
+  pub fn conjugate(&self) -> DualQuaternion {
+    Self {
+      real: self.real.conjugate(),
+      dual: self.dual.conjugate(),
+    }
+  }
 }
 
 // Modifiers

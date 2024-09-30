@@ -82,7 +82,6 @@ impl Quaternion {
   pub fn from_angle_axis<A: Angle>(angle: A, axis: &Vec3) -> Self {
     let norm = axis.magnitude();
 
-    let angle = angle.to_angle::<Radian>().0;
     let half_angle = angle / 2.0;
     let (sin_half_angle, cos_half_angle) = half_angle.sin_cos();
 
@@ -105,7 +104,7 @@ impl Quaternion {
   ///
   /// * `angle` - The yaw angle.
   pub fn from_yaw<A: Angle>(angle: A) -> Self {
-    let half_angle = angle.to_angle::<Radian>() / 2.0;
+    let half_angle = angle / 2.0;
     let (sin_half_angle, cos_half_angle) = half_angle.sin_cos();
 
     Quaternion::new(cos_half_angle, 0.0, 0.0, sin_half_angle)
@@ -117,7 +116,7 @@ impl Quaternion {
   ///
   /// * `angle` - The pitch angle.
   pub fn from_pitch<A: Angle>(angle: A) -> Self {
-    let half_angle = angle.to_angle::<Radian>() / 2.0;
+    let half_angle = angle / 2.0;
     let (sin_half_angle, cos_half_angle) = half_angle.sin_cos();
 
     Quaternion::new(cos_half_angle, 0.0, sin_half_angle, 0.0)
@@ -129,7 +128,7 @@ impl Quaternion {
   ///
   /// * `angle` - The roll angle.
   pub fn from_roll<A: Angle>(angle: A) -> Self {
-    let half_angle = angle.to_angle::<Radian>() / 2.0;
+    let half_angle = angle / 2.0;
     let (sin_half_angle, cos_half_angle) = half_angle.sin_cos();
 
     Quaternion::new(cos_half_angle, sin_half_angle, 0.0, 0.0)
@@ -143,12 +142,6 @@ impl Quaternion {
   /// * `pitch` - The pitch angle.
   /// * `roll`  - The roll angle.
   pub fn from_euler_angles<A: Angle>(yaw: A, pitch: A, roll: A) -> Self {
-    let (yaw, pitch, roll) = (
-      yaw.to_angle::<Radian>(),
-      pitch.to_angle::<Radian>(),
-      roll.to_angle::<Radian>(),
-    );
-
     let half_yaw = yaw / 2.0;
     let half_pitch = pitch / 2.0;
     let half_roll = roll / 2.0;

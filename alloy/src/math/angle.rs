@@ -1,4 +1,6 @@
 //! A module for providing angular definitions needed for geometric operations.
+use std::ops;
+
 use crate::cmp::{AlmostEq, Near};
 
 mod sealed {
@@ -74,7 +76,9 @@ pub trait Trig: sealed::Sealed {
 ///
 /// Types that implement this inherit all basic trigonometric functions and
 /// enable easy conversion between angular units.
-pub trait Angle: Copy + Trig + FromUnit + ToUnit {
+pub trait Angle:
+  Copy + Trig + FromUnit + ToUnit + ops::Mul<f32, Output = Self> + ops::Div<f32, Output = Self>
+{
   /// Converts this [`Angle`] to any other generic [`Angle`] by converting to
   /// [`Unit`] as an intermediate value.
   ///
