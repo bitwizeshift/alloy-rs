@@ -5,6 +5,7 @@ pub mod simd;
 pub mod vec;
 
 mod angle;
+mod dual_quaternion;
 mod euler;
 mod interpolate;
 mod quaternion;
@@ -17,6 +18,9 @@ pub use interpolate::*;
 
 #[doc(inline)]
 pub use quaternion::*;
+
+#[doc(inline)]
+pub use dual_quaternion::*;
 
 #[doc(inline)]
 pub use euler::*;
