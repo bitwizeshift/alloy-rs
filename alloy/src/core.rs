@@ -2,6 +2,7 @@
 
 mod align;
 mod aligned_array;
+mod clamped;
 mod ieee754;
 mod slice;
 
@@ -19,6 +20,9 @@ pub use aligned_array::*;
 
 #[doc(inline)]
 pub use slice::*;
+
+#[doc(inline)]
+pub use clamped::*;
 
 #[doc(inline)]
 pub use astd::Uuid;
